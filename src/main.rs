@@ -1,8 +1,12 @@
 use macroquad::prelude::*;
 use miniquad::conf::Icon;
 
+mod cpu;
+mod window;
+
+const WINDOW_SCALE: u8 = 4;
+
 fn window_conf() -> Conf {
-    const SCALE: i32 = 4;
     Conf {
         window_title: "DMG-2025".to_owned(),
         icon: Some(Icon {
@@ -23,16 +27,20 @@ fn window_conf() -> Conf {
                 .unwrap(),
         }),
         window_resizable: false,
-        window_width: 160 * SCALE,
-        window_height: 144 * SCALE,
+        window_width: 160 * i32::from(WINDOW_SCALE),
+        window_height: 144 * i32::from(WINDOW_SCALE),
         ..Default::default()
     }
 }
 
 #[macroquad::main(window_conf)]
 async fn main() {
+    let window = window::Window::new(WINDOW_SCALE);
+    let cpu = cpu::CPU::init(&window);
+
     loop {
         clear_background(BLACK);
+        cpu.frame();
         next_frame().await
     }
 }
