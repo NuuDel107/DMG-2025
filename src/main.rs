@@ -5,6 +5,7 @@ mod cpu;
 mod window;
 
 const WINDOW_SCALE: u8 = 4;
+const ROM_PATH: &str = "roms/Pokemon - Red Version (USA, Europe) (SGB Enhanced).gb";
 
 fn window_conf() -> Conf {
     Conf {
@@ -33,10 +34,23 @@ fn window_conf() -> Conf {
     }
 }
 
+fn load_rom_file(path: &str) -> Vec<u8> {
+    match std::fs::read(path) {
+        Ok(rom_file) => rom_file,
+        Err(e) => {
+            if e.kind() == std::io::ErrorKind::NotFound {
+                eprintln!("ROM file not found!");
+            }
+            panic!("{}", e)
+        }
+    }
+}
+
 #[macroquad::main(window_conf)]
 async fn main() {
+    let rom_file = load_rom_file(ROM_PATH);
     let window = window::Window::new(WINDOW_SCALE);
-    let cpu = cpu::CPU::init(&window);
+    let cpu = cpu::CPU::new(rom_file, &window);
 
     loop {
         clear_background(BLACK);
