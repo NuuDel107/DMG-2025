@@ -147,7 +147,7 @@ impl CPU {
                                 self.mem.f.half_carry = false;
                                 self.mem.f.carry = true;
                             }
-                            _ => eprintln!("Invalid instruction: {}", opcode),
+                            _ => panic!("Invalid instruction: {:#04X}", opcode),
                         }
                     }
                     0x8 => {
@@ -178,7 +178,7 @@ impl CPU {
 
                         self.mem.f.zero = res == 0;
                         self.mem.f.subtract = false;
-                        self.mem.f.half_carry = (reg_val & 0x00FF) + val > 0x00FF;
+                        self.mem.f.half_carry = (reg_val & 0x00FF) + (val & 0x00FF) > 0x00FF;
                         self.mem.f.carry = carry;
                     }
                     0xF => {
@@ -205,14 +205,14 @@ impl CPU {
                                 self.mem.f.half_carry = false;
                                 self.mem.f.carry = !self.mem.f.carry;
                             }
-                            _ => eprintln!("Invalid instruction: {}", opcode),
+                            _ => panic!("Invalid instruction: {:#04X}", opcode),
                         }
                     }
-                    _ => eprintln!("Invalid instruction: {}", opcode),
+                    _ => panic!("Invalid instruction: {:#04X}", opcode),
                 }
             }
             // Similarly implemented 8-bit loading and arithmetic operations
-            0x40..=0x75 | 0x77..=0x7F => {
+            0x40..=0x75 | 0x77..=0xBF => {
                 let reg = Self::get_opcode_reg(opcode);
                 let val: u8;
                 if reg.is_none() {
@@ -220,6 +220,7 @@ impl CPU {
                 } else {
                     val = self.mem.read_reg(&reg.unwrap());
                 }
+
                 match opcode {
                     // LD
                     0x40..=0x47 => self.mem.b = val,
@@ -243,7 +244,7 @@ impl CPU {
                     0xB0..=0xB7 => self.or_a(val),
                     // CP
                     0xB8..=0xBF => self.cp_a(val),
-                    _ => eprintln!("Invalid instruction: {}", opcode),
+                    _ => panic!("Invalid instruction: {:#04X}", opcode),
                 }
             }
             // HALT
@@ -410,10 +411,10 @@ impl CPU {
                             self.arithmetic();
                         }
                     }
-                    _ => eprintln!("Invalid instruction: {}", opcode),
+                    _ => panic!("Invalid instruction: {:#04X}", opcode),
                 }
             }
-            _ => eprintln!("Invalid instruction: {}", opcode),
+            _ => panic!("Invalid instruction: {:#04X}", opcode),
         }
         if increment_pc {
             self.mem.pc += 1;
@@ -508,7 +509,7 @@ impl CPU {
 
         self.mem.f.zero = res == 0;
         self.mem.f.subtract = false;
-        self.mem.f.half_carry = (self.mem.a & 0x0F) + val > 0x0F;
+        self.mem.f.half_carry = (self.mem.a & 0x0F) + (val & 0x0F) > 0x0F;
         self.mem.f.carry = carry;
     }
 
@@ -521,7 +522,7 @@ impl CPU {
 
         self.mem.f.zero = res == 0;
         self.mem.f.subtract = true;
-        self.mem.f.half_carry = (self.mem.a & 0x0F) < val;
+        self.mem.f.half_carry = (self.mem.a & 0x0F) < (val & 0x0F);
         self.mem.f.carry = carry;
     }
 
@@ -552,14 +553,14 @@ impl CPU {
 
         self.mem.f.zero = res == 0;
         self.mem.f.subtract = true;
-        self.mem.f.half_carry = (self.mem.a & 0x0F) < val;
+        self.mem.f.half_carry = (self.mem.a & 0x0F) < (val & 0x0F);
         self.mem.f.carry = carry;
     }
 
     fn get_opcode_reg(opcode: u8) -> Option<Reg8> {
         let mut nibble = opcode & 0x0F;
-        if nibble > 0x08 {
-            nibble <<= 2;
+        if nibble >= 0x08 {
+            nibble -= 0x08;
         }
         match nibble {
             0x00 => Some(Reg8::B),
@@ -574,7 +575,7 @@ impl CPU {
     }
 
     fn get_opcode_reg16(opcode: u8) -> Option<Reg16> {
-        let nibble = (opcode & 0xF0) >> 2;
+        let nibble = (opcode & 0xF0) >> 4;
         match nibble {
             0x00 => Some(Reg16::BC),
             0x01 => Some(Reg16::DE),

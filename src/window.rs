@@ -2,11 +2,17 @@ use super::cpu::memory::*;
 use super::CPU;
 use egui::epaint::*;
 
+mod debug;
+mod instructions;
+use instructions::InstructionDB;
+
 pub struct Window {
     cpu: CPU,
     window_scale: u8,
     display: [[u8; 144]; 160],
+    instruction_db: InstructionDB,
     show_debug: bool,
+    show_instruction_info: bool,
 }
 
 impl Window {
@@ -15,7 +21,9 @@ impl Window {
             cpu,
             window_scale,
             display: [[0; 144]; 160],
+            instruction_db: InstructionDB::init(),
             show_debug: false,
+            show_instruction_info: false,
         }
     }
 
@@ -121,21 +129,8 @@ impl eframe::App for Window {
                         ctx.input(|input| {
                             self.handle_input(input);
                         });
-                        ctx.set_visuals(egui::Visuals {
-                            override_text_color: Some(Color32::WHITE),
-                            ..Default::default()
-                        });
-                        ui.monospace(format!("AF: {:#06X}", self.cpu.mem.read_reg_16(&Reg16::AF)));
-                        ui.monospace(format!("BC: {:#06X}", self.cpu.mem.read_reg_16(&Reg16::BC)));
-                        ui.monospace(format!("DE: {:#06X}", self.cpu.mem.read_reg_16(&Reg16::DE)));
-                        ui.monospace(format!("HL: {:#06X}", self.cpu.mem.read_reg_16(&Reg16::HL)));
-                        ui.monospace(format!("SP: {:#06X}", self.cpu.mem.read_reg_16(&Reg16::SP)));
-                        ui.monospace(format!("PC: {:#06X}", self.cpu.mem.read_reg_16(&Reg16::PC)));
-                        ui.separator();
-                        ui.monospace(format!("Z: {}", self.cpu.mem.f.zero));
-                        ui.monospace(format!("N: {}", self.cpu.mem.f.subtract));
-                        ui.monospace(format!("H: {}", self.cpu.mem.f.half_carry));
-                        ui.monospace(format!("C: {}", self.cpu.mem.f.carry));
+                        // Run rendering code
+                        self.render_debug(ctx, ui);
                     });
 
                     if ctx.input(|i| i.viewport().close_requested()) {

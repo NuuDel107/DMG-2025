@@ -21,14 +21,14 @@ fn load_rom_file(path: &str) -> Vec<u8> {
 }
 
 fn main() -> eframe::Result {
-    let rom_file = load_rom_file(ROM_PATH);
-    let cpu = CPU::new(rom_file);
-    let window = Window::new(cpu, WINDOW_SCALE);
-
     // Display backtrace
     std::env::set_var("RUST_BACKTRACE", "1");
     // Log to stderr
     env_logger::init();
+
+    let rom_file = load_rom_file(ROM_PATH);
+    let cpu = CPU::new(rom_file);
+    let window = Window::new(cpu, WINDOW_SCALE);
 
     // Initialize main window
     let icon = std::fs::read("icon.png").unwrap();

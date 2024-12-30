@@ -83,8 +83,8 @@ pub struct Memory {
 impl Memory {
     pub fn new(rom_file: Vec<u8>) -> Self {
         Self {
-            a: 0xFE,
-            f: 0x69.into(),
+            a: 0,
+            f: 0.into(),
             b: 0,
             c: 0,
             d: 0,
@@ -139,10 +139,10 @@ impl Memory {
 
     pub fn read_reg_16(&self, register: &Reg16) -> u16 {
         match register {
-            Reg16::AF => u16::from_le_bytes([self.a, self.f.into()]),
-            Reg16::BC => u16::from_le_bytes([self.b, self.c]),
-            Reg16::DE => u16::from_le_bytes([self.d, self.e]),
-            Reg16::HL => u16::from_le_bytes([self.h, self.l]),
+            Reg16::AF => u16::from_be_bytes([self.a, self.f.into()]),
+            Reg16::BC => u16::from_be_bytes([self.b, self.c]),
+            Reg16::DE => u16::from_be_bytes([self.d, self.e]),
+            Reg16::HL => u16::from_be_bytes([self.h, self.l]),
             Reg16::SP => self.sp,
             Reg16::PC => self.pc,
         }
@@ -188,22 +188,22 @@ impl Memory {
     pub fn write_reg_16(&mut self, register: &Reg16, value: u16) {
         match register {
             Reg16::AF => {
-                let bytes = value.to_le_bytes();
+                let bytes = value.to_be_bytes();
                 self.a = bytes[0];
                 self.f = bytes[1].into();
             }
             Reg16::BC => {
-                let bytes = value.to_le_bytes();
+                let bytes = value.to_be_bytes();
                 self.b = bytes[0];
                 self.c = bytes[1];
             }
             Reg16::DE => {
-                let bytes = value.to_le_bytes();
+                let bytes = value.to_be_bytes();
                 self.d = bytes[0];
                 self.e = bytes[1];
             }
             Reg16::HL => {
-                let bytes = value.to_le_bytes();
+                let bytes = value.to_be_bytes();
                 self.h = bytes[0];
                 self.l = bytes[1];
             }

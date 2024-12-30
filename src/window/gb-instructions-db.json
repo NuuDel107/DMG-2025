@@ -1,0 +1,4002 @@
+[
+    {
+        "mnemonic": "LD A, A",
+        "opCode": "7F",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Load the contents of register A into register A."
+    },
+    {
+        "mnemonic": "LD A, B",
+        "opCode": "78",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Load the contents of register B into register A."
+    },
+    {
+        "mnemonic": "LD A, C",
+        "opCode": "79",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Load the contents of register C into register A."
+    },
+    {
+        "mnemonic": "LD A, D",
+        "opCode": "7A",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Load the contents of register D into register A."
+    },
+    {
+        "mnemonic": "LD A, E",
+        "opCode": "7B",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Load the contents of register E into register A."
+    },
+    {
+        "mnemonic": "LD A, H",
+        "opCode": "7C",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Load the contents of register H into register A."
+    },
+    {
+        "mnemonic": "LD A, L",
+        "opCode": "7D",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Load the contents of register L into register A."
+    },
+    {
+        "mnemonic": "LD B, A",
+        "opCode": "47",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Load the contents of register A into register B."
+    },
+    {
+        "mnemonic": "LD B, B",
+        "opCode": "40",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Load the contents of register B into register B."
+    },
+    {
+        "mnemonic": "LD B, C",
+        "opCode": "41",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Load the contents of register C into register B."
+    },
+    {
+        "mnemonic": "LD B, D",
+        "opCode": "42",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Load the contents of register D into register B."
+    },
+    {
+        "mnemonic": "LD B, E",
+        "opCode": "43",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Load the contents of register E into register B."
+    },
+    {
+        "mnemonic": "LD B, H",
+        "opCode": "44",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Load the contents of register H into register B."
+    },
+    {
+        "mnemonic": "LD B, L",
+        "opCode": "45",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Load the contents of register L into register B."
+    },
+    {
+        "mnemonic": "LD C, A",
+        "opCode": "4F",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Load the contents of register A into register C."
+    },
+    {
+        "mnemonic": "LD C, B",
+        "opCode": "48",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Load the contents of register B into register C."
+    },
+    {
+        "mnemonic": "LD C, C",
+        "opCode": "49",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Load the contents of register C into register C."
+    },
+    {
+        "mnemonic": "LD C, D",
+        "opCode": "4A",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Load the contents of register D into register C."
+    },
+    {
+        "mnemonic": "LD C, E",
+        "opCode": "4B",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Load the contents of register E into register C."
+    },
+    {
+        "mnemonic": "LD C, H",
+        "opCode": "4C",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Load the contents of register H into register C."
+    },
+    {
+        "mnemonic": "LD C, L",
+        "opCode": "4D",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Load the contents of register L into register C."
+    },
+    {
+        "mnemonic": "LD D, A",
+        "opCode": "57",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Load the contents of register A into register D."
+    },
+    {
+        "mnemonic": "LD D, B",
+        "opCode": "50",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Load the contents of register B into register D."
+    },
+    {
+        "mnemonic": "LD D, C",
+        "opCode": "51",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Load the contents of register C into register D."
+    },
+    {
+        "mnemonic": "LD D, D",
+        "opCode": "52",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Load the contents of register D into register D."
+    },
+    {
+        "mnemonic": "LD D, E",
+        "opCode": "53",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Load the contents of register E into register D."
+    },
+    {
+        "mnemonic": "LD D, H",
+        "opCode": "54",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Load the contents of register H into register D."
+    },
+    {
+        "mnemonic": "LD D, L",
+        "opCode": "55",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Load the contents of register L into register D."
+    },
+    {
+        "mnemonic": "LD E, A",
+        "opCode": "5F",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Load the contents of register A into register E."
+    },
+    {
+        "mnemonic": "LD E, B",
+        "opCode": "58",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Load the contents of register B into register E."
+    },
+    {
+        "mnemonic": "LD E, C",
+        "opCode": "59",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Load the contents of register C into register E."
+    },
+    {
+        "mnemonic": "LD E, D",
+        "opCode": "5A",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Load the contents of register D into register E."
+    },
+    {
+        "mnemonic": "LD E, E",
+        "opCode": "5B",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Load the contents of register E into register E."
+    },
+    {
+        "mnemonic": "LD E, H",
+        "opCode": "5C",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Load the contents of register H into register E."
+    },
+    {
+        "mnemonic": "LD E, L",
+        "opCode": "5D",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Load the contents of register L into register E."
+    },
+    {
+        "mnemonic": "LD H, A",
+        "opCode": "67",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Load the contents of register A into register H."
+    },
+    {
+        "mnemonic": "LD H, B",
+        "opCode": "60",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Load the contents of register B into register H."
+    },
+    {
+        "mnemonic": "LD H, C",
+        "opCode": "61",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Load the contents of register C into register H."
+    },
+    {
+        "mnemonic": "LD H, D",
+        "opCode": "62",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Load the contents of register D into register H."
+    },
+    {
+        "mnemonic": "LD H, E",
+        "opCode": "63",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Load the contents of register E into register H."
+    },
+    {
+        "mnemonic": "LD H, H",
+        "opCode": "64",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Load the contents of register H into register H."
+    },
+    {
+        "mnemonic": "LD H, L",
+        "opCode": "65",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Load the contents of register L into register H."
+    },
+    {
+        "mnemonic": "LD L, A",
+        "opCode": "6F",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Load the contents of register A into register L."
+    },
+    {
+        "mnemonic": "LD L, B",
+        "opCode": "68",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Load the contents of register B into register L."
+    },
+    {
+        "mnemonic": "LD L, C",
+        "opCode": "69",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Load the contents of register C into register L."
+    },
+    {
+        "mnemonic": "LD L, D",
+        "opCode": "6A",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Load the contents of register D into register L."
+    },
+    {
+        "mnemonic": "LD L, E",
+        "opCode": "6B",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Load the contents of register E into register L."
+    },
+    {
+        "mnemonic": "LD L, H",
+        "opCode": "6C",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Load the contents of register H into register L."
+    },
+    {
+        "mnemonic": "LD L, L",
+        "opCode": "6D",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Load the contents of register L into register L."
+    },
+    {
+        "mnemonic": "LD A, d8",
+        "opCode": "3E",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Load the 8-bit immediate operand d8 into register A."
+    },
+    {
+        "mnemonic": "LD B, d8",
+        "opCode": "06",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Load the 8-bit immediate operand d8 into register B."
+    },
+    {
+        "mnemonic": "LD C, d8",
+        "opCode": "0E",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Load the 8-bit immediate operand d8 into register C."
+    },
+    {
+        "mnemonic": "LD D, d8",
+        "opCode": "16",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Load the 8-bit immediate operand d8 into register D."
+    },
+    {
+        "mnemonic": "LD E, d8",
+        "opCode": "1E",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Load the 8-bit immediate operand d8 into register E."
+    },
+    {
+        "mnemonic": "LD H, d8",
+        "opCode": "26",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Load the 8-bit immediate operand d8 into register H."
+    },
+    {
+        "mnemonic": "LD L, d8",
+        "opCode": "2E",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Load the 8-bit immediate operand d8 into register L."
+    },
+    {
+        "mnemonic": "LD A, (HL)",
+        "opCode": "7E",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "2",
+        "description": "Load the 8-bit contents of memory specified by register pair HL into register A."
+    },
+    {
+        "mnemonic": "LD B, (HL)",
+        "opCode": "46",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "2",
+        "description": "Load the 8-bit contents of memory specified by register pair HL into register B."
+    },
+    {
+        "mnemonic": "LD C, (HL)",
+        "opCode": "4E",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "2",
+        "description": "Load the 8-bit contents of memory specified by register pair HL into register C."
+    },
+    {
+        "mnemonic": "LD D, (HL)",
+        "opCode": "56",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "2",
+        "description": "Load the 8-bit contents of memory specified by register pair HL into register D."
+    },
+    {
+        "mnemonic": "LD E, (HL)",
+        "opCode": "5E",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "2",
+        "description": "Load the 8-bit contents of memory specified by register pair HL into register E."
+    },
+    {
+        "mnemonic": "LD H, (HL)",
+        "opCode": "66",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "2",
+        "description": "Load the 8-bit contents of memory specified by register pair HL into register H."
+    },
+    {
+        "mnemonic": "LD L, (HL)",
+        "opCode": "6E",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "2",
+        "description": "Load the 8-bit contents of memory specified by register pair HL into register L."
+    },
+    {
+        "mnemonic": "LD (HL), A",
+        "opCode": "77",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "2",
+        "description": "Store the contents of register A in the memory location specified by register pair HL."
+    },
+    {
+        "mnemonic": "LD (HL), B",
+        "opCode": "70",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "2",
+        "description": "Store the contents of register B in the memory location specified by register pair HL."
+    },
+    {
+        "mnemonic": "LD (HL), C",
+        "opCode": "71",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "2",
+        "description": "Store the contents of register C in the memory location specified by register pair HL."
+    },
+    {
+        "mnemonic": "LD (HL), D",
+        "opCode": "72",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "2",
+        "description": "Store the contents of register D in the memory location specified by register pair HL."
+    },
+    {
+        "mnemonic": "LD (HL), E",
+        "opCode": "73",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "2",
+        "description": "Store the contents of register E in the memory location specified by register pair HL."
+    },
+    {
+        "mnemonic": "LD (HL), H",
+        "opCode": "74",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "2",
+        "description": "Store the contents of register H in the memory location specified by register pair HL."
+    },
+    {
+        "mnemonic": "LD (HL), L",
+        "opCode": "75",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "2",
+        "description": "Store the contents of register L in the memory location specified by register pair HL."
+    },
+    {
+        "mnemonic": "LD (HL), d8",
+        "opCode": "36",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "3",
+        "description": "Store the contents of 8-bit immediate operand d8 in the memory location specified by register pair HL."
+    },
+    {
+        "mnemonic": "LD A, (BC)",
+        "opCode": "0A",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "2",
+        "description": "Load the 8-bit contents of memory specified by register pair BC into register A."
+    },
+    {
+        "mnemonic": "LD A, (DE)",
+        "opCode": "1A",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "2",
+        "description": "Load the 8-bit contents of memory specified by register pair DE into register A."
+    },
+    {
+        "mnemonic": "LD A, (C)",
+        "opCode": "F2",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "2",
+        "description": "Load into register A the contents of the internal RAM, port register, or mode register at the address in the range 0xFF00-0xFFFF specified by register C.\n0xFF00-0xFF7F: Port/Mode registers, control register, sound register\n0xFF80-0xFFFE: Working & Stack RAM (127 bytes)\n0xFFFF: Interrupt Enable Register"
+    },
+    {
+        "mnemonic": "LD (C), A",
+        "opCode": "E2",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "2",
+        "description": "Store the contents of register A in the internal RAM, port register, or mode register at the address in the range 0xFF00-0xFFFF specified by register C.\n0xFF00-0xFF7F: Port/Mode registers, control register, sound register\n0xFF80-0xFFFE: Working & Stack RAM (127 bytes)\n0xFFFF: Interrupt Enable Register"
+    },
+    {
+        "mnemonic": "LD A, (a8)",
+        "opCode": "F0",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "3",
+        "description": "Load into register A the contents of the internal RAM, port register, or mode register at the address in the range 0xFF00-0xFFFF specified by the 8-bit immediate operand a8.\nNote: Should specify a 16-bit address in the mnemonic portion for a8, although the immediate operand only has the lower-order 8 bits.\n0xFF00-0xFF7F: Port/Mode registers, control register, sound register\n0xFF80-0xFFFE: Working & Stack RAM (127 bytes)\n0xFFFF: Interrupt Enable Register"
+    },
+    {
+        "mnemonic": "LD (a8), A",
+        "opCode": "E0",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "3",
+        "description": "Store the contents of register A in the internal RAM, port register, or mode register at the address in the range 0xFF00-0xFFFF specified by the 8-bit immediate operand a8.\nNote: Should specify a 16-bit address in the mnemonic portion for a8, although the immediate operand only has the lower-order 8 bits.\n0xFF00-0xFF7F: Port/Mode registers, control register, sound register\n0xFF80-0xFFFE: Working & Stack RAM (127 bytes)\n0xFFFF: Interrupt Enable Register"
+    },
+    {
+        "mnemonic": "LD A, (a16)",
+        "opCode": "FA",
+        "flags": {},
+        "bytes": 3,
+        "cycles": "4",
+        "description": "Load into register A the contents of the internal RAM or register specified by the 16-bit immediate operand a16."
+    },
+    {
+        "mnemonic": "LD (a16), A",
+        "opCode": "EA",
+        "flags": {},
+        "bytes": 3,
+        "cycles": "4",
+        "description": "Store the contents of register A in the internal RAM or register specified by the 16-bit immediate operand a16."
+    },
+    {
+        "mnemonic": "LD A, (HL+)",
+        "opCode": "2A",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "2",
+        "description": "Load the contents of memory specified by register pair HL into register A, and simultaneously increment the contents of HL."
+    },
+    {
+        "mnemonic": "LD A, (HL-)",
+        "opCode": "3A",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "2",
+        "description": "Load the contents of memory specified by register pair HL into register A, and simultaneously decrement the contents of HL."
+    },
+    {
+        "mnemonic": "LD (BC), A",
+        "opCode": "02",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "2",
+        "description": "Store the contents of register A in the memory location specified by register pair BC."
+    },
+    {
+        "mnemonic": "LD (DE), A",
+        "opCode": "12",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "2",
+        "description": "Store the contents of register A in the memory location specified by register pair DE."
+    },
+    {
+        "mnemonic": "LD (HL+), A",
+        "opCode": "22",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "2",
+        "description": "Store the contents of register A into the memory location specified by register pair HL, and simultaneously increment the contents of HL."
+    },
+    {
+        "mnemonic": "LD (HL-), A",
+        "opCode": "32",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "2",
+        "description": "Store the contents of register A into the memory location specified by register pair HL, and simultaneously decrement the contents of HL."
+    },
+    {
+        "mnemonic": "LD BC, d16",
+        "opCode": "01",
+        "flags": {},
+        "bytes": 3,
+        "cycles": "3",
+        "description": "Load the 2 bytes of immediate data into register pair BC.\n The first byte of immediate data is the lower byte (i.e., bits 0-7), and the second byte of immediate data is the higher byte (i.e., bits 8-15)."
+    },
+    {
+        "mnemonic": "LD DE, d16",
+        "opCode": "11",
+        "flags": {},
+        "bytes": 3,
+        "cycles": "3",
+        "description": "Load the 2 bytes of immediate data into register pair DE.\n The first byte of immediate data is the lower byte (i.e., bits 0-7), and the second byte of immediate data is the higher byte (i.e., bits 8-15)."
+    },
+    {
+        "mnemonic": "LD HL, d16",
+        "opCode": "21",
+        "flags": {},
+        "bytes": 3,
+        "cycles": "3",
+        "description": "Load the 2 bytes of immediate data into register pair HL.\n The first byte of immediate data is the lower byte (i.e., bits 0-7), and the second byte of immediate data is the higher byte (i.e., bits 8-15)."
+    },
+    {
+        "mnemonic": "LD SP, d16",
+        "opCode": "31",
+        "flags": {},
+        "bytes": 3,
+        "cycles": "3",
+        "description": "Load the 2 bytes of immediate data into register pair SP.\n The first byte of immediate data is the lower byte (i.e., bits 0-7), and the second byte of immediate data is the higher byte (i.e., bits 8-15)."
+    },
+    {
+        "mnemonic": "LD SP, HL",
+        "opCode": "F9",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "2",
+        "description": "Load the contents of register pair HL into the stack pointer SP."
+    },
+    {
+        "mnemonic": "PUSH BC",
+        "opCode": "C5",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "4",
+        "description": "Push the contents of register pair BC onto the memory stack by doing the following:\nSubtract 1 from the stack pointer SP, and put the contents of the higher portion of register pair BC on the stack.\nSubtract 2 from SP, and put the lower portion of register pair BC on the stack.\nDecrement SP by 2."
+    },
+    {
+        "mnemonic": "PUSH DE",
+        "opCode": "D5",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "4",
+        "description": "Push the contents of register pair DE onto the memory stack by doing the following:\nSubtract 1 from the stack pointer SP, and put the contents of the higher portion of register pair DE on the stack.\nSubtract 2 from SP, and put the lower portion of register pair DE on the stack.\nDecrement SP by 2."
+    },
+    {
+        "mnemonic": "PUSH HL",
+        "opCode": "E5",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "4",
+        "description": "Push the contents of register pair HL onto the memory stack by doing the following:\nSubtract 1 from the stack pointer SP, and put the contents of the higher portion of register pair HL on the stack.\nSubtract 2 from SP, and put the lower portion of register pair HL on the stack.\nDecrement SP by 2."
+    },
+    {
+        "mnemonic": "PUSH AF",
+        "opCode": "F5",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "4",
+        "description": "Push the contents of register pair AF onto the memory stack by doing the following:\nSubtract 1 from the stack pointer SP, and put the contents of the higher portion of register pair AF on the stack.\nSubtract 2 from SP, and put the lower portion of register pair AF on the stack.\nDecrement SP by 2."
+    },
+    {
+        "mnemonic": "POP BC",
+        "opCode": "C1",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "3",
+        "description": "Pop the contents from the memory stack into register pair into register pair BC by doing the following:\nLoad the contents of memory specified by stack pointer SP into the lower portion of BC.\nAdd 1 to SP and load the contents from the new memory location into the upper portion of BC.\nBy the end, SP should be 2 more than its initial value."
+    },
+    {
+        "mnemonic": "POP DE",
+        "opCode": "D1",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "3",
+        "description": "Pop the contents from the memory stack into register pair into register pair DE by doing the following:\nLoad the contents of memory specified by stack pointer SP into the lower portion of DE.\nAdd 1 to SP and load the contents from the new memory location into the upper portion of DE.\nBy the end, SP should be 2 more than its initial value."
+    },
+    {
+        "mnemonic": "POP HL",
+        "opCode": "E1",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "3",
+        "description": "Pop the contents from the memory stack into register pair into register pair HL by doing the following:\nLoad the contents of memory specified by stack pointer SP into the lower portion of HL.\nAdd 1 to SP and load the contents from the new memory location into the upper portion of HL.\nBy the end, SP should be 2 more than its initial value."
+    },
+    {
+        "mnemonic": "POP AF",
+        "opCode": "F1",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "3",
+        "description": "Pop the contents from the memory stack into register pair into register pair AF by doing the following:\nLoad the contents of memory specified by stack pointer SP into the lower portion of AF.\nAdd 1 to SP and load the contents from the new memory location into the upper portion of AF.\nBy the end, SP should be 2 more than its initial value."
+    },
+    {
+        "mnemonic": "LD HL, SP+s8",
+        "opCode": "F8",
+        "flags": { "CY": "16-bit", "H": "16-bit", "N": "0", "Z": "0" },
+        "bytes": 2,
+        "cycles": "3",
+        "description": "Add the 8-bit signed operand s8 (values -128 to +127) to the stack pointer SP, and store the result in register pair HL."
+    },
+    {
+        "mnemonic": "LD (a16), SP",
+        "opCode": "08",
+        "flags": {},
+        "bytes": 3,
+        "cycles": "5",
+        "description": "Store the lower byte of stack pointer SP at the address specified by the 16-bit immediate operand a16, and store the upper byte of SP at address a16 + 1."
+    },
+    {
+        "mnemonic": "ADD A, A",
+        "opCode": "87",
+        "flags": { "CY": "8-bit", "H": "8-bit", "N": "0", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Add the contents of register A to the contents of register A, and store the results in register A."
+    },
+    {
+        "mnemonic": "ADD A, B",
+        "opCode": "80",
+        "flags": { "CY": "8-bit", "H": "8-bit", "N": "0", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Add the contents of register B to the contents of register A, and store the results in register A."
+    },
+    {
+        "mnemonic": "ADD A, C",
+        "opCode": "81",
+        "flags": { "CY": "8-bit", "H": "8-bit", "N": "0", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Add the contents of register C to the contents of register A, and store the results in register A."
+    },
+    {
+        "mnemonic": "ADD A, D",
+        "opCode": "82",
+        "flags": { "CY": "8-bit", "H": "8-bit", "N": "0", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Add the contents of register D to the contents of register A, and store the results in register A."
+    },
+    {
+        "mnemonic": "ADD A, E",
+        "opCode": "83",
+        "flags": { "CY": "8-bit", "H": "8-bit", "N": "0", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Add the contents of register E to the contents of register A, and store the results in register A."
+    },
+    {
+        "mnemonic": "ADD A, H",
+        "opCode": "84",
+        "flags": { "CY": "8-bit", "H": "8-bit", "N": "0", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Add the contents of register H to the contents of register A, and store the results in register A."
+    },
+    {
+        "mnemonic": "ADD A, L",
+        "opCode": "85",
+        "flags": { "CY": "8-bit", "H": "8-bit", "N": "0", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Add the contents of register L to the contents of register A, and store the results in register A."
+    },
+    {
+        "mnemonic": "ADD A, d8",
+        "opCode": "C6",
+        "flags": { "CY": "8-bit", "H": "8-bit", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Add the contents of the 8-bit immediate operand d8 to the contents of register A, and store the results in register A."
+    },
+    {
+        "mnemonic": "ADD A, (HL)",
+        "opCode": "86",
+        "flags": { "CY": "8-bit", "H": "8-bit", "N": "0", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "2",
+        "description": "Add the contents of memory specified by register pair HL to the contents of register A, and store the results in register A."
+    },
+    {
+        "mnemonic": "ADC A, A",
+        "opCode": "8F",
+        "flags": { "CY": "8-bit", "H": "8-bit", "N": "0", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Add the contents of register A and the CY flag to the contents of register A, and store the results in register A."
+    },
+    {
+        "mnemonic": "ADC A, B",
+        "opCode": "88",
+        "flags": { "CY": "8-bit", "H": "8-bit", "N": "0", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Add the contents of register B and the CY flag to the contents of register A, and store the results in register A."
+    },
+    {
+        "mnemonic": "ADC A, C",
+        "opCode": "89",
+        "flags": { "CY": "8-bit", "H": "8-bit", "N": "0", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Add the contents of register C and the CY flag to the contents of register A, and store the results in register A."
+    },
+    {
+        "mnemonic": "ADC A, D",
+        "opCode": "8A",
+        "flags": { "CY": "8-bit", "H": "8-bit", "N": "0", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Add the contents of register D and the CY flag to the contents of register A, and store the results in register A."
+    },
+    {
+        "mnemonic": "ADC A, E",
+        "opCode": "8B",
+        "flags": { "CY": "8-bit", "H": "8-bit", "N": "0", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Add the contents of register E and the CY flag to the contents of register A, and store the results in register A."
+    },
+    {
+        "mnemonic": "ADC A, H",
+        "opCode": "8C",
+        "flags": { "CY": "8-bit", "H": "8-bit", "N": "0", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Add the contents of register H and the CY flag to the contents of register A, and store the results in register A."
+    },
+    {
+        "mnemonic": "ADC A, L",
+        "opCode": "8D",
+        "flags": { "CY": "8-bit", "H": "8-bit", "N": "0", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Add the contents of register L and the CY flag to the contents of register A, and store the results in register A."
+    },
+    {
+        "mnemonic": "ADC A, d8",
+        "opCode": "CE",
+        "flags": { "CY": "8-bit", "H": "8-bit", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Add the contents of the 8-bit immediate operand d8 and the CY flag to the contents of register A, and store the results in register A."
+    },
+    {
+        "mnemonic": "ADC A, (HL)",
+        "opCode": "8E",
+        "flags": { "CY": "8-bit", "H": "8-bit", "N": "0", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "2",
+        "description": "Add the contents of memory specified by register pair HL and the CY flag to the contents of register A, and store the results in register A."
+    },
+    {
+        "mnemonic": "SUB A",
+        "opCode": "97",
+        "flags": { "CY": "8-bit", "H": "8-bit", "N": "1", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Subtract the contents of register A from the contents of register A, and store the results in register A."
+    },
+    {
+        "mnemonic": "SUB B",
+        "opCode": "90",
+        "flags": { "CY": "8-bit", "H": "8-bit", "N": "1", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Subtract the contents of register B from the contents of register A, and store the results in register A."
+    },
+    {
+        "mnemonic": "SUB C",
+        "opCode": "91",
+        "flags": { "CY": "8-bit", "H": "8-bit", "N": "1", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Subtract the contents of register C from the contents of register A, and store the results in register A."
+    },
+    {
+        "mnemonic": "SUB D",
+        "opCode": "92",
+        "flags": { "CY": "8-bit", "H": "8-bit", "N": "1", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Subtract the contents of register D from the contents of register A, and store the results in register A."
+    },
+    {
+        "mnemonic": "SUB E",
+        "opCode": "93",
+        "flags": { "CY": "8-bit", "H": "8-bit", "N": "1", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Subtract the contents of register E from the contents of register A, and store the results in register A."
+    },
+    {
+        "mnemonic": "SUB H",
+        "opCode": "94",
+        "flags": { "CY": "8-bit", "H": "8-bit", "N": "1", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Subtract the contents of register H from the contents of register A, and store the results in register A."
+    },
+    {
+        "mnemonic": "SUB L",
+        "opCode": "95",
+        "flags": { "CY": "8-bit", "H": "8-bit", "N": "1", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Subtract the contents of register L from the contents of register A, and store the results in register A."
+    },
+    {
+        "mnemonic": "SUB d8",
+        "opCode": "D6",
+        "flags": { "CY": "8-bit", "H": "8-bit", "N": "1", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Subtract the contents of the 8-bit immediate operand d8 from the contents of register A, and store the results in register A."
+    },
+    {
+        "mnemonic": "SUB (HL)",
+        "opCode": "96",
+        "flags": { "CY": "8-bit", "H": "8-bit", "N": "1", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "2",
+        "description": "Subtract the contents of memory specified by register pair HL from the contents of register A, and store the results in register A."
+    },
+    {
+        "mnemonic": "SBC A, A",
+        "opCode": "9F",
+        "flags": { "CY": "8-bit", "H": "8-bit", "N": "1", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Subtract the contents of register A and the CY flag from the contents of register A, and store the results in register A."
+    },
+    {
+        "mnemonic": "SBC A, B",
+        "opCode": "98",
+        "flags": { "CY": "8-bit", "H": "8-bit", "N": "1", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Subtract the contents of register B and the CY flag from the contents of register A, and store the results in register A."
+    },
+    {
+        "mnemonic": "SBC A, C",
+        "opCode": "99",
+        "flags": { "CY": "8-bit", "H": "8-bit", "N": "1", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Subtract the contents of register C and the CY flag from the contents of register A, and store the results in register A."
+    },
+    {
+        "mnemonic": "SBC A, D",
+        "opCode": "9A",
+        "flags": { "CY": "8-bit", "H": "8-bit", "N": "1", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Subtract the contents of register D and the CY flag from the contents of register A, and store the results in register A."
+    },
+    {
+        "mnemonic": "SBC A, E",
+        "opCode": "9B",
+        "flags": { "CY": "8-bit", "H": "8-bit", "N": "1", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Subtract the contents of register E and the CY flag from the contents of register A, and store the results in register A."
+    },
+    {
+        "mnemonic": "SBC A, H",
+        "opCode": "9C",
+        "flags": { "CY": "8-bit", "H": "8-bit", "N": "1", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Subtract the contents of register H and the CY flag from the contents of register A, and store the results in register A."
+    },
+    {
+        "mnemonic": "SBC A, L",
+        "opCode": "9D",
+        "flags": { "CY": "8-bit", "H": "8-bit", "N": "1", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Subtract the contents of register L and the CY flag from the contents of register A, and store the results in register A."
+    },
+    {
+        "mnemonic": "SBC A, d8",
+        "opCode": "DE",
+        "flags": { "CY": "8-bit", "H": "8-bit", "N": "1", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Subtract the contents of the 8-bit immediate operand d8 and the carry flag CY from the contents of register A, and store the results in register A."
+    },
+    {
+        "mnemonic": "SBC A, (HL)",
+        "opCode": "9E",
+        "flags": { "CY": "8-bit", "H": "8-bit", "N": "1", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "2",
+        "description": "Subtract the contents of memory specified by register pair HL and the carry flag CY from the contents of register A, and store the results in register A."
+    },
+    {
+        "mnemonic": "AND A",
+        "opCode": "A7",
+        "flags": { "CY": "0", "H": "1", "N": "0", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Take the logical AND for each bit of the contents of register A and the contents of register A, and store the results in register A."
+    },
+    {
+        "mnemonic": "AND B",
+        "opCode": "A0",
+        "flags": { "CY": "0", "H": "1", "N": "0", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Take the logical AND for each bit of the contents of register B and the contents of register A, and store the results in register A."
+    },
+    {
+        "mnemonic": "AND C",
+        "opCode": "A1",
+        "flags": { "CY": "0", "H": "1", "N": "0", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Take the logical AND for each bit of the contents of register C and the contents of register A, and store the results in register A."
+    },
+    {
+        "mnemonic": "AND D",
+        "opCode": "A2",
+        "flags": { "CY": "0", "H": "1", "N": "0", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Take the logical AND for each bit of the contents of register D and the contents of register A, and store the results in register A."
+    },
+    {
+        "mnemonic": "AND E",
+        "opCode": "A3",
+        "flags": { "CY": "0", "H": "1", "N": "0", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Take the logical AND for each bit of the contents of register E and the contents of register A, and store the results in register A."
+    },
+    {
+        "mnemonic": "AND H",
+        "opCode": "A4",
+        "flags": { "CY": "0", "H": "1", "N": "0", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Take the logical AND for each bit of the contents of register H and the contents of register A, and store the results in register A."
+    },
+    {
+        "mnemonic": "AND L",
+        "opCode": "A5",
+        "flags": { "CY": "0", "H": "1", "N": "0", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Take the logical AND for each bit of the contents of register L and the contents of register A, and store the results in register A."
+    },
+    {
+        "mnemonic": "AND d8",
+        "opCode": "E6",
+        "flags": { "CY": "0", "H": "1", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Take the logical AND for each bit of the contents of 8-bit immediate operand d8 and the contents of register A, and store the results in register A."
+    },
+    {
+        "mnemonic": "AND (HL)",
+        "opCode": "A6",
+        "flags": { "CY": "0", "N": "0", "H": "1", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "2",
+        "description": "Take the logical AND for each bit of the contents of memory specified by register pair HL and the contents of register A, and store the results in register A."
+    },
+    {
+        "mnemonic": "OR A",
+        "opCode": "B7",
+        "flags": { "CY": "0", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Take the logical OR for each bit of the contents of register A and the contents of register A, and store the results in register A."
+    },
+    {
+        "mnemonic": "OR B",
+        "opCode": "B0",
+        "flags": { "CY": "0", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Take the logical OR for each bit of the contents of register B and the contents of register A, and store the results in register A."
+    },
+    {
+        "mnemonic": "OR C",
+        "opCode": "B1",
+        "flags": { "CY": "0", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Take the logical OR for each bit of the contents of register C and the contents of register A, and store the results in register A."
+    },
+    {
+        "mnemonic": "OR D",
+        "opCode": "B2",
+        "flags": { "CY": "0", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Take the logical OR for each bit of the contents of register D and the contents of register A, and store the results in register A."
+    },
+    {
+        "mnemonic": "OR E",
+        "opCode": "B3",
+        "flags": { "CY": "0", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Take the logical OR for each bit of the contents of register E and the contents of register A, and store the results in register A."
+    },
+    {
+        "mnemonic": "OR H",
+        "opCode": "B4",
+        "flags": { "CY": "0", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Take the logical OR for each bit of the contents of register H and the contents of register A, and store the results in register A."
+    },
+    {
+        "mnemonic": "OR L",
+        "opCode": "B5",
+        "flags": { "CY": "0", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Take the logical OR for each bit of the contents of register L and the contents of register A, and store the results in register A."
+    },
+    {
+        "mnemonic": "OR d8",
+        "opCode": "F6",
+        "flags": { "CY": "0", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Take the logical OR for each bit of the contents of the 8-bit immediate operand d8 and the contents of register A, and store the results in register A."
+    },
+    {
+        "mnemonic": "OR (HL)",
+        "opCode": "B6",
+        "flags": { "CY": "0", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "2",
+        "description": "Take the logical OR for each bit of the contents of memory specified by register pair HL and the contents of register A, and store the results in register A."
+    },
+    {
+        "mnemonic": "XOR A",
+        "opCode": "AF",
+        "flags": { "CY": "0", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Take the logical exclusive-OR for each bit of the contents of register A and the contents of register A, and store the results in register A."
+    },
+    {
+        "mnemonic": "XOR B",
+        "opCode": "A8",
+        "flags": { "CY": "0", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Take the logical exclusive-OR for each bit of the contents of register B and the contents of register A, and store the results in register A."
+    },
+    {
+        "mnemonic": "XOR C",
+        "opCode": "A9",
+        "flags": { "CY": "0", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Take the logical exclusive-OR for each bit of the contents of register C and the contents of register A, and store the results in register A."
+    },
+    {
+        "mnemonic": "XOR D",
+        "opCode": "AA",
+        "flags": { "CY": "0", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Take the logical exclusive-OR for each bit of the contents of register D and the contents of register A, and store the results in register A."
+    },
+    {
+        "mnemonic": "XOR E",
+        "opCode": "AB",
+        "flags": { "CY": "0", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Take the logical exclusive-OR for each bit of the contents of register E and the contents of register A, and store the results in register A."
+    },
+    {
+        "mnemonic": "XOR H",
+        "opCode": "AC",
+        "flags": { "CY": "0", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Take the logical exclusive-OR for each bit of the contents of register H and the contents of register A, and store the results in register A."
+    },
+    {
+        "mnemonic": "XOR L",
+        "opCode": "AD",
+        "flags": { "CY": "0", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Take the logical exclusive-OR for each bit of the contents of register L and the contents of register A, and store the results in register A."
+    },
+    {
+        "mnemonic": "XOR d8",
+        "opCode": "EE",
+        "flags": { "CY": "0", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Take the logical exclusive-OR for each bit of the contents of the 8-bit immediate operand d8 and the contents of register A, and store the results in register A."
+    },
+    {
+        "mnemonic": "XOR (HL)",
+        "opCode": "AE",
+        "flags": { "CY": "0", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "2",
+        "description": "Take the logical exclusive-OR for each bit of the contents of memory specified by register pair HL and the contents of register A, and store the results in register A."
+    },
+    {
+        "mnemonic": "CP A",
+        "opCode": "BF",
+        "flags": { "CY": "8-bit", "H": "8-bit", "N": "1", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Compare the contents of register A and the contents of register A by calculating A - A, and set the Z flag if they are equal.\nThe execution of this instruction does not affect the contents of register A."
+    },
+    {
+        "mnemonic": "CP B",
+        "opCode": "B8",
+        "flags": { "CY": "8-bit", "H": "8-bit", "N": "1", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Compare the contents of register B and the contents of register A by calculating A - B, and set the Z flag if they are equal.\nThe execution of this instruction does not affect the contents of register A."
+    },
+    {
+        "mnemonic": "CP C",
+        "opCode": "B9",
+        "flags": { "CY": "8-bit", "H": "8-bit", "N": "1", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Compare the contents of register C and the contents of register A by calculating A - C, and set the Z flag if they are equal.\nThe execution of this instruction does not affect the contents of register A."
+    },
+    {
+        "mnemonic": "CP D",
+        "opCode": "BA",
+        "flags": { "CY": "8-bit", "H": "8-bit", "N": "1", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Compare the contents of register D and the contents of register A by calculating A - D, and set the Z flag if they are equal.\nThe execution of this instruction does not affect the contents of register A."
+    },
+    {
+        "mnemonic": "CP E",
+        "opCode": "BB",
+        "flags": { "CY": "8-bit", "H": "8-bit", "N": "1", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Compare the contents of register E and the contents of register A by calculating A - E, and set the Z flag if they are equal.\nThe execution of this instruction does not affect the contents of register A."
+    },
+    {
+        "mnemonic": "CP H",
+        "opCode": "BC",
+        "flags": { "CY": "8-bit", "H": "8-bit", "N": "1", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Compare the contents of register H and the contents of register A by calculating A - H, and set the Z flag if they are equal.\nThe execution of this instruction does not affect the contents of register A."
+    },
+    {
+        "mnemonic": "CP L",
+        "opCode": "BD",
+        "flags": { "CY": "8-bit", "H": "8-bit", "N": "1", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Compare the contents of register L and the contents of register A by calculating A - L, and set the Z flag if they are equal.\nThe execution of this instruction does not affect the contents of register A."
+    },
+    {
+        "mnemonic": "CP d8",
+        "opCode": "FE",
+        "flags": { "CY": "8-bit", "H": "8-bit", "N": "1", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Compare the contents of register A and the contents of the 8-bit immediate operand d8 by calculating A - d8, and set the Z flag if they are equal.\nThe execution of this instruction does not affect the contents of register A."
+    },
+    {
+        "mnemonic": "CP (HL)",
+        "opCode": "BE",
+        "flags": { "CY": "8-bit", "H": "8-bit", "N": "1", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "2",
+        "description": "Compare the contents of memory specified by register pair HL and the contents of register A by calculating A - (HL), and set the Z flag if they are equal.\nThe execution of this instruction does not affect the contents of register A."
+    },
+    {
+        "mnemonic": "INC A",
+        "opCode": "3C",
+        "flags": { "H": "8-bit", "N": "0", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Increment the contents of register A by 1."
+    },
+    {
+        "mnemonic": "INC B",
+        "opCode": "04",
+        "flags": { "H": "8-bit", "N": "0", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Increment the contents of register B by 1."
+    },
+    {
+        "mnemonic": "INC C",
+        "opCode": "0C",
+        "flags": { "H": "8-bit", "N": "0", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Increment the contents of register C by 1."
+    },
+    {
+        "mnemonic": "INC D",
+        "opCode": "14",
+        "flags": { "H": "8-bit", "N": "0", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Increment the contents of register D by 1."
+    },
+    {
+        "mnemonic": "INC E",
+        "opCode": "1C",
+        "flags": { "H": "8-bit", "N": "0", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Increment the contents of register E by 1."
+    },
+    {
+        "mnemonic": "INC H",
+        "opCode": "24",
+        "flags": { "H": "8-bit", "N": "0", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Increment the contents of register H by 1."
+    },
+    {
+        "mnemonic": "INC L",
+        "opCode": "2C",
+        "flags": { "H": "8-bit", "N": "0", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Increment the contents of register L by 1."
+    },
+    {
+        "mnemonic": "INC (HL)",
+        "opCode": "34",
+        "flags": { "H": "8-bit", "N": "0", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "3",
+        "description": "Increment the contents of memory specified by register pair HL by 1."
+    },
+    {
+        "mnemonic": "DEC A",
+        "opCode": "3D",
+        "flags": { "H": "8-bit", "N": "1", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Decrement the contents of register A by 1."
+    },
+    {
+        "mnemonic": "DEC B",
+        "opCode": "05",
+        "flags": { "H": "8-bit", "N": "1", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Decrement the contents of register B by 1."
+    },
+    {
+        "mnemonic": "DEC C",
+        "opCode": "0D",
+        "flags": { "H": "8-bit", "N": "1", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Decrement the contents of register C by 1."
+    },
+    {
+        "mnemonic": "DEC D",
+        "opCode": "15",
+        "flags": { "H": "8-bit", "N": "1", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Decrement the contents of register D by 1."
+    },
+    {
+        "mnemonic": "DEC E",
+        "opCode": "1D",
+        "flags": { "H": "8-bit", "N": "1", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Decrement the contents of register E by 1."
+    },
+    {
+        "mnemonic": "DEC H",
+        "opCode": "25",
+        "flags": { "H": "8-bit", "N": "1", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Decrement the contents of register H by 1."
+    },
+    {
+        "mnemonic": "DEC L",
+        "opCode": "2D",
+        "flags": { "H": "8-bit", "N": "1", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Decrement the contents of register L by 1."
+    },
+    {
+        "mnemonic": "DEC (HL)",
+        "opCode": "35",
+        "flags": { "H": "8-bit", "N": "1", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "3",
+        "description": "Decrement the contents of memory specified by register pair HL by 1."
+    },
+    {
+        "mnemonic": "ADD HL, BC",
+        "opCode": "09",
+        "flags": { "CY": "16-bit", "H": "16-bit", "N": "0" },
+        "bytes": 1,
+        "cycles": "2",
+        "description": "Add the contents of register pair BC to the contents of register pair HL, and store the results in register pair HL."
+    },
+    {
+        "mnemonic": "ADD HL, DE",
+        "opCode": "19",
+        "flags": { "CY": "16-bit", "H": "16-bit", "N": "0" },
+        "bytes": 1,
+        "cycles": "2",
+        "description": "Add the contents of register pair DE to the contents of register pair HL, and store the results in register pair HL."
+    },
+    {
+        "mnemonic": "ADD HL, HL",
+        "opCode": "29",
+        "flags": { "CY": "16-bit", "H": "16-bit", "N": "0" },
+        "bytes": 1,
+        "cycles": "2",
+        "description": "Add the contents of register pair HL to the contents of register pair HL, and store the results in register pair HL."
+    },
+    {
+        "mnemonic": "ADD HL, SP",
+        "opCode": "39",
+        "flags": { "CY": "16-bit", "H": "16-bit", "N": "0" },
+        "bytes": 1,
+        "cycles": "2",
+        "description": "Add the contents of register pair SP to the contents of register pair HL, and store the results in register pair HL."
+    },
+    {
+        "mnemonic": "ADD SP, s8",
+        "opCode": "E8",
+        "flags": { "CY": "16-bit", "H": "16-bit", "N": "0", "Z": "0" },
+        "bytes": 2,
+        "cycles": "4",
+        "description": "Add the contents of the 8-bit signed (2's complement) immediate operand s8 and the stack pointer SP and store the results in SP."
+    },
+    {
+        "mnemonic": "INC BC",
+        "opCode": "03",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "2",
+        "description": "Increment the contents of register pair BC by 1."
+    },
+    {
+        "mnemonic": "INC DE",
+        "opCode": "13",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "2",
+        "description": "Increment the contents of register pair DE by 1."
+    },
+    {
+        "mnemonic": "INC HL",
+        "opCode": "23",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "2",
+        "description": "Increment the contents of register pair HL by 1."
+    },
+    {
+        "mnemonic": "INC SP",
+        "opCode": "33",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "2",
+        "description": "Increment the contents of register pair SP by 1."
+    },
+    {
+        "mnemonic": "DEC BC",
+        "opCode": "0B",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "2",
+        "description": "Decrement the contents of register pair BC by 1."
+    },
+    {
+        "mnemonic": "DEC DE",
+        "opCode": "1B",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "2",
+        "description": "Decrement the contents of register pair DE by 1."
+    },
+    {
+        "mnemonic": "DEC HL",
+        "opCode": "2B",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "2",
+        "description": "Decrement the contents of register pair HL by 1."
+    },
+    {
+        "mnemonic": "DEC SP",
+        "opCode": "3B",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "2",
+        "description": "Decrement the contents of register pair SP by 1."
+    },
+    {
+        "mnemonic": "RLCA",
+        "opCode": "07",
+        "flags": { "CY": "A7", "H": "0", "N": "0", "Z": "0" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Rotate the contents of register A to the left. That is, the contents of bit 0 are copied to bit 1, and the previous contents of bit 1 (before the copy operation) are copied to bit 2. The same operation is repeated in sequence for the rest of the register. The contents of bit 7 are placed in both the CY flag and bit 0 of register A."
+    },
+    {
+        "mnemonic": "RLA",
+        "opCode": "17",
+        "flags": { "CY": "A7", "H": "0", "N": "0", "Z": "0" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Rotate the contents of register A to the left, through the carry (CY) flag. That is, the contents of bit 0 are copied to bit 1, and the previous contents of bit 1 (before the copy operation) are copied to bit 2. The same operation is repeated in sequence for the rest of the register. The previous contents of the carry flag are copied to bit 0."
+    },
+    {
+        "mnemonic": "RRCA",
+        "opCode": "0F",
+        "flags": { "CY": "A0", "H": "0", "N": "0", "Z": "0" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Rotate the contents of register A to the right. That is, the contents of bit 7 are copied to bit 6, and the previous contents of bit 6 (before the copy) are copied to bit 5. The same operation is repeated in sequence for the rest of the register. The contents of bit 0 are placed in both the CY flag and bit 7 of register A."
+    },
+    {
+        "mnemonic": "RRA",
+        "opCode": "1F",
+        "flags": { "CY": "A0", "H": "0", "N": "0", "Z": "0" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Rotate the contents of register A to the right, through the carry (CY) flag. That is, the contents of bit 7 are copied to bit 6, and the previous contents of bit 6 (before the copy) are copied to bit 5. The same operation is repeated in sequence for the rest of the register. The previous contents of the carry flag are copied to bit 7."
+    },
+    {
+        "mnemonic": "RLC A",
+        "opCode": "CB07",
+        "flags": { "CY": "A7", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Rotate the contents of register A to the left. That is, the contents of bit 0 are copied to bit 1, and the previous contents of bit 1 (before the copy operation) are copied to bit 2. The same operation is repeated in sequence for the rest of the register. The contents of bit 7 are placed in both the CY flag and bit 0 of register A."
+    },
+    {
+        "mnemonic": "RLC B",
+        "opCode": "CB00",
+        "flags": { "CY": "B7", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Rotate the contents of register B to the left. That is, the contents of bit 0 are copied to bit 1, and the previous contents of bit 1 (before the copy operation) are copied to bit 2. The same operation is repeated in sequence for the rest of the register. The contents of bit 7 are placed in both the CY flag and bit 0 of register B."
+    },
+    {
+        "mnemonic": "RLC C",
+        "opCode": "CB01",
+        "flags": { "CY": "C7", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Rotate the contents of register C to the left. That is, the contents of bit 0 are copied to bit 1, and the previous contents of bit 1 (before the copy operation) are copied to bit 2. The same operation is repeated in sequence for the rest of the register. The contents of bit 7 are placed in both the CY flag and bit 0 of register C."
+    },
+    {
+        "mnemonic": "RLC D",
+        "opCode": "CB02",
+        "flags": { "CY": "D7", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Rotate the contents of register D to the left. That is, the contents of bit 0 are copied to bit 1, and the previous contents of bit 1 (before the copy operation) are copied to bit 2. The same operation is repeated in sequence for the rest of the register. The contents of bit 7 are placed in both the CY flag and bit 0 of register D."
+    },
+    {
+        "mnemonic": "RLC E",
+        "opCode": "CB03",
+        "flags": { "CY": "E7", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Rotate the contents of register E to the left. That is, the contents of bit 0 are copied to bit 1, and the previous contents of bit 1 (before the copy operation) are copied to bit 2. The same operation is repeated in sequence for the rest of the register. The contents of bit 7 are placed in both the CY flag and bit 0 of register E."
+    },
+    {
+        "mnemonic": "RLC H",
+        "opCode": "CB04",
+        "flags": { "CY": "H7", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Rotate the contents of register H to the left. That is, the contents of bit 0 are copied to bit 1, and the previous contents of bit 1 (before the copy operation) are copied to bit 2. The same operation is repeated in sequence for the rest of the register. The contents of bit 7 are placed in both the CY flag and bit 0 of register H."
+    },
+    {
+        "mnemonic": "RLC L",
+        "opCode": "CB05",
+        "flags": { "CY": "L7", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Rotate the contents of register L to the left. That is, the contents of bit 0 are copied to bit 1, and the previous contents of bit 1 (before the copy operation) are copied to bit 2. The same operation is repeated in sequence for the rest of the register. The contents of bit 7 are placed in both the CY flag and bit 0 of register L."
+    },
+    {
+        "mnemonic": "RLC (HL)",
+        "opCode": "CB06",
+        "flags": { "CY": "(HL)7", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "4",
+        "description": "Rotate the contents of memory specified by register pair HL to the left. That is, the contents of bit 0 are copied to bit 1, and the previous contents of bit 1 (before the copy operation) are copied to bit 2. The same operation is repeated in sequence for the rest of the memory location. The contents of bit 7 are placed in both the CY flag and bit 0 of (HL)."
+    },
+    {
+        "mnemonic": "RL A",
+        "opCode": "CB17",
+        "flags": { "CY": "A7", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Rotate the contents of register A to the left. That is, the contents of bit 0 are copied to bit 1, and the previous contents of bit 1 (before the copy operation) are copied to bit 2. The same operation is repeated in sequence for the rest of the register. The previous contents of the carry (CY) flag are copied to bit 0 of register A."
+    },
+    {
+        "mnemonic": "RL B",
+        "opCode": "CB10",
+        "flags": { "CY": "B7", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Rotate the contents of register B to the left. That is, the contents of bit 0 are copied to bit 1, and the previous contents of bit 1 (before the copy operation) are copied to bit 2. The same operation is repeated in sequence for the rest of the register. The previous contents of the carry (CY) flag are copied to bit 0 of register B."
+    },
+    {
+        "mnemonic": "RL C",
+        "opCode": "CB11",
+        "flags": { "CY": "C7", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Rotate the contents of register C to the left. That is, the contents of bit 0 are copied to bit 1, and the previous contents of bit 1 (before the copy operation) are copied to bit 2. The same operation is repeated in sequence for the rest of the register. The previous contents of the carry (CY) flag are copied to bit 0 of register C."
+    },
+    {
+        "mnemonic": "RL D",
+        "opCode": "CB12",
+        "flags": { "CY": "D7", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Rotate the contents of register D to the left. That is, the contents of bit 0 are copied to bit 1, and the previous contents of bit 1 (before the copy operation) are copied to bit 2. The same operation is repeated in sequence for the rest of the register. The previous contents of the carry (CY) flag are copied to bit 0 of register D."
+    },
+    {
+        "mnemonic": "RL E",
+        "opCode": "CB13",
+        "flags": { "CY": "E7", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Rotate the contents of register E to the left. That is, the contents of bit 0 are copied to bit 1, and the previous contents of bit 1 (before the copy operation) are copied to bit 2. The same operation is repeated in sequence for the rest of the register. The previous contents of the carry (CY) flag are copied to bit 0 of register E."
+    },
+    {
+        "mnemonic": "RL H",
+        "opCode": "CB14",
+        "flags": { "CY": "H7", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Rotate the contents of register H to the left. That is, the contents of bit 0 are copied to bit 1, and the previous contents of bit 1 (before the copy operation) are copied to bit 2. The same operation is repeated in sequence for the rest of the register. The previous contents of the carry (CY) flag are copied to bit 0 of register H."
+    },
+    {
+        "mnemonic": "RL L",
+        "opCode": "CB15",
+        "flags": { "CY": "L7", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Rotate the contents of register L to the left. That is, the contents of bit 0 are copied to bit 1, and the previous contents of bit 1 (before the copy operation) are copied to bit 2. The same operation is repeated in sequence for the rest of the register. The previous contents of the carry (CY) flag are copied to bit 0 of register L."
+    },
+    {
+        "mnemonic": "RL (HL)",
+        "opCode": "CB16",
+        "flags": { "CY": "(HL)7", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "4",
+        "description": "Rotate the contents of memory specified by register pair HL to the left, through the carry flag. That is, the contents of bit 0 are copied to bit 1, and the previous contents of bit 1 (before the copy operation) are copied to bit 2. The same operation is repeated in sequence for the rest of the memory location. The previous contents of the CY flag are copied into bit 0 of (HL)."
+    },
+    {
+        "mnemonic": "RRC A",
+        "opCode": "CB0F",
+        "flags": { "CY": "A0", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Rotate the contents of register A to the right. That is, the contents of bit 7 are copied to bit 6, and the previous contents of bit 6 (before the copy operation) are copied to bit 5. The same operation is repeated in sequence for the rest of the register. The contents of bit 0 are placed in both the CY flag and bit 7 of register A."
+    },
+    {
+        "mnemonic": "RRC B",
+        "opCode": "CB08",
+        "flags": { "CY": "B0", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Rotate the contents of register B to the right. That is, the contents of bit 7 are copied to bit 6, and the previous contents of bit 6 (before the copy operation) are copied to bit 5. The same operation is repeated in sequence for the rest of the register. The contents of bit 0 are placed in both the CY flag and bit 7 of register B."
+    },
+    {
+        "mnemonic": "RRC C",
+        "opCode": "CB09",
+        "flags": { "CY": "C0", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Rotate the contents of register C to the right. That is, the contents of bit 7 are copied to bit 6, and the previous contents of bit 6 (before the copy operation) are copied to bit 5. The same operation is repeated in sequence for the rest of the register. The contents of bit 0 are placed in both the CY flag and bit 7 of register C."
+    },
+    {
+        "mnemonic": "RRC D",
+        "opCode": "CB0A",
+        "flags": { "CY": "D0", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Rotate the contents of register D to the right. That is, the contents of bit 7 are copied to bit 6, and the previous contents of bit 6 (before the copy operation) are copied to bit 5. The same operation is repeated in sequence for the rest of the register. The contents of bit 0 are placed in both the CY flag and bit 7 of register D."
+    },
+    {
+        "mnemonic": "RRC E",
+        "opCode": "CB0B",
+        "flags": { "CY": "E0", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Rotate the contents of register E to the right. That is, the contents of bit 7 are copied to bit 6, and the previous contents of bit 6 (before the copy operation) are copied to bit 5. The same operation is repeated in sequence for the rest of the register. The contents of bit 0 are placed in both the CY flag and bit 7 of register E."
+    },
+    {
+        "mnemonic": "RRC H",
+        "opCode": "CB0C",
+        "flags": { "CY": "H0", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Rotate the contents of register H to the right. That is, the contents of bit 7 are copied to bit 6, and the previous contents of bit 6 (before the copy operation) are copied to bit 5. The same operation is repeated in sequence for the rest of the register. The contents of bit 0 are placed in both the CY flag and bit 7 of register H."
+    },
+    {
+        "mnemonic": "RRC L",
+        "opCode": "CB0D",
+        "flags": { "CY": "L0", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Rotate the contents of register L to the right. That is, the contents of bit 7 are copied to bit 6, and the previous contents of bit 6 (before the copy operation) are copied to bit 5. The same operation is repeated in sequence for the rest of the register. The contents of bit 0 are placed in both the CY flag and bit 7 of register L."
+    },
+    {
+        "mnemonic": "RRC (HL)",
+        "opCode": "CB0E",
+        "flags": { "CY": "(HL)0", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "4",
+        "description": "Rotate the contents of memory specified by register pair HL to the right. That is, the contents of bit 7 are copied to bit 6, and the previous contents of bit 6 (before the copy operation) are copied to bit 5. The same operation is repeated in sequence for the rest of the memory location. The contents of bit 0 are placed in both the CY flag and bit 7 of (HL)."
+    },
+    {
+        "mnemonic": "RR A",
+        "opCode": "CB1F",
+        "flags": { "CY": "A0", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Rotate the contents of register A to the right. That is, the contents of bit 7 are copied to bit 6, and the previous contents of bit 6 (before the copy operation) are copied to bit 5. The same operation is repeated in sequence for the rest of the register. The previous contents of the carry (CY) flag are copied to bit 7 of register A."
+    },
+    {
+        "mnemonic": "RR B",
+        "opCode": "CB18",
+        "flags": { "CY": "B0", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Rotate the contents of register B to the right. That is, the contents of bit 7 are copied to bit 6, and the previous contents of bit 6 (before the copy operation) are copied to bit 5. The same operation is repeated in sequence for the rest of the register. The previous contents of the carry (CY) flag are copied to bit 7 of register B."
+    },
+    {
+        "mnemonic": "RR C",
+        "opCode": "CB19",
+        "flags": { "CY": "C0", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Rotate the contents of register C to the right. That is, the contents of bit 7 are copied to bit 6, and the previous contents of bit 6 (before the copy operation) are copied to bit 5. The same operation is repeated in sequence for the rest of the register. The previous contents of the carry (CY) flag are copied to bit 7 of register C."
+    },
+    {
+        "mnemonic": "RR D",
+        "opCode": "CB1A",
+        "flags": { "CY": "D0", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Rotate the contents of register D to the right. That is, the contents of bit 7 are copied to bit 6, and the previous contents of bit 6 (before the copy operation) are copied to bit 5. The same operation is repeated in sequence for the rest of the register. The previous contents of the carry (CY) flag are copied to bit 7 of register D."
+    },
+    {
+        "mnemonic": "RR E",
+        "opCode": "CB1B",
+        "flags": { "CY": "E0", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Rotate the contents of register E to the right. That is, the contents of bit 7 are copied to bit 6, and the previous contents of bit 6 (before the copy operation) are copied to bit 5. The same operation is repeated in sequence for the rest of the register. The previous contents of the carry (CY) flag are copied to bit 7 of register E."
+    },
+    {
+        "mnemonic": "RR H",
+        "opCode": "CB1C",
+        "flags": { "CY": "H0", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Rotate the contents of register H to the right. That is, the contents of bit 7 are copied to bit 6, and the previous contents of bit 6 (before the copy operation) are copied to bit 5. The same operation is repeated in sequence for the rest of the register. The previous contents of the carry (CY) flag are copied to bit 7 of register H."
+    },
+    {
+        "mnemonic": "RR L",
+        "opCode": "CB1D",
+        "flags": { "CY": "L0", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Rotate the contents of register L to the right. That is, the contents of bit 7 are copied to bit 6, and the previous contents of bit 6 (before the copy operation) are copied to bit 5. The same operation is repeated in sequence for the rest of the register. The previous contents of the carry (CY) flag are copied to bit 7 of register L."
+    },
+    {
+        "mnemonic": "RR (HL)",
+        "opCode": "CB1E",
+        "flags": { "CY": "(HL)0", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "4",
+        "description": "Rotate the contents of memory specified by register pair HL to the right, through the carry flag. That is, the contents of bit 7 are copied to bit 6, and the previous contents of bit 6 (before the copy operation) are copied to bit 5. The same operation is repeated in sequence for the rest of the memory location. The previous contents of the CY flag are copied into bit 7 of (HL)."
+    },
+    {
+        "mnemonic": "SLA A",
+        "opCode": "CB27",
+        "flags": { "CY": "A7", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Shift the contents of register A to the left. That is, the contents of bit 0 are copied to bit 1, and the previous contents of bit 1 (before the copy operation) are copied to bit 2. The same operation is repeated in sequence for the rest of the register. The contents of bit 7 are copied to the CY flag, and bit 0 of register A is reset to 0."
+    },
+    {
+        "mnemonic": "SLA B",
+        "opCode": "CB20",
+        "flags": { "CY": "B7", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Shift the contents of register B to the left. That is, the contents of bit 0 are copied to bit 1, and the previous contents of bit 1 (before the copy operation) are copied to bit 2. The same operation is repeated in sequence for the rest of the register. The contents of bit 7 are copied to the CY flag, and bit 0 of register B is reset to 0."
+    },
+    {
+        "mnemonic": "SLA C",
+        "opCode": "CB21",
+        "flags": { "CY": "C7", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Shift the contents of register C to the left. That is, the contents of bit 0 are copied to bit 1, and the previous contents of bit 1 (before the copy operation) are copied to bit 2. The same operation is repeated in sequence for the rest of the register. The contents of bit 7 are copied to the CY flag, and bit 0 of register C is reset to 0."
+    },
+    {
+        "mnemonic": "SLA D",
+        "opCode": "CB22",
+        "flags": { "CY": "D7", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Shift the contents of register D to the left. That is, the contents of bit 0 are copied to bit 1, and the previous contents of bit 1 (before the copy operation) are copied to bit 2. The same operation is repeated in sequence for the rest of the register. The contents of bit 7 are copied to the CY flag, and bit 0 of register D is reset to 0."
+    },
+    {
+        "mnemonic": "SLA E",
+        "opCode": "CB23",
+        "flags": { "CY": "E7", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Shift the contents of register E to the left. That is, the contents of bit 0 are copied to bit 1, and the previous contents of bit 1 (before the copy operation) are copied to bit 2. The same operation is repeated in sequence for the rest of the register. The contents of bit 7 are copied to the CY flag, and bit 0 of register E is reset to 0."
+    },
+    {
+        "mnemonic": "SLA H",
+        "opCode": "CB24",
+        "flags": { "CY": "H7", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Shift the contents of register H to the left. That is, the contents of bit 0 are copied to bit 1, and the previous contents of bit 1 (before the copy operation) are copied to bit 2. The same operation is repeated in sequence for the rest of the register. The contents of bit 7 are copied to the CY flag, and bit 0 of register H is reset to 0."
+    },
+    {
+        "mnemonic": "SLA L",
+        "opCode": "CB25",
+        "flags": { "CY": "L7", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Shift the contents of register L to the left. That is, the contents of bit 0 are copied to bit 1, and the previous contents of bit 1 (before the copy operation) are copied to bit 2. The same operation is repeated in sequence for the rest of the register. The contents of bit 7 are copied to the CY flag, and bit 0 of register L is reset to 0."
+    },
+    {
+        "mnemonic": "SLA (HL)",
+        "opCode": "CB26",
+        "flags": { "CY": "(HL)7", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "4",
+        "description": "Shift the contents of memory specified by register pair HL to the left. That is, the contents of bit 0 are copied to bit 1, and the previous contents of bit 1 (before the copy operation) are copied to bit 2. The same operation is repeated in sequence for the rest of the memory location. The contents of bit 7 are copied to the CY flag, and bit 0 of (HL) is reset to 0."
+    },
+    {
+        "mnemonic": "SRA A",
+        "opCode": "CB2F",
+        "flags": { "CY": "A0", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Shift the contents of register A to the right. That is, the contents of bit 7 are copied to bit 6, and the previous contents of bit 6 (before the copy operation) are copied to bit 5. The same operation is repeated in sequence for the rest of the register. The contents of bit 0 are copied to the CY flag, and bit 7 of register A is unchanged."
+    },
+    {
+        "mnemonic": "SRA B",
+        "opCode": "CB28",
+        "flags": { "CY": "B0", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Shift the contents of register B to the right. That is, the contents of bit 7 are copied to bit 6, and the previous contents of bit 6 (before the copy operation) are copied to bit 5. The same operation is repeated in sequence for the rest of the register. The contents of bit 0 are copied to the CY flag, and bit 7 of register B is unchanged."
+    },
+    {
+        "mnemonic": "SRA C",
+        "opCode": "CB29",
+        "flags": { "CY": "C0", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Shift the contents of register C to the right. That is, the contents of bit 7 are copied to bit 6, and the previous contents of bit 6 (before the copy operation) are copied to bit 5. The same operation is repeated in sequence for the rest of the register. The contents of bit 0 are copied to the CY flag, and bit 7 of register C is unchanged."
+    },
+    {
+        "mnemonic": "SRA D",
+        "opCode": "CB2A",
+        "flags": { "CY": "D0", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Shift the contents of register D to the right. That is, the contents of bit 7 are copied to bit 6, and the previous contents of bit 6 (before the copy operation) are copied to bit 5. The same operation is repeated in sequence for the rest of the register. The contents of bit 0 are copied to the CY flag, and bit 7 of register D is unchanged."
+    },
+    {
+        "mnemonic": "SRA E",
+        "opCode": "CB2B",
+        "flags": { "CY": "E0", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Shift the contents of register E to the right. That is, the contents of bit 7 are copied to bit 6, and the previous contents of bit 6 (before the copy operation) are copied to bit 5. The same operation is repeated in sequence for the rest of the register. The contents of bit 0 are copied to the CY flag, and bit 7 of register E is unchanged."
+    },
+    {
+        "mnemonic": "SRA H",
+        "opCode": "CB2C",
+        "flags": { "CY": "H0", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Shift the contents of register H to the right. That is, the contents of bit 7 are copied to bit 6, and the previous contents of bit 6 (before the copy operation) are copied to bit 5. The same operation is repeated in sequence for the rest of the register. The contents of bit 0 are copied to the CY flag, and bit 7 of register H is unchanged."
+    },
+    {
+        "mnemonic": "SRA L",
+        "opCode": "CB2D",
+        "flags": { "CY": "L0", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Shift the contents of register L to the right. That is, the contents of bit 7 are copied to bit 6, and the previous contents of bit 6 (before the copy operation) are copied to bit 5. The same operation is repeated in sequence for the rest of the register. The contents of bit 0 are copied to the CY flag, and bit 7 of register L is unchanged."
+    },
+    {
+        "mnemonic": "SRA (HL)",
+        "opCode": "CB2E",
+        "flags": { "CY": "(HL)0", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "4",
+        "description": "Shift the contents of memory specified by register pair HL to the right. That is, the contents of bit 7 are copied to bit 6, and the previous contents of bit 6 (before the copy operation) are copied to bit 5. The same operation is repeated in sequence for the rest of the memory location. The contents of bit 0 are copied to the CY flag, and bit 7 of (HL) is unchanged."
+    },
+    {
+        "mnemonic": "SRL A",
+        "opCode": "CB3F",
+        "flags": { "CY": "A0", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Shift the contents of register A to the right. That is, the contents of bit 7 are copied to bit 6, and the previous contents of bit 6 (before the copy operation) are copied to bit 5. The same operation is repeated in sequence for the rest of the register. The contents of bit 0 are copied to the CY flag, and bit 7 of register A is reset to 0."
+    },
+    {
+        "mnemonic": "SRL B",
+        "opCode": "CB38",
+        "flags": { "CY": "B0", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Shift the contents of register B to the right. That is, the contents of bit 7 are copied to bit 6, and the previous contents of bit 6 (before the copy operation) are copied to bit 5. The same operation is repeated in sequence for the rest of the register. The contents of bit 0 are copied to the CY flag, and bit 7 of register B is reset to 0."
+    },
+    {
+        "mnemonic": "SRL C",
+        "opCode": "CB39",
+        "flags": { "CY": "C0", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Shift the contents of register C to the right. That is, the contents of bit 7 are copied to bit 6, and the previous contents of bit 6 (before the copy operation) are copied to bit 5. The same operation is repeated in sequence for the rest of the register. The contents of bit 0 are copied to the CY flag, and bit 7 of register C is reset to 0."
+    },
+    {
+        "mnemonic": "SRL D",
+        "opCode": "CB3A",
+        "flags": { "CY": "D0", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Shift the contents of register D to the right. That is, the contents of bit 7 are copied to bit 6, and the previous contents of bit 6 (before the copy operation) are copied to bit 5. The same operation is repeated in sequence for the rest of the register. The contents of bit 0 are copied to the CY flag, and bit 7 of register D is reset to 0."
+    },
+    {
+        "mnemonic": "SRL E",
+        "opCode": "CB3B",
+        "flags": { "CY": "E0", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Shift the contents of register E to the right. That is, the contents of bit 7 are copied to bit 6, and the previous contents of bit 6 (before the copy operation) are copied to bit 5. The same operation is repeated in sequence for the rest of the register. The contents of bit 0 are copied to the CY flag, and bit 7 of register E is reset to 0."
+    },
+    {
+        "mnemonic": "SRL H",
+        "opCode": "CB3C",
+        "flags": { "CY": "H0", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Shift the contents of register H to the right. That is, the contents of bit 7 are copied to bit 6, and the previous contents of bit 6 (before the copy operation) are copied to bit 5. The same operation is repeated in sequence for the rest of the register. The contents of bit 0 are copied to the CY flag, and bit 7 of register H is reset to 0."
+    },
+    {
+        "mnemonic": "SRL L",
+        "opCode": "CB3D",
+        "flags": { "CY": "L0", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Shift the contents of register L to the right. That is, the contents of bit 7 are copied to bit 6, and the previous contents of bit 6 (before the copy operation) are copied to bit 5. The same operation is repeated in sequence for the rest of the register. The contents of bit 0 are copied to the CY flag, and bit 7 of register L is reset to 0."
+    },
+    {
+        "mnemonic": "SRL (HL)",
+        "opCode": "CB3E",
+        "flags": { "CY": "(HL)0", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "4",
+        "description": "Shift the contents of memory specified by register pair HL to the right. That is, the contents of bit 7 are copied to bit 6, and the previous contents of bit 6 (before the copy operation) are copied to bit 5. The same operation is repeated in sequence for the rest of the memory location. The contents of bit 0 are copied to the CY flag, and bit 7 of (HL) is reset to 0."
+    },
+    {
+        "mnemonic": "SWAP A",
+        "opCode": "CB37",
+        "flags": { "CY": "0", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Shift the contents of the lower-order four bits (0-3) of register A to the higher-order four bits (4-7) of the register, and shift the higher-order four bits to the lower-order four bits."
+    },
+    {
+        "mnemonic": "SWAP B",
+        "opCode": "CB30",
+        "flags": { "CY": "0", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Shift the contents of the lower-order four bits (0-3) of register B to the higher-order four bits (4-7) of the register, and shift the higher-order four bits to the lower-order four bits."
+    },
+    {
+        "mnemonic": "SWAP C",
+        "opCode": "CB31",
+        "flags": { "CY": "0", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Shift the contents of the lower-order four bits (0-3) of register C to the higher-order four bits (4-7) of the register, and shift the higher-order four bits to the lower-order four bits."
+    },
+    {
+        "mnemonic": "SWAP D",
+        "opCode": "CB32",
+        "flags": { "CY": "0", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Shift the contents of the lower-order four bits (0-3) of register D to the higher-order four bits (4-7) of the register, and shift the higher-order four bits to the lower-order four bits."
+    },
+    {
+        "mnemonic": "SWAP E",
+        "opCode": "CB33",
+        "flags": { "CY": "0", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Shift the contents of the lower-order four bits (0-3) of register E to the higher-order four bits (4-7) of the register, and shift the higher-order four bits to the lower-order four bits."
+    },
+    {
+        "mnemonic": "SWAP H",
+        "opCode": "CB34",
+        "flags": { "CY": "0", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Shift the contents of the lower-order four bits (0-3) of register H to the higher-order four bits (4-7) of the register, and shift the higher-order four bits to the lower-order four bits."
+    },
+    {
+        "mnemonic": "SWAP L",
+        "opCode": "CB35",
+        "flags": { "CY": "0", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Shift the contents of the lower-order four bits (0-3) of register L to the higher-order four bits (4-7) of the register, and shift the higher-order four bits to the lower-order four bits."
+    },
+    {
+        "mnemonic": "SWAP (HL)",
+        "opCode": "CB36",
+        "flags": { "CY": "0", "H": "0", "N": "0", "Z": "Z" },
+        "bytes": 2,
+        "cycles": "4",
+        "description": "Shift the contents of the lower-order four bits (0-3) of the contents of memory specified by register pair HL to the higher-order four bits (4-7) of that memory location, and shift the contents of the higher-order four bits to the lower-order four bits."
+    },
+    {
+        "mnemonic": "BIT 0, A",
+        "opCode": "CB47",
+        "flags": { "H": "1", "N": "0", "Z": "!r0" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Copy the complement of the contents of bit 0 in register A to the Z flag of the program status word (PSW)."
+    },
+    {
+        "mnemonic": "BIT 0, B",
+        "opCode": "CB40",
+        "flags": { "H": "1", "N": "0", "Z": "!r0" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Copy the complement of the contents of bit 0 in register B to the Z flag of the program status word (PSW)."
+    },
+    {
+        "mnemonic": "BIT 0, C",
+        "opCode": "CB41",
+        "flags": { "H": "1", "N": "0", "Z": "!r0" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Copy the complement of the contents of bit 0 in register C to the Z flag of the program status word (PSW)."
+    },
+    {
+        "mnemonic": "BIT 0, D",
+        "opCode": "CB42",
+        "flags": { "H": "1", "N": "0", "Z": "!r0" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Copy the complement of the contents of bit 0 in register D to the Z flag of the program status word (PSW)."
+    },
+    {
+        "mnemonic": "BIT 0, E",
+        "opCode": "CB43",
+        "flags": { "H": "1", "N": "0", "Z": "!r0" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Copy the complement of the contents of bit 0 in register E to the Z flag of the program status word (PSW)."
+    },
+    {
+        "mnemonic": "BIT 0, H",
+        "opCode": "CB44",
+        "flags": { "H": "1", "N": "0", "Z": "!r0" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Copy the complement of the contents of bit 0 in register H to the Z flag of the program status word (PSW)."
+    },
+    {
+        "mnemonic": "BIT 0, L",
+        "opCode": "CB45",
+        "flags": { "H": "1", "N": "0", "Z": "!r0" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Copy the complement of the contents of bit 0 in register L to the Z flag of the program status word (PSW)."
+    },
+    {
+        "mnemonic": "BIT 1, A",
+        "opCode": "CB4F",
+        "flags": { "H": "1", "N": "0", "Z": "!r1" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Copy the complement of the contents of bit 1 in register A to the Z flag of the program status word (PSW)."
+    },
+    {
+        "mnemonic": "BIT 1, B",
+        "opCode": "CB48",
+        "flags": { "H": "1", "N": "0", "Z": "!r1" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Copy the complement of the contents of bit 1 in register B to the Z flag of the program status word (PSW)."
+    },
+    {
+        "mnemonic": "BIT 1, C",
+        "opCode": "CB49",
+        "flags": { "H": "1", "N": "0", "Z": "!r1" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Copy the complement of the contents of bit 1 in register C to the Z flag of the program status word (PSW)."
+    },
+    {
+        "mnemonic": "BIT 1, D",
+        "opCode": "CB4A",
+        "flags": { "H": "1", "N": "0", "Z": "!r1" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Copy the complement of the contents of bit 1 in register D to the Z flag of the program status word (PSW)."
+    },
+    {
+        "mnemonic": "BIT 1, E",
+        "opCode": "CB4B",
+        "flags": { "H": "1", "N": "0", "Z": "!r1" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Copy the complement of the contents of bit 1 in register E to the Z flag of the program status word (PSW)."
+    },
+    {
+        "mnemonic": "BIT 1, H",
+        "opCode": "CB4C",
+        "flags": { "H": "1", "N": "0", "Z": "!r1" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Copy the complement of the contents of bit 1 in register H to the Z flag of the program status word (PSW)."
+    },
+    {
+        "mnemonic": "BIT 1, L",
+        "opCode": "CB4D",
+        "flags": { "H": "1", "N": "0", "Z": "!r1" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Copy the complement of the contents of bit 1 in register L to the Z flag of the program status word (PSW)."
+    },
+    {
+        "mnemonic": "BIT 2, A",
+        "opCode": "CB57",
+        "flags": { "H": "1", "N": "0", "Z": "!r2" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Copy the complement of the contents of bit 2 in register A to the Z flag of the program status word (PSW)."
+    },
+    {
+        "mnemonic": "BIT 2, B",
+        "opCode": "CB50",
+        "flags": { "H": "1", "N": "0", "Z": "!r2" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Copy the complement of the contents of bit 2 in register B to the Z flag of the program status word (PSW)."
+    },
+    {
+        "mnemonic": "BIT 2, C",
+        "opCode": "CB51",
+        "flags": { "H": "1", "N": "0", "Z": "!r2" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Copy the complement of the contents of bit 2 in register C to the Z flag of the program status word (PSW)."
+    },
+    {
+        "mnemonic": "BIT 2, D",
+        "opCode": "CB52",
+        "flags": { "H": "1", "N": "0", "Z": "!r2" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Copy the complement of the contents of bit 2 in register D to the Z flag of the program status word (PSW)."
+    },
+    {
+        "mnemonic": "BIT 2, E",
+        "opCode": "CB53",
+        "flags": { "H": "1", "N": "0", "Z": "!r2" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Copy the complement of the contents of bit 2 in register E to the Z flag of the program status word (PSW)."
+    },
+    {
+        "mnemonic": "BIT 2, H",
+        "opCode": "CB54",
+        "flags": { "H": "1", "N": "0", "Z": "!r2" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Copy the complement of the contents of bit 2 in register H to the Z flag of the program status word (PSW)."
+    },
+    {
+        "mnemonic": "BIT 2, L",
+        "opCode": "CB55",
+        "flags": { "H": "1", "N": "0", "Z": "!r2" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Copy the complement of the contents of bit 2 in register L to the Z flag of the program status word (PSW)."
+    },
+    {
+        "mnemonic": "BIT 3, A",
+        "opCode": "CB5F",
+        "flags": { "H": "1", "N": "0", "Z": "!r3" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Copy the complement of the contents of bit 3 in register A to the Z flag of the program status word (PSW)."
+    },
+    {
+        "mnemonic": "BIT 3, B",
+        "opCode": "CB58",
+        "flags": { "H": "1", "N": "0", "Z": "!r3" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Copy the complement of the contents of bit 3 in register B to the Z flag of the program status word (PSW)."
+    },
+    {
+        "mnemonic": "BIT 3, C",
+        "opCode": "CB59",
+        "flags": { "H": "1", "N": "0", "Z": "!r3" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Copy the complement of the contents of bit 3 in register C to the Z flag of the program status word (PSW)."
+    },
+    {
+        "mnemonic": "BIT 3, D",
+        "opCode": "CB5A",
+        "flags": { "H": "1", "N": "0", "Z": "!r3" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Copy the complement of the contents of bit 3 in register D to the Z flag of the program status word (PSW)."
+    },
+    {
+        "mnemonic": "BIT 3, E",
+        "opCode": "CB5B",
+        "flags": { "H": "1", "N": "0", "Z": "!r3" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Copy the complement of the contents of bit 3 in register E to the Z flag of the program status word (PSW)."
+    },
+    {
+        "mnemonic": "BIT 3, H",
+        "opCode": "CB5C",
+        "flags": { "H": "1", "N": "0", "Z": "!r3" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Copy the complement of the contents of bit 3 in register H to the Z flag of the program status word (PSW)."
+    },
+    {
+        "mnemonic": "BIT 3, L",
+        "opCode": "CB5D",
+        "flags": { "H": "1", "N": "0", "Z": "!r3" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Copy the complement of the contents of bit 3 in register L to the Z flag of the program status word (PSW)."
+    },
+    {
+        "mnemonic": "BIT 4, A",
+        "opCode": "CB67",
+        "flags": { "H": "1", "N": "0", "Z": "!r4" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Copy the complement of the contents of bit 4 in register A to the Z flag of the program status word (PSW)."
+    },
+    {
+        "mnemonic": "BIT 4, B",
+        "opCode": "CB60",
+        "flags": { "H": "1", "N": "0", "Z": "!r4" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Copy the complement of the contents of bit 4 in register B to the Z flag of the program status word (PSW)."
+    },
+    {
+        "mnemonic": "BIT 4, C",
+        "opCode": "CB61",
+        "flags": { "H": "1", "N": "0", "Z": "!r4" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Copy the complement of the contents of bit 4 in register C to the Z flag of the program status word (PSW)."
+    },
+    {
+        "mnemonic": "BIT 4, D",
+        "opCode": "CB62",
+        "flags": { "H": "1", "N": "0", "Z": "!r4" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Copy the complement of the contents of bit 4 in register D to the Z flag of the program status word (PSW)."
+    },
+    {
+        "mnemonic": "BIT 4, E",
+        "opCode": "CB63",
+        "flags": { "H": "1", "N": "0", "Z": "!r4" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Copy the complement of the contents of bit 4 in register E to the Z flag of the program status word (PSW)."
+    },
+    {
+        "mnemonic": "BIT 4, H",
+        "opCode": "CB64",
+        "flags": { "H": "1", "N": "0", "Z": "!r4" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Copy the complement of the contents of bit 4 in register H to the Z flag of the program status word (PSW)."
+    },
+    {
+        "mnemonic": "BIT 4, L",
+        "opCode": "CB65",
+        "flags": { "H": "1", "N": "0", "Z": "!r4" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Copy the complement of the contents of bit 4 in register L to the Z flag of the program status word (PSW)."
+    },
+    {
+        "mnemonic": "BIT 5, A",
+        "opCode": "CB6F",
+        "flags": { "H": "1", "N": "0", "Z": "!r5" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Copy the complement of the contents of bit 5 in register A to the Z flag of the program status word (PSW)."
+    },
+    {
+        "mnemonic": "BIT 5, B",
+        "opCode": "CB68",
+        "flags": { "H": "1", "N": "0", "Z": "!r5" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Copy the complement of the contents of bit 5 in register B to the Z flag of the program status word (PSW)."
+    },
+    {
+        "mnemonic": "BIT 5, C",
+        "opCode": "CB69",
+        "flags": { "H": "1", "N": "0", "Z": "!r5" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Copy the complement of the contents of bit 5 in register C to the Z flag of the program status word (PSW)."
+    },
+    {
+        "mnemonic": "BIT 5, D",
+        "opCode": "CB6A",
+        "flags": { "H": "1", "N": "0", "Z": "!r5" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Copy the complement of the contents of bit 5 in register D to the Z flag of the program status word (PSW)."
+    },
+    {
+        "mnemonic": "BIT 5, E",
+        "opCode": "CB6B",
+        "flags": { "H": "1", "N": "0", "Z": "!r5" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Copy the complement of the contents of bit 5 in register E to the Z flag of the program status word (PSW)."
+    },
+    {
+        "mnemonic": "BIT 5, H",
+        "opCode": "CB6C",
+        "flags": { "H": "1", "N": "0", "Z": "!r5" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Copy the complement of the contents of bit 5 in register H to the Z flag of the program status word (PSW)."
+    },
+    {
+        "mnemonic": "BIT 5, L",
+        "opCode": "CB6D",
+        "flags": { "H": "1", "N": "0", "Z": "!r5" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Copy the complement of the contents of bit 5 in register L to the Z flag of the program status word (PSW)."
+    },
+    {
+        "mnemonic": "BIT 6, A",
+        "opCode": "CB77",
+        "flags": { "H": "1", "N": "0", "Z": "!r6" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Copy the complement of the contents of bit 6 in register A to the Z flag of the program status word (PSW)."
+    },
+    {
+        "mnemonic": "BIT 6, B",
+        "opCode": "CB70",
+        "flags": { "H": "1", "N": "0", "Z": "!r6" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Copy the complement of the contents of bit 6 in register B to the Z flag of the program status word (PSW)."
+    },
+    {
+        "mnemonic": "BIT 6, C",
+        "opCode": "CB71",
+        "flags": { "H": "1", "N": "0", "Z": "!r6" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Copy the complement of the contents of bit 6 in register C to the Z flag of the program status word (PSW)."
+    },
+    {
+        "mnemonic": "BIT 6, D",
+        "opCode": "CB72",
+        "flags": { "H": "1", "N": "0", "Z": "!r6" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Copy the complement of the contents of bit 6 in register D to the Z flag of the program status word (PSW)."
+    },
+    {
+        "mnemonic": "BIT 6, E",
+        "opCode": "CB73",
+        "flags": { "H": "1", "N": "0", "Z": "!r6" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Copy the complement of the contents of bit 6 in register E to the Z flag of the program status word (PSW)."
+    },
+    {
+        "mnemonic": "BIT 6, H",
+        "opCode": "CB74",
+        "flags": { "H": "1", "N": "0", "Z": "!r6" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Copy the complement of the contents of bit 6 in register H to the Z flag of the program status word (PSW)."
+    },
+    {
+        "mnemonic": "BIT 6, L",
+        "opCode": "CB75",
+        "flags": { "H": "1", "N": "0", "Z": "!r6" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Copy the complement of the contents of bit 6 in register L to the Z flag of the program status word (PSW)."
+    },
+    {
+        "mnemonic": "BIT 7, A",
+        "opCode": "CB7F",
+        "flags": { "H": "1", "N": "0", "Z": "!r7" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Copy the complement of the contents of bit 7 in register A to the Z flag of the program status word (PSW)."
+    },
+    {
+        "mnemonic": "BIT 7, B",
+        "opCode": "CB78",
+        "flags": { "H": "1", "N": "0", "Z": "!r7" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Copy the complement of the contents of bit 7 in register B to the Z flag of the program status word (PSW)."
+    },
+    {
+        "mnemonic": "BIT 7, C",
+        "opCode": "CB79",
+        "flags": { "H": "1", "N": "0", "Z": "!r7" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Copy the complement of the contents of bit 7 in register C to the Z flag of the program status word (PSW)."
+    },
+    {
+        "mnemonic": "BIT 7, D",
+        "opCode": "CB7A",
+        "flags": { "H": "1", "N": "0", "Z": "!r7" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Copy the complement of the contents of bit 7 in register D to the Z flag of the program status word (PSW)."
+    },
+    {
+        "mnemonic": "BIT 7, E",
+        "opCode": "CB7B",
+        "flags": { "H": "1", "N": "0", "Z": "!r7" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Copy the complement of the contents of bit 7 in register E to the Z flag of the program status word (PSW)."
+    },
+    {
+        "mnemonic": "BIT 7, H",
+        "opCode": "CB7C",
+        "flags": { "H": "1", "N": "0", "Z": "!r7" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Copy the complement of the contents of bit 7 in register H to the Z flag of the program status word (PSW)."
+    },
+    {
+        "mnemonic": "BIT 7, L",
+        "opCode": "CB7D",
+        "flags": { "H": "1", "N": "0", "Z": "!r7" },
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Copy the complement of the contents of bit 7 in register L to the Z flag of the program status word (PSW)."
+    },
+    {
+        "mnemonic": "BIT 0, (HL)",
+        "opCode": "CB46",
+        "flags": { "H": "1", "N": "0", "Z": "!(HL)0" },
+        "bytes": 2,
+        "cycles": "3",
+        "description": "Copy the complement of the contents of bit 0 in the memory location specified by register pair HL to the Z flag of the program status word (PSW)."
+    },
+    {
+        "mnemonic": "BIT 1, (HL)",
+        "opCode": "CB4E",
+        "flags": { "H": "1", "N": "0", "Z": "!(HL)1" },
+        "bytes": 2,
+        "cycles": "3",
+        "description": "Copy the complement of the contents of bit 1 in the memory location specified by register pair HL to the Z flag of the program status word (PSW)."
+    },
+    {
+        "mnemonic": "BIT 2, (HL)",
+        "opCode": "CB56",
+        "flags": { "H": "1", "N": "0", "Z": "!(HL)2" },
+        "bytes": 2,
+        "cycles": "3",
+        "description": "Copy the complement of the contents of bit 2 in the memory location specified by register pair HL to the Z flag of the program status word (PSW)."
+    },
+    {
+        "mnemonic": "BIT 3, (HL)",
+        "opCode": "CB5E",
+        "flags": { "H": "1", "N": "0", "Z": "!(HL)3" },
+        "bytes": 2,
+        "cycles": "3",
+        "description": "Copy the complement of the contents of bit 3 in the memory location specified by register pair HL to the Z flag of the program status word (PSW)."
+    },
+    {
+        "mnemonic": "BIT 4, (HL)",
+        "opCode": "CB66",
+        "flags": { "H": "1", "N": "0", "Z": "!(HL)4" },
+        "bytes": 2,
+        "cycles": "3",
+        "description": "Copy the complement of the contents of bit 4 in the memory location specified by register pair HL to the Z flag of the program status word (PSW)."
+    },
+    {
+        "mnemonic": "BIT 5, (HL)",
+        "opCode": "CB6E",
+        "flags": { "H": "1", "N": "0", "Z": "!(HL)5" },
+        "bytes": 2,
+        "cycles": "3",
+        "description": "Copy the complement of the contents of bit 5 in the memory location specified by register pair HL to the Z flag of the program status word (PSW)."
+    },
+    {
+        "mnemonic": "BIT 6, (HL)",
+        "opCode": "CB76",
+        "flags": { "H": "1", "N": "0", "Z": "!(HL)6" },
+        "bytes": 2,
+        "cycles": "3",
+        "description": "Copy the complement of the contents of bit 6 in the memory location specified by register pair HL to the Z flag of the program status word (PSW)."
+    },
+    {
+        "mnemonic": "BIT 7, (HL)",
+        "opCode": "CB7E",
+        "flags": { "H": "1", "N": "0", "Z": "!(HL)7" },
+        "bytes": 2,
+        "cycles": "3",
+        "description": "Copy the complement of the contents of bit 7 in the memory location specified by register pair HL to the Z flag of the program status word (PSW)."
+    },
+    {
+        "mnemonic": "SET 0, A",
+        "opCode": "CBC7",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Set bit 0 in register A to 1."
+    },
+    {
+        "mnemonic": "SET 0, B",
+        "opCode": "CBC0",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Set bit 0 in register B to 1."
+    },
+    {
+        "mnemonic": "SET 0, C",
+        "opCode": "CBC1",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Set bit 0 in register C to 1."
+    },
+    {
+        "mnemonic": "SET 0, D",
+        "opCode": "CBC2",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Set bit 0 in register D to 1."
+    },
+    {
+        "mnemonic": "SET 0, E",
+        "opCode": "CBC3",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Set bit 0 in register E to 1."
+    },
+    {
+        "mnemonic": "SET 0, H",
+        "opCode": "CBC4",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Set bit 0 in register H to 1."
+    },
+    {
+        "mnemonic": "SET 0, L",
+        "opCode": "CBC5",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Set bit 0 in register L to 1."
+    },
+    {
+        "mnemonic": "SET 1, A",
+        "opCode": "CBCF",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Set bit 1 in register A to 1."
+    },
+    {
+        "mnemonic": "SET 1, B",
+        "opCode": "CBC8",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Set bit 1 in register B to 1."
+    },
+    {
+        "mnemonic": "SET 1, C",
+        "opCode": "CBC9",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Set bit 1 in register C to 1."
+    },
+    {
+        "mnemonic": "SET 1, D",
+        "opCode": "CBCA",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Set bit 1 in register D to 1."
+    },
+    {
+        "mnemonic": "SET 1, E",
+        "opCode": "CBCB",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Set bit 1 in register E to 1."
+    },
+    {
+        "mnemonic": "SET 1, H",
+        "opCode": "CBCC",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Set bit 1 in register H to 1."
+    },
+    {
+        "mnemonic": "SET 1, L",
+        "opCode": "CBCD",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Set bit 1 in register L to 1."
+    },
+    {
+        "mnemonic": "SET 2, A",
+        "opCode": "CBD7",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Set bit 2 in register A to 1."
+    },
+    {
+        "mnemonic": "SET 2, B",
+        "opCode": "CBD0",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Set bit 2 in register B to 1."
+    },
+    {
+        "mnemonic": "SET 2, C",
+        "opCode": "CBD1",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Set bit 2 in register C to 1."
+    },
+    {
+        "mnemonic": "SET 2, D",
+        "opCode": "CBD2",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Set bit 2 in register D to 1."
+    },
+    {
+        "mnemonic": "SET 2, E",
+        "opCode": "CBD3",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Set bit 2 in register E to 1."
+    },
+    {
+        "mnemonic": "SET 2, H",
+        "opCode": "CBD4",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Set bit 2 in register H to 1."
+    },
+    {
+        "mnemonic": "SET 2, L",
+        "opCode": "CBD5",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Set bit 2 in register L to 1."
+    },
+    {
+        "mnemonic": "SET 3, A",
+        "opCode": "CBDF",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Set bit 3 in register A to 1."
+    },
+    {
+        "mnemonic": "SET 3, B",
+        "opCode": "CBD8",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Set bit 3 in register B to 1."
+    },
+    {
+        "mnemonic": "SET 3, C",
+        "opCode": "CBD9",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Set bit 3 in register C to 1."
+    },
+    {
+        "mnemonic": "SET 3, D",
+        "opCode": "CBDA",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Set bit 3 in register D to 1."
+    },
+    {
+        "mnemonic": "SET 3, E",
+        "opCode": "CBDB",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Set bit 3 in register E to 1."
+    },
+    {
+        "mnemonic": "SET 3, H",
+        "opCode": "CBDC",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Set bit 3 in register H to 1."
+    },
+    {
+        "mnemonic": "SET 3, L",
+        "opCode": "CBDD",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Set bit 3 in register L to 1."
+    },
+    {
+        "mnemonic": "SET 4, A",
+        "opCode": "CBE7",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Set bit 4 in register A to 1."
+    },
+    {
+        "mnemonic": "SET 4, B",
+        "opCode": "CBE0",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Set bit 4 in register B to 1."
+    },
+    {
+        "mnemonic": "SET 4, C",
+        "opCode": "CBE1",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Set bit 4 in register C to 1."
+    },
+    {
+        "mnemonic": "SET 4, D",
+        "opCode": "CBE2",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Set bit 4 in register D to 1."
+    },
+    {
+        "mnemonic": "SET 4, E",
+        "opCode": "CBE3",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Set bit 4 in register E to 1."
+    },
+    {
+        "mnemonic": "SET 4, H",
+        "opCode": "CBE4",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Set bit 4 in register H to 1."
+    },
+    {
+        "mnemonic": "SET 4, L",
+        "opCode": "CBE5",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Set bit 4 in register L to 1."
+    },
+    {
+        "mnemonic": "SET 5, A",
+        "opCode": "CBEF",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Set bit 5 in register A to 1."
+    },
+    {
+        "mnemonic": "SET 5, B",
+        "opCode": "CBE8",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Set bit 5 in register B to 1."
+    },
+    {
+        "mnemonic": "SET 5, C",
+        "opCode": "CBE9",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Set bit 5 in register C to 1."
+    },
+    {
+        "mnemonic": "SET 5, D",
+        "opCode": "CBEA",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Set bit 5 in register D to 1."
+    },
+    {
+        "mnemonic": "SET 5, E",
+        "opCode": "CBEB",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Set bit 5 in register E to 1."
+    },
+    {
+        "mnemonic": "SET 5, H",
+        "opCode": "CBEC",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Set bit 5 in register H to 1."
+    },
+    {
+        "mnemonic": "SET 5, L",
+        "opCode": "CBED",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Set bit 5 in register L to 1."
+    },
+    {
+        "mnemonic": "SET 6, A",
+        "opCode": "CBF7",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Set bit 6 in register A to 1."
+    },
+    {
+        "mnemonic": "SET 6, B",
+        "opCode": "CBF0",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Set bit 6 in register B to 1."
+    },
+    {
+        "mnemonic": "SET 6, C",
+        "opCode": "CBF1",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Set bit 6 in register C to 1."
+    },
+    {
+        "mnemonic": "SET 6, D",
+        "opCode": "CBF2",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Set bit 6 in register D to 1."
+    },
+    {
+        "mnemonic": "SET 6, E",
+        "opCode": "CBF3",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Set bit 6 in register E to 1."
+    },
+    {
+        "mnemonic": "SET 6, H",
+        "opCode": "CBF4",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Set bit 6 in register H to 1."
+    },
+    {
+        "mnemonic": "SET 6, L",
+        "opCode": "CBF5",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Set bit 6 in register L to 1."
+    },
+    {
+        "mnemonic": "SET 7, A",
+        "opCode": "CBFF",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Set bit 7 in register A to 1."
+    },
+    {
+        "mnemonic": "SET 7, B",
+        "opCode": "CBF8",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Set bit 7 in register B to 1."
+    },
+    {
+        "mnemonic": "SET 7, C",
+        "opCode": "CBF9",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Set bit 7 in register C to 1."
+    },
+    {
+        "mnemonic": "SET 7, D",
+        "opCode": "CBFA",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Set bit 7 in register D to 1."
+    },
+    {
+        "mnemonic": "SET 7, E",
+        "opCode": "CBFB",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Set bit 7 in register E to 1."
+    },
+    {
+        "mnemonic": "SET 7, H",
+        "opCode": "CBFC",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Set bit 7 in register H to 1."
+    },
+    {
+        "mnemonic": "SET 7, L",
+        "opCode": "CBFD",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Set bit 7 in register L to 1."
+    },
+    {
+        "mnemonic": "SET 0, (HL)",
+        "opCode": "CBC6",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "4",
+        "description": "Set bit 0 in the memory location specified by register pair HL to 1."
+    },
+    {
+        "mnemonic": "SET 1, (HL)",
+        "opCode": "CBCE",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "4",
+        "description": "Set bit 1 in the memory location specified by register pair HL to 1."
+    },
+    {
+        "mnemonic": "SET 2, (HL)",
+        "opCode": "CBD6",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "4",
+        "description": "Set bit 2 in the memory location specified by register pair HL to 1."
+    },
+    {
+        "mnemonic": "SET 3, (HL)",
+        "opCode": "CBDE",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "4",
+        "description": "Set bit 3 in the memory location specified by register pair HL to 1."
+    },
+    {
+        "mnemonic": "SET 4, (HL)",
+        "opCode": "CBE6",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "4",
+        "description": "Set bit 4 in the memory location specified by register pair HL to 1."
+    },
+    {
+        "mnemonic": "SET 5, (HL)",
+        "opCode": "CBEE",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "4",
+        "description": "Set bit 5 in the memory location specified by register pair HL to 1."
+    },
+    {
+        "mnemonic": "SET 6, (HL)",
+        "opCode": "CBF6",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "4",
+        "description": "Set bit 6 in the memory location specified by register pair HL to 1."
+    },
+    {
+        "mnemonic": "SET 7, (HL)",
+        "opCode": "CBFE",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "4",
+        "description": "Set bit 7 in the memory location specified by register pair HL to 1."
+    },
+    {
+        "mnemonic": "RES 0, A",
+        "opCode": "CB87",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Reset bit 0 in register A to 0."
+    },
+    {
+        "mnemonic": "RES 0, B",
+        "opCode": "CB80",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Reset bit 0 in register B to 0."
+    },
+    {
+        "mnemonic": "RES 0, C",
+        "opCode": "CB81",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Reset bit 0 in register C to 0."
+    },
+    {
+        "mnemonic": "RES 0, D",
+        "opCode": "CB82",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Reset bit 0 in register D to 0."
+    },
+    {
+        "mnemonic": "RES 0, E",
+        "opCode": "CB83",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Reset bit 0 in register E to 0."
+    },
+    {
+        "mnemonic": "RES 0, H",
+        "opCode": "CB84",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Reset bit 0 in register H to 0."
+    },
+    {
+        "mnemonic": "RES 0, L",
+        "opCode": "CB85",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Reset bit 0 in register L to 0."
+    },
+    {
+        "mnemonic": "RES 1, A",
+        "opCode": "CB8F",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Reset bit 1 in register A to 0."
+    },
+    {
+        "mnemonic": "RES 1, B",
+        "opCode": "CB88",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Reset bit 1 in register B to 0."
+    },
+    {
+        "mnemonic": "RES 1, C",
+        "opCode": "CB89",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Reset bit 1 in register C to 0."
+    },
+    {
+        "mnemonic": "RES 1, D",
+        "opCode": "CB8A",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Reset bit 1 in register D to 0."
+    },
+    {
+        "mnemonic": "RES 1, E",
+        "opCode": "CB8B",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Reset bit 1 in register E to 0."
+    },
+    {
+        "mnemonic": "RES 1, H",
+        "opCode": "CB8C",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Reset bit 1 in register H to 0."
+    },
+    {
+        "mnemonic": "RES 1, L",
+        "opCode": "CB8D",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Reset bit 1 in register L to 0."
+    },
+    {
+        "mnemonic": "RES 2, A",
+        "opCode": "CB97",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Reset bit 2 in register A to 0."
+    },
+    {
+        "mnemonic": "RES 2, B",
+        "opCode": "CB90",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Reset bit 2 in register B to 0."
+    },
+    {
+        "mnemonic": "RES 2, C",
+        "opCode": "CB91",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Reset bit 2 in register C to 0."
+    },
+    {
+        "mnemonic": "RES 2, D",
+        "opCode": "CB92",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Reset bit 2 in register D to 0."
+    },
+    {
+        "mnemonic": "RES 2, E",
+        "opCode": "CB93",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Reset bit 2 in register E to 0."
+    },
+    {
+        "mnemonic": "RES 2, H",
+        "opCode": "CB94",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Reset bit 2 in register H to 0."
+    },
+    {
+        "mnemonic": "RES 2, L",
+        "opCode": "CB95",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Reset bit 2 in register L to 0."
+    },
+    {
+        "mnemonic": "RES 3, A",
+        "opCode": "CB9F",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Reset bit 3 in register A to 0."
+    },
+    {
+        "mnemonic": "RES 3, B",
+        "opCode": "CB98",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Reset bit 3 in register B to 0."
+    },
+    {
+        "mnemonic": "RES 3, C",
+        "opCode": "CB99",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Reset bit 3 in register C to 0."
+    },
+    {
+        "mnemonic": "RES 3, D",
+        "opCode": "CB9A",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Reset bit 3 in register D to 0."
+    },
+    {
+        "mnemonic": "RES 3, E",
+        "opCode": "CB9B",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Reset bit 3 in register E to 0."
+    },
+    {
+        "mnemonic": "RES 3, H",
+        "opCode": "CB9C",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Reset bit 3 in register H to 0."
+    },
+    {
+        "mnemonic": "RES 3, L",
+        "opCode": "CB9D",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Reset bit 3 in register L to 0."
+    },
+    {
+        "mnemonic": "RES 4, A",
+        "opCode": "CBA7",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Reset bit 4 in register A to 0."
+    },
+    {
+        "mnemonic": "RES 4, B",
+        "opCode": "CBA0",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Reset bit 4 in register B to 0."
+    },
+    {
+        "mnemonic": "RES 4, C",
+        "opCode": "CBA1",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Reset bit 4 in register C to 0."
+    },
+    {
+        "mnemonic": "RES 4, D",
+        "opCode": "CBA2",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Reset bit 4 in register D to 0."
+    },
+    {
+        "mnemonic": "RES 4, E",
+        "opCode": "CBA3",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Reset bit 4 in register E to 0."
+    },
+    {
+        "mnemonic": "RES 4, H",
+        "opCode": "CBA4",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Reset bit 4 in register H to 0."
+    },
+    {
+        "mnemonic": "RES 4, L",
+        "opCode": "CBA5",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Reset bit 4 in register L to 0."
+    },
+    {
+        "mnemonic": "RES 5, A",
+        "opCode": "CBAF",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Reset bit 5 in register A to 0."
+    },
+    {
+        "mnemonic": "RES 5, B",
+        "opCode": "CBA8",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Reset bit 5 in register B to 0."
+    },
+    {
+        "mnemonic": "RES 5, C",
+        "opCode": "CBA9",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Reset bit 5 in register C to 0."
+    },
+    {
+        "mnemonic": "RES 5, D",
+        "opCode": "CBAA",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Reset bit 5 in register D to 0."
+    },
+    {
+        "mnemonic": "RES 5, E",
+        "opCode": "CBAB",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Reset bit 5 in register E to 0."
+    },
+    {
+        "mnemonic": "RES 5, H",
+        "opCode": "CBAC",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Reset bit 5 in register H to 0."
+    },
+    {
+        "mnemonic": "RES 5, L",
+        "opCode": "CBAD",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Reset bit 5 in register L to 0."
+    },
+    {
+        "mnemonic": "RES 6, A",
+        "opCode": "CBB7",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Reset bit 6 in register A to 0."
+    },
+    {
+        "mnemonic": "RES 6, B",
+        "opCode": "CBB0",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Reset bit 6 in register B to 0."
+    },
+    {
+        "mnemonic": "RES 6, C",
+        "opCode": "CBB1",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Reset bit 6 in register C to 0."
+    },
+    {
+        "mnemonic": "RES 6, D",
+        "opCode": "CBB2",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Reset bit 6 in register D to 0."
+    },
+    {
+        "mnemonic": "RES 6, E",
+        "opCode": "CBB3",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Reset bit 6 in register E to 0."
+    },
+    {
+        "mnemonic": "RES 6, H",
+        "opCode": "CBB4",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Reset bit 6 in register H to 0."
+    },
+    {
+        "mnemonic": "RES 6, L",
+        "opCode": "CBB5",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Reset bit 6 in register L to 0."
+    },
+    {
+        "mnemonic": "RES 7, A",
+        "opCode": "CBBF",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Reset bit 7 in register A to 0."
+    },
+    {
+        "mnemonic": "RES 7, B",
+        "opCode": "CBB8",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Reset bit 7 in register B to 0."
+    },
+    {
+        "mnemonic": "RES 7, C",
+        "opCode": "CBB9",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Reset bit 7 in register C to 0."
+    },
+    {
+        "mnemonic": "RES 7, D",
+        "opCode": "CBBA",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Reset bit 7 in register D to 0."
+    },
+    {
+        "mnemonic": "RES 7, E",
+        "opCode": "CBBB",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Reset bit 7 in register E to 0."
+    },
+    {
+        "mnemonic": "RES 7, H",
+        "opCode": "CBBC",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Reset bit 7 in register H to 0."
+    },
+    {
+        "mnemonic": "RES 7, L",
+        "opCode": "CBBD",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "2",
+        "description": "Reset bit 7 in register L to 0."
+    },
+    {
+        "mnemonic": "RES 0, (HL)",
+        "opCode": "CB86",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "4",
+        "description": "Reset bit 0 in the memory location specified by register pair HL to 0."
+    },
+    {
+        "mnemonic": "RES 1, (HL)",
+        "opCode": "CB8E",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "4",
+        "description": "Reset bit 1 in the memory location specified by register pair HL to 0."
+    },
+    {
+        "mnemonic": "RES 2, (HL)",
+        "opCode": "CB96",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "4",
+        "description": "Reset bit 2 in the memory location specified by register pair HL to 0."
+    },
+    {
+        "mnemonic": "RES 3, (HL)",
+        "opCode": "CB9E",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "4",
+        "description": "Reset bit 3 in the memory location specified by register pair HL to 0."
+    },
+    {
+        "mnemonic": "RES 4, (HL)",
+        "opCode": "CBA6",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "4",
+        "description": "Reset bit 4 in the memory location specified by register pair HL to 0."
+    },
+    {
+        "mnemonic": "RES 5, (HL)",
+        "opCode": "CBAE",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "4",
+        "description": "Reset bit 5 in the memory location specified by register pair HL to 0."
+    },
+    {
+        "mnemonic": "RES 6, (HL)",
+        "opCode": "CBB6",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "4",
+        "description": "Reset bit 6 in the memory location specified by register pair HL to 0."
+    },
+    {
+        "mnemonic": "RES 7, (HL)",
+        "opCode": "CBBE",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "4",
+        "description": "Reset bit 7 in the memory location specified by register pair HL to 0."
+    },
+    {
+        "mnemonic": "JP a16",
+        "opCode": "C3",
+        "flags": {},
+        "bytes": 3,
+        "cycles": "4",
+        "description": "Load the 16-bit immediate operand a16 into the program counter (PC). a16 specifies the address of the subsequently executed instruction.\nThe second byte of the object code (immediately following the opcode) corresponds to the lower-order byte of a16 (bits 0-7), and the third byte of the object code corresponds to the higher-order byte (bits 8-15)."
+    },
+    {
+        "mnemonic": "JP NZ, a16",
+        "opCode": "C2",
+        "flags": {},
+        "bytes": 3,
+        "cycles": "4/3",
+        "description": "Load the 16-bit immediate operand a16 into the program counter PC if the Z flag is 0. If the Z flag is 0, then the subsequent instruction starts at address a16. If not, the contents of PC are incremented, and the next instruction following the current JP instruction is executed (as usual).\nThe second byte of the object code (immediately following the opcode) corresponds to the lower-order byte of a16 (bits 0-7), and the third byte of the object code corresponds to the higher-order byte (bits 8-15)."
+    },
+    {
+        "mnemonic": "JP Z, a16",
+        "opCode": "CA",
+        "flags": {},
+        "bytes": 3,
+        "cycles": "4/3",
+        "description": "Load the 16-bit immediate operand a16 into the program counter PC if the Z flag is 1. If the Z flag is 1, then the subsequent instruction starts at address a16. If not, the contents of PC are incremented, and the next instruction following the current JP instruction is executed (as usual).\nThe second byte of the object code (immediately following the opcode) corresponds to the lower-order byte of a16 (bits 0-7), and the third byte of the object code corresponds to the higher-order byte (bits 8-15)."
+    },
+    {
+        "mnemonic": "JP NC, a16",
+        "opCode": "D2",
+        "flags": {},
+        "bytes": 3,
+        "cycles": "4/3",
+        "description": "Load the 16-bit immediate operand a16 into the program counter PC if the CY flag is 0. If the CY flag is 0, then the subsequent instruction starts at address a16. If not, the contents of PC are incremented, and the next instruction following the current JP instruction is executed (as usual).\nThe second byte of the object code (immediately following the opcode) corresponds to the lower-order byte of a16 (bits 0-7), and the third byte of the object code corresponds to the higher-order byte (bits 8-15)."
+    },
+    {
+        "mnemonic": "JP C, a16",
+        "opCode": "DA",
+        "flags": {},
+        "bytes": 3,
+        "cycles": "4/3",
+        "description": "Load the 16-bit immediate operand a16 into the program counter PC if the CY flag is 1. If the CY flag is 1, then the subsequent instruction starts at address a16. If not, the contents of PC are incremented, and the next instruction following the current JP instruction is executed (as usual).\nThe second byte of the object code (immediately following the opcode) corresponds to the lower-order byte of a16 (bits 0-7), and the third byte of the object code corresponds to the higher-order byte (bits 8-15)."
+    },
+    {
+        "mnemonic": "JR s8",
+        "opCode": "18",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "3",
+        "description": "Jump s8 steps from the current address in the program counter (PC). (Jump relative.)"
+    },
+    {
+        "mnemonic": "JR NZ, s8",
+        "opCode": "20",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "3/2",
+        "description": "If the Z flag is 0, jump s8 steps from the current address stored in the program counter (PC). If not, the instruction following the current JP instruction is executed (as usual)."
+    },
+    {
+        "mnemonic": "JR Z, s8",
+        "opCode": "28",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "3/2",
+        "description": "If the Z flag is 1, jump s8 steps from the current address stored in the program counter (PC). If not, the instruction following the current JP instruction is executed (as usual)."
+    },
+    {
+        "mnemonic": "JR NC, s8",
+        "opCode": "30",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "3/2",
+        "description": "If the CY flag is 0, jump s8 steps from the current address stored in the program counter (PC). If not, the instruction following the current JP instruction is executed (as usual)."
+    },
+    {
+        "mnemonic": "JR C, s8",
+        "opCode": "38",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "3/2",
+        "description": "If the CY flag is 1, jump s8 steps from the current address stored in the program counter (PC). If not, the instruction following the current JP instruction is executed (as usual)."
+    },
+    {
+        "mnemonic": "JP HL",
+        "opCode": "E9",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Load the contents of register pair HL into the program counter PC. The next instruction is fetched from the location specified by the new value of PC."
+    },
+    {
+        "mnemonic": "CALL a16",
+        "opCode": "CD",
+        "flags": {},
+        "bytes": 3,
+        "cycles": "6",
+        "description": "In memory, push the program counter PC value corresponding to the address following the CALL instruction to the 2 bytes following the byte specified by the current stack pointer SP. Then load the 16-bit immediate operand a16 into PC.\nThe subroutine is placed after the location specified by the new PC value. When the subroutine finishes, control is returned to the source program using a return instruction and by popping the starting address of the next instruction (which was just pushed) and moving it to the PC.\nWith the push, the current value of SP is decremented by 1, and the higher-order byte of PC is loaded in the memory address specified by the new SP value. The value of SP is then decremented by 1 again, and the lower-order byte of PC is loaded in the memory address specified by that value of SP.\nThe lower-order byte of a16 is placed in byte 2 of the object code, and the higher-order byte is placed in byte 3."
+    },
+    {
+        "mnemonic": "CALL NZ, a16",
+        "opCode": "C4",
+        "flags": {},
+        "bytes": 3,
+        "cycles": "6/3",
+        "description": "If the Z flag is 0, the program counter PC value corresponding to the memory location of the instruction following the CALL instruction is pushed to the 2 bytes following the memory byte specified by the stack pointer SP. The 16-bit immediate operand a16 is then loaded into PC.\nThe lower-order byte of a16 is placed in byte 2 of the object code, and the higher-order byte is placed in byte 3."
+    },
+    {
+        "mnemonic": "CALL Z, a16",
+        "opCode": "CC",
+        "flags": {},
+        "bytes": 3,
+        "cycles": "6/3",
+        "description": "If the Z flag is 1, the program counter PC value corresponding to the memory location of the instruction following the CALL instruction is pushed to the 2 bytes following the memory byte specified by the stack pointer SP. The 16-bit immediate operand a16 is then loaded into PC.\nThe lower-order byte of a16 is placed in byte 2 of the object code, and the higher-order byte is placed in byte 3."
+    },
+    {
+        "mnemonic": "CALL NC, a16",
+        "opCode": "D4",
+        "flags": {},
+        "bytes": 3,
+        "cycles": "6/3",
+        "description": "If the CY flag is 0, the program counter PC value corresponding to the memory location of the instruction following the CALL instruction is pushed to the 2 bytes following the memory byte specified by the stack pointer SP. The 16-bit immediate operand a16 is then loaded into PC.\nThe lower-order byte of a16 is placed in byte 2 of the object code, and the higher-order byte is placed in byte 3."
+    },
+    {
+        "mnemonic": "CALL C, a16",
+        "opCode": "DC",
+        "flags": {},
+        "bytes": 3,
+        "cycles": "6/3",
+        "description": "If the CY flag is 1, the program counter PC value corresponding to the memory location of the instruction following the CALL instruction is pushed to the 2 bytes following the memory byte specified by the stack pointer SP. The 16-bit immediate operand a16 is then loaded into PC.\nThe lower-order byte of a16 is placed in byte 2 of the object code, and the higher-order byte is placed in byte 3."
+    },
+    {
+        "mnemonic": "RET",
+        "opCode": "C9",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "4",
+        "description": "Pop from the memory stack the program counter PC value pushed when the subroutine was called, returning contorl to the source program.\nThe contents of the address specified by the stack pointer SP are loaded in the lower-order byte of PC, and the contents of SP are incremented by 1. The contents of the address specified by the new SP value are then loaded in the higher-order byte of PC, and the contents of SP are incremented by 1 again. (THe value of SP is 2 larger than before instruction execution.) The next instruction is fetched from the address specified by the content of PC (as usual)."
+    },
+    {
+        "mnemonic": "RETI",
+        "opCode": "D9",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "4",
+        "description": "Used when an interrupt-service routine finishes. The address for the return from the interrupt is loaded in the program counter PC. The master interrupt enable flag is returned to its pre-interrupt status.\nThe contents of the address specified by the stack pointer SP are loaded in the lower-order byte of PC, and the contents of SP are incremented by 1. The contents of the address specified by the new SP value are then loaded in the higher-order byte of PC, and the contents of SP are incremented by 1 again. (THe value of SP is 2 larger than before instruction execution.) The next instruction is fetched from the address specified by the content of PC (as usual)."
+    },
+    {
+        "mnemonic": "RET NZ",
+        "opCode": "C0",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "5/2",
+        "description": "If the Z flag is 0, control is returned to the source program by popping from the memory stack the program counter PC value that was pushed to the stack when the subroutine was called.\nThe contents of the address specified by the stack pointer SP are loaded in the lower-order byte of PC, and the contents of SP are incremented by 1. The contents of the address specified by the new SP value are then loaded in the higher-order byte of PC, and the contents of SP are incremented by 1 again. (THe value of SP is 2 larger than before instruction execution.) The next instruction is fetched from the address specified by the content of PC (as usual)."
+    },
+    {
+        "mnemonic": "RET Z",
+        "opCode": "C8",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "5/2",
+        "description": "If the Z flag is 1, control is returned to the source program by popping from the memory stack the program counter PC value that was pushed to the stack when the subroutine was called.\nThe contents of the address specified by the stack pointer SP are loaded in the lower-order byte of PC, and the contents of SP are incremented by 1. The contents of the address specified by the new SP value are then loaded in the higher-order byte of PC, and the contents of SP are incremented by 1 again. (THe value of SP is 2 larger than before instruction execution.) The next instruction is fetched from the address specified by the content of PC (as usual)."
+    },
+    {
+        "mnemonic": "RET NC",
+        "opCode": "D0",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "5/2",
+        "description": "If the CY flag is 0, control is returned to the source program by popping from the memory stack the program counter PC value that was pushed to the stack when the subroutine was called.\nThe contents of the address specified by the stack pointer SP are loaded in the lower-order byte of PC, and the contents of SP are incremented by 1. The contents of the address specified by the new SP value are then loaded in the higher-order byte of PC, and the contents of SP are incremented by 1 again. (THe value of SP is 2 larger than before instruction execution.) The next instruction is fetched from the address specified by the content of PC (as usual)."
+    },
+    {
+        "mnemonic": "RET C",
+        "opCode": "D8",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "5/2",
+        "description": "If the CY flag is 1, control is returned to the source program by popping from the memory stack the program counter PC value that was pushed to the stack when the subroutine was called.\nThe contents of the address specified by the stack pointer SP are loaded in the lower-order byte of PC, and the contents of SP are incremented by 1. The contents of the address specified by the new SP value are then loaded in the higher-order byte of PC, and the contents of SP are incremented by 1 again. (THe value of SP is 2 larger than before instruction execution.) The next instruction is fetched from the address specified by the content of PC (as usual)."
+    },
+    {
+        "mnemonic": "RST 0",
+        "opCode": "C7",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "4",
+        "description": "Push the current value of the program counter PC onto the memory stack, and load into PC the 1th byte of page 0 memory addresses, 0x00. The next instruction is fetched from the address specified by the new content of PC (as usual).\nWith the push, the contents of the stack pointer SP are decremented by 1, and the higher-order byte of PC is loaded in the memory address specified by the new SP value. The value of SP is then again decremented by 1, and the lower-order byte of the PC is loaded in the memory address specified by that value of SP.\nThe RST instruction can be used to jump to 1 of 8 addresses. Because all ofthe addresses are held in page 0 memory, 0x00 is loaded in the higher-orderbyte of the PC, and 0x00 is loaded in the lower-order byte."
+    },
+    {
+        "mnemonic": "RST 1",
+        "opCode": "CF",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "4",
+        "description": "Push the current value of the program counter PC onto the memory stack, and load into PC the 2th byte of page 0 memory addresses, 0x08. The next instruction is fetched from the address specified by the new content of PC (as usual).\nWith the push, the contents of the stack pointer SP are decremented by 1, and the higher-order byte of PC is loaded in the memory address specified by the new SP value. The value of SP is then again decremented by 1, and the lower-order byte of the PC is loaded in the memory address specified by that value of SP.\nThe RST instruction can be used to jump to 1 of 8 addresses. Because all ofthe addresses are held in page 0 memory, 0x00 is loaded in the higher-orderbyte of the PC, and 0x08 is loaded in the lower-order byte."
+    },
+    {
+        "mnemonic": "RST 2",
+        "opCode": "D7",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "4",
+        "description": "Push the current value of the program counter PC onto the memory stack, and load into PC the 3th byte of page 0 memory addresses, 0x10. The next instruction is fetched from the address specified by the new content of PC (as usual).\nWith the push, the contents of the stack pointer SP are decremented by 1, and the higher-order byte of PC is loaded in the memory address specified by the new SP value. The value of SP is then again decremented by 1, and the lower-order byte of the PC is loaded in the memory address specified by that value of SP.\nThe RST instruction can be used to jump to 1 of 8 addresses. Because all ofthe addresses are held in page 0 memory, 0x00 is loaded in the higher-orderbyte of the PC, and 0x10 is loaded in the lower-order byte."
+    },
+    {
+        "mnemonic": "RST 3",
+        "opCode": "DF",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "4",
+        "description": "Push the current value of the program counter PC onto the memory stack, and load into PC the 4th byte of page 0 memory addresses, 0x18. The next instruction is fetched from the address specified by the new content of PC (as usual).\nWith the push, the contents of the stack pointer SP are decremented by 1, and the higher-order byte of PC is loaded in the memory address specified by the new SP value. The value of SP is then again decremented by 1, and the lower-order byte of the PC is loaded in the memory address specified by that value of SP.\nThe RST instruction can be used to jump to 1 of 8 addresses. Because all ofthe addresses are held in page 0 memory, 0x00 is loaded in the higher-orderbyte of the PC, and 0x18 is loaded in the lower-order byte."
+    },
+    {
+        "mnemonic": "RST 4",
+        "opCode": "E7",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "4",
+        "description": "Push the current value of the program counter PC onto the memory stack, and load into PC the 5th byte of page 0 memory addresses, 0x20. The next instruction is fetched from the address specified by the new content of PC (as usual).\nWith the push, the contents of the stack pointer SP are decremented by 1, and the higher-order byte of PC is loaded in the memory address specified by the new SP value. The value of SP is then again decremented by 1, and the lower-order byte of the PC is loaded in the memory address specified by that value of SP.\nThe RST instruction can be used to jump to 1 of 8 addresses. Because all ofthe addresses are held in page 0 memory, 0x00 is loaded in the higher-orderbyte of the PC, and 0x20 is loaded in the lower-order byte."
+    },
+    {
+        "mnemonic": "RST 5",
+        "opCode": "EF",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "4",
+        "description": "Push the current value of the program counter PC onto the memory stack, and load into PC the 6th byte of page 0 memory addresses, 0x28. The next instruction is fetched from the address specified by the new content of PC (as usual).\nWith the push, the contents of the stack pointer SP are decremented by 1, and the higher-order byte of PC is loaded in the memory address specified by the new SP value. The value of SP is then again decremented by 1, and the lower-order byte of the PC is loaded in the memory address specified by that value of SP.\nThe RST instruction can be used to jump to 1 of 8 addresses. Because all ofthe addresses are held in page 0 memory, 0x00 is loaded in the higher-orderbyte of the PC, and 0x28 is loaded in the lower-order byte."
+    },
+    {
+        "mnemonic": "RST 6",
+        "opCode": "F7",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "4",
+        "description": "Push the current value of the program counter PC onto the memory stack, and load into PC the 7th byte of page 0 memory addresses, 0x30. The next instruction is fetched from the address specified by the new content of PC (as usual).\nWith the push, the contents of the stack pointer SP are decremented by 1, and the higher-order byte of PC is loaded in the memory address specified by the new SP value. The value of SP is then again decremented by 1, and the lower-order byte of the PC is loaded in the memory address specified by that value of SP.\nThe RST instruction can be used to jump to 1 of 8 addresses. Because all ofthe addresses are held in page 0 memory, 0x00 is loaded in the higher-orderbyte of the PC, and 0x30 is loaded in the lower-order byte."
+    },
+    {
+        "mnemonic": "RST 7",
+        "opCode": "FF",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "4",
+        "description": "Push the current value of the program counter PC onto the memory stack, and load into PC the 8th byte of page 0 memory addresses, 0x38. The next instruction is fetched from the address specified by the new content of PC (as usual).\nWith the push, the contents of the stack pointer SP are decremented by 1, and the higher-order byte of PC is loaded in the memory address specified by the new SP value. The value of SP is then again decremented by 1, and the lower-order byte of the PC is loaded in the memory address specified by that value of SP.\nThe RST instruction can be used to jump to 1 of 8 addresses. Because all ofthe addresses are held in page 0 memory, 0x00 is loaded in the higher-orderbyte of the PC, and 0x38 is loaded in the lower-order byte."
+    },
+    {
+        "mnemonic": "DAA",
+        "opCode": "27",
+        "flags": { "CY": "CY", "H": "0", "Z": "Z" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Adjust the accumulator (register A) too a binary-coded decimal (BCD) number after BCD addition and subtraction operations."
+    },
+    {
+        "mnemonic": "CPL",
+        "opCode": "2F",
+        "flags": { "H": "1", "N": "1" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Take the one's complement (i.e., flip all bits) of the contents of register A."
+    },
+    {
+        "mnemonic": "NOP",
+        "opCode": "00",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Only advances the program counter by 1. Performs no other operations that would have an effect."
+    },
+    {
+        "mnemonic": "CCF",
+        "opCode": "3F",
+        "flags": { "CY": "!CY", "H": "0", "N": "0" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Flip the carry flag CY."
+    },
+    {
+        "mnemonic": "SCF",
+        "opCode": "37",
+        "flags": { "CY": "1", "H": "0", "N": "0" },
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Set the carry flag CY."
+    },
+    {
+        "mnemonic": "DI",
+        "opCode": "F3",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Reset the interrupt master enable (IME) flag and prohibit maskable interrupts.\nEven if a DI instruction is executed in an interrupt routine, the IME flag is set if a return is performed with a RETI instruction."
+    },
+    {
+        "mnemonic": "EI",
+        "opCode": "FB",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "1",
+        "description": "Set the interrupt master enable (IME) flag and enable maskable interrupts. This instruction can be used in an interrupt routine to enable higher-order interrupts.\nThe IME flag is reset immediately after an interrupt occurs. The IME flag reset remains in effect if coontrol is returned from the interrupt routine by a RET instruction. However, if an EI instruction is executed in the interrupt routine, control is returned with IME = 1."
+    },
+    {
+        "mnemonic": "HALT",
+        "opCode": "76",
+        "flags": {},
+        "bytes": 1,
+        "cycles": "1",
+        "description": "After a HALT instruction is executed, the system clock is stopped and HALT mode is entered. Although the system clock is stopped in this status, the oscillator circuit and LCD controller continue to operate.\nIn addition, the status of the internal RAM register ports remains unchanged.\nHALT mode is cancelled by an interrupt or reset signal.\nThe program counter is halted at the step after the HALT instruction. If both the interrupt request flag and the corresponding interrupt enable flag are set, HALT mode is exited, even if the interrupt master enable flag is not set.\nOnce HALT mode is cancelled, the program starts from the address indicated by the program counter.\nIf the interrupt master enable flag is set, the contents of the program coounter are pushed to the stack and control jumps to the starting address of the interrupt.\nIf the RESET terminal goes LOW in HALT moode, the mode becomes that of a normal reset."
+    },
+    {
+        "mnemonic": "STOP",
+        "opCode": "10",
+        "flags": {},
+        "bytes": 2,
+        "cycles": "1",
+        "description": "Execution of a STOP instruction stops both the system clock and oscillator circuit. STOP mode is entered and the LCD controller also stops. However, the status of the internal RAM register ports remains unchanged.\nSTOP mode can be cancelled by a reset signal.\nIf the RESET terminal goes LOW in STOP mode, it becomes that of a normal reset status.\nThe following conditions should be met before a STOP instruction is executed and stop mode is entered:\nAll interrupt-enable (IE) flags are reset.\nInput to P10-P13 is LOW for all."
+    }
+]
