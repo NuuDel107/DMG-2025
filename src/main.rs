@@ -1,38 +1,12 @@
-use macroquad::prelude::*;
-use miniquad::conf::Icon;
+use std::sync::Arc;
 
 mod cpu;
+use cpu::CPU;
 mod window;
+use window::Window;
 
 const WINDOW_SCALE: u8 = 4;
-const ROM_PATH: &str = "roms/Pokemon - Red Version (USA, Europe) (SGB Enhanced).gb";
-
-fn window_conf() -> Conf {
-    Conf {
-        window_title: "DMG-2025".to_owned(),
-        icon: Some(Icon {
-            small: image::open("img/icon_small.ico")
-                .unwrap()
-                .into_bytes()
-                .try_into()
-                .unwrap(),
-            medium: image::open("img/icon_medium.ico")
-                .unwrap()
-                .into_bytes()
-                .try_into()
-                .unwrap(),
-            big: image::open("img/icon_large.ico")
-                .unwrap()
-                .into_bytes()
-                .try_into()
-                .unwrap(),
-        }),
-        window_resizable: false,
-        window_width: 160 * i32::from(WINDOW_SCALE),
-        window_height: 144 * i32::from(WINDOW_SCALE),
-        ..Default::default()
-    }
-}
+const ROM_PATH: &str = "roms/test.gb";
 
 fn load_rom_file(path: &str) -> Vec<u8> {
     match std::fs::read(path) {
@@ -46,15 +20,24 @@ fn load_rom_file(path: &str) -> Vec<u8> {
     }
 }
 
-#[macroquad::main(window_conf)]
-async fn main() {
+fn main() -> eframe::Result {
     let rom_file = load_rom_file(ROM_PATH);
-    let window = window::Window::new(WINDOW_SCALE);
-    let cpu = cpu::CPU::new(rom_file, &window);
+    let cpu = CPU::new(rom_file);
+    let window = Window::new(cpu, WINDOW_SCALE);
 
-    loop {
-        clear_background(BLACK);
-        cpu.frame();
-        next_frame().await
-    }
+    // Display backtrace
+    std::env::set_var("RUST_BACKTRACE", "1");
+    // Log to stderr
+    env_logger::init();
+
+    // Initialize main window
+    let icon = std::fs::read("icon.png").unwrap();
+    let options = eframe::NativeOptions {
+        viewport: egui::ViewportBuilder::default()
+            .with_resizable(false)
+            .with_inner_size([160.0 * WINDOW_SCALE as f32, 144.0 * WINDOW_SCALE as f32])
+            .with_icon(Arc::new(eframe::icon_data::from_png_bytes(&icon).unwrap())),
+        ..Default::default()
+    };
+    eframe::run_native("DMG-2025", options, Box::new(|_| Ok(Box::new(window))))
 }

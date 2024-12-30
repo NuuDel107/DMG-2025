@@ -76,25 +76,29 @@ pub struct Memory {
     pub bank: [u8; 0x4000],
     pub vram: [u8; 0x2000],
     pub wram: [u8; 0x2000],
+    pub oam: [u8; 0xA0],
+    pub hram: [u8; 0x7F],
 }
 
 impl Memory {
     pub fn new(rom_file: Vec<u8>) -> Self {
         Self {
-            a: 0,
-            f: 0.into(),
+            a: 0xFE,
+            f: 0x69.into(),
             b: 0,
             c: 0,
             d: 0,
             e: 0,
             h: 0,
             l: 0,
-            sp: 0,
+            sp: 0xFFFE,
             pc: 0x0100,
             rom: Self::load_range::<0x4000>(&rom_file, 0x0000),
             bank: Self::load_range::<0x4000>(&rom_file, 0x4000),
             vram: [0; 0x2000],
             wram: [0; 0x2000],
+            oam: [0; 0xA0],
+            hram: [0; 0x7F],
         }
     }
 
@@ -106,9 +110,12 @@ impl Memory {
 
     pub fn read_mem(&self, address: u16) -> u8 {
         match address {
-            0x0000..0x4000 => self.rom[address as usize],
-            0x4000..0x8000 => self.bank[(address - 0x4000) as usize],
-            0x8000..0xA000 => self.vram[(address - 0x8000) as usize],
+            0x0000..=0x3FFF => self.rom[address as usize],
+            0x4000..=0x7FFF => self.bank[(address - 0x4000) as usize],
+            0x8000..=0x9FFF => self.vram[(address - 0x8000) as usize],
+            0xC000..=0xDFFF => self.wram[(address - 0xC000) as usize],
+            0xFE00..=0xFE9F => self.oam[(address - 0xFE00) as usize],
+            0xFF80..=0xFFFE => self.hram[(address - 0xFF80) as usize],
             _ => todo!(),
         }
     }
@@ -158,6 +165,9 @@ impl Memory {
             0x0000..0x4000 => self.rom[address as usize] = value,
             0x4000..0x8000 => self.bank[(address - 0x4000) as usize] = value,
             0x8000..0xA000 => self.vram[(address - 0x8000) as usize] = value,
+            0xC000..=0xDFFF => self.wram[(address - 0xC000) as usize] = value,
+            0xFE00..=0xFE9F => self.oam[(address - 0xFE00) as usize] = value,
+            0xFF80..=0xFFFE => self.hram[(address - 0xFF80) as usize] = value,
             _ => todo!(),
         }
     }

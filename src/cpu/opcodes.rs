@@ -1,7 +1,7 @@
 use super::*;
 
-impl CPU<'_> {
-    fn execute(&mut self) {
+impl CPU {
+    pub fn execute(&mut self) {
         let opcode = self.mem.read_mem(self.mem.pc);
         let mut increment_pc = true;
         match opcode {
@@ -11,7 +11,7 @@ impl CPU<'_> {
                 match nibble {
                     0x0 => match opcode {
                         // NOP
-                        0x00 => self.mem.pc += 1,
+                        0x00 => {}
                         // STOP
                         0x10 => todo!(),
                         // JR
@@ -147,7 +147,7 @@ impl CPU<'_> {
                                 self.mem.f.half_carry = false;
                                 self.mem.f.carry = true;
                             }
-                            _ => {}
+                            _ => eprintln!("Invalid instruction: {}", opcode),
                         }
                     }
                     0x8 => {
@@ -205,10 +205,10 @@ impl CPU<'_> {
                                 self.mem.f.half_carry = false;
                                 self.mem.f.carry = !self.mem.f.carry;
                             }
-                            _ => {}
+                            _ => eprintln!("Invalid instruction: {}", opcode),
                         }
                     }
-                    _ => todo!(),
+                    _ => eprintln!("Invalid instruction: {}", opcode),
                 }
             }
             // Similarly implemented 8-bit loading and arithmetic operations
@@ -243,14 +243,14 @@ impl CPU<'_> {
                     0xB0..=0xB7 => self.or_a(val),
                     // CP
                     0xB8..=0xBF => self.cp_a(val),
-                    _ => {}
+                    _ => eprintln!("Invalid instruction: {}", opcode),
                 }
             }
             // HALT
             0x76 => todo!(),
             0xC0..=0xFF => {
                 // Mask out the first nibble for easier pattern matching
-                let nibble = opcode;
+                let nibble = opcode & 0x0F;
                 match nibble {
                     0x0 | 0x2 | 0x3 | 0xA => {
                         // DI
@@ -258,7 +258,7 @@ impl CPU<'_> {
                             todo!()
                         }
                         // LD
-                        else if opcode & 0xF0 <= 0xE0 {
+                        else if opcode & 0xF0 >= 0xE0 {
                             let address: u16 = match nibble {
                                 0x0 => 0xFF00u16 + self.mem.read_operand() as u16,
                                 0x2 => 0xFF00u16 + self.mem.c as u16,
@@ -410,10 +410,10 @@ impl CPU<'_> {
                             self.arithmetic();
                         }
                     }
-                    _ => {}
+                    _ => eprintln!("Invalid instruction: {}", opcode),
                 }
             }
-            _ => {}
+            _ => eprintln!("Invalid instruction: {}", opcode),
         }
         if increment_pc {
             self.mem.pc += 1;
