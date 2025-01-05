@@ -4,7 +4,7 @@ impl CPU {
     /// Executes the next instruction at program counter.
     /// Returns the amount of M-cycles that instruction takes
     pub fn execute(&mut self) -> u8 {
-        let opcode = self.mem.read_mem(self.mem.pc);
+        let opcode = self.read(self.reg.pc);
         let mut increment_pc = true;
         let cycles: u8 = match opcode {
             0x00..=0x3F => {
@@ -21,11 +21,11 @@ impl CPU {
                         }
                         // JR
                         _ => {
-                            let step = self.mem.read_operand() as i8;
-                            if !((opcode == 0x20 && self.mem.f.intersects(FlagReg::ZERO))
-                                || (opcode == 0x30 && self.mem.f.intersects(FlagReg::CARRY)))
+                            let step = self.read_operand() as i8;
+                            if !((opcode == 0x20 && self.reg.f.intersects(FlagReg::ZERO))
+                                || (opcode == 0x30 && self.reg.f.intersects(FlagReg::CARRY)))
                             {
-                                self.mem.pc = self.mem.pc.wrapping_add_signed(step as i16);
+                                self.reg.pc = self.reg.pc.wrapping_add_signed(step as i16);
                                 3
                             } else {
                                 2
@@ -35,28 +35,28 @@ impl CPU {
                     // LD d16
                     0x1 => {
                         let reg = Self::get_opcode_reg16(opcode).unwrap_or(Reg16::SP);
-                        let val = self.mem.read_operand_16();
-                        self.mem.write_reg_16(&reg, val);
+                        let val = self.read_operand_16();
+                        self.reg.write_16(&reg, val);
                         3
                     }
                     // LD r16
                     0x2 | 0xA => {
                         let reg = Self::get_opcode_reg16(opcode).unwrap_or(Reg16::HL);
-                        let address = self.mem.read_reg_16(&reg);
+                        let address = self.reg.read_16(&reg);
 
                         if nibble == 0x02 {
-                            self.mem.write_mem(address, self.mem.a);
+                            self.write(address, self.reg.a);
                         } else {
-                            self.mem.a = self.mem.read_mem(address);
+                            self.reg.a = self.read(address);
                         }
 
                         if opcode == 0x22 || opcode == 0x2A {
-                            self.mem
-                                .write_reg_16(&reg, self.mem.read_reg_16(&reg).wrapping_add(1));
+                            self.reg
+                                .write_16(&reg, self.reg.read_16(&reg).wrapping_add(1));
                         }
                         if opcode == 0x32 || opcode == 0x3A {
-                            self.mem
-                                .write_reg_16(&reg, self.mem.read_reg_16(&reg).wrapping_sub(1));
+                            self.reg
+                                .write_16(&reg, self.reg.read_16(&reg).wrapping_sub(1));
                         }
                         2
                     }
@@ -65,11 +65,11 @@ impl CPU {
                     0x3 | 0xB => {
                         let reg = Self::get_opcode_reg16(opcode).unwrap_or(Reg16::SP);
                         let val = if nibble == 0x03 {
-                            self.mem.read_reg_16(&reg).wrapping_add(1)
+                            self.reg.read_16(&reg).wrapping_add(1)
                         } else {
-                            self.mem.read_reg_16(&reg).wrapping_sub(1)
+                            self.reg.read_16(&reg).wrapping_sub(1)
                         };
-                        self.mem.write_reg_16(&reg, val);
+                        self.reg.write_16(&reg, val);
                         2
                     }
                     // INC/DEC r8
@@ -83,26 +83,26 @@ impl CPU {
 
                         let mut val: u8;
                         if reg.is_none() {
-                            val = self.mem.read_mem(self.mem.read_reg_16(&Reg16::HL))
+                            val = self.read(self.reg.read_16(&Reg16::HL))
                         } else {
-                            val = self.mem.read_reg(&reg.unwrap())
+                            val = self.reg.read(&reg.unwrap())
                         }
 
                         if nibble == 0x04 || nibble == 0x0C {
-                            self.mem.f.remove(FlagReg::SUBTRACT);
-                            self.mem.f.set(FlagReg::HALF_CARRY, (val & 0x0F) == 0x0F);
+                            self.reg.f.remove(FlagReg::SUBTRACT);
+                            self.reg.f.set(FlagReg::HALF_CARRY, (val & 0x0F) == 0x0F);
                             val = val.wrapping_add(1);
                         } else {
-                            self.mem.f.insert(FlagReg::SUBTRACT);
-                            self.mem.f.set(FlagReg::HALF_CARRY, (val & 0x0F) == 0x00);
+                            self.reg.f.insert(FlagReg::SUBTRACT);
+                            self.reg.f.set(FlagReg::HALF_CARRY, (val & 0x0F) == 0x00);
                             val = val.wrapping_sub(1);
                         }
-                        self.mem.f.set(FlagReg::ZERO, val == 0);
+                        self.reg.f.set(FlagReg::ZERO, val == 0);
 
                         if let Some(reg_val) = reg {
-                            self.mem.write_reg(&reg_val, val);
+                            self.reg.write(&reg_val, val);
                         } else {
-                            self.mem.write_mem(self.mem.read_reg_16(&Reg16::HL), val);
+                            self.write(self.reg.read_16(&Reg16::HL), val);
                         }
 
                         1
@@ -111,13 +111,13 @@ impl CPU {
                     0x6 | 0xE => {
                         let offset = if nibble == 0x06 { 0 } else { 1 };
                         let reg = Self::get_opcode_reg(2 * (opcode >> 4) + offset);
-                        let val = self.mem.read_operand();
+                        let val = self.read_operand();
 
                         if let Some(reg_val) = reg {
-                            self.mem.write_reg(&reg_val, val);
+                            self.reg.write(&reg_val, val);
                             2
                         } else {
-                            self.mem.write_mem(self.mem.read_reg_16(&Reg16::HL), val);
+                            self.write(self.reg.read_16(&Reg16::HL), val);
                             3
                         }
                     }
@@ -125,48 +125,48 @@ impl CPU {
                         match opcode {
                             // RLC
                             0x07 => {
-                                self.mem.a = self.rotate(self.mem.a, true, false);
-                                self.mem.f.remove(FlagReg::ZERO);
+                                self.reg.a = self.rotate(self.reg.a, true, false);
+                                self.reg.f.remove(FlagReg::ZERO);
                             }
                             // RL
                             0x17 => {
-                                self.mem.a = self.rotate(self.mem.a, true, true);
-                                self.mem.f.remove(FlagReg::ZERO);
+                                self.reg.a = self.rotate(self.reg.a, true, true);
+                                self.reg.f.remove(FlagReg::ZERO);
                             }
                             // DAA (https://rgbds.gbdev.io/docs/v0.9.0/gbz80.7#DAA)
                             0x27 => {
                                 let mut adj: u8 = 0;
-                                let res = if self.mem.f.intersects(FlagReg::SUBTRACT) {
-                                    if self.mem.f.intersects(FlagReg::HALF_CARRY) {
+                                let res = if self.reg.f.intersects(FlagReg::SUBTRACT) {
+                                    if self.reg.f.intersects(FlagReg::HALF_CARRY) {
                                         adj += 0x6;
                                     }
-                                    if self.mem.f.intersects(FlagReg::CARRY) {
+                                    if self.reg.f.intersects(FlagReg::CARRY) {
                                         adj += 0x60;
-                                        self.mem.f.insert(FlagReg::CARRY);
+                                        self.reg.f.insert(FlagReg::CARRY);
                                     }
-                                    self.mem.a.wrapping_sub(adj)
+                                    self.reg.a.wrapping_sub(adj)
                                 } else {
-                                    if self.mem.f.intersects(FlagReg::HALF_CARRY)
-                                        || self.mem.a & 0x0F > 0x9
+                                    if self.reg.f.intersects(FlagReg::HALF_CARRY)
+                                        || self.reg.a & 0x0F > 0x9
                                     {
                                         adj += 0x6;
                                     }
-                                    if self.mem.f.intersects(FlagReg::CARRY) || self.mem.a > 0x99 {
+                                    if self.reg.f.intersects(FlagReg::CARRY) || self.reg.a > 0x99 {
                                         adj += 0x60;
-                                        self.mem.f.insert(FlagReg::CARRY);
+                                        self.reg.f.insert(FlagReg::CARRY);
                                     }
-                                    self.mem.a.wrapping_add(adj)
+                                    self.reg.a.wrapping_add(adj)
                                 };
 
-                                self.mem.f.set(FlagReg::ZERO, res == 0);
-                                self.mem.f.remove(FlagReg::HALF_CARRY);
-                                self.mem.a = res;
+                                self.reg.f.set(FlagReg::ZERO, res == 0);
+                                self.reg.f.remove(FlagReg::HALF_CARRY);
+                                self.reg.a = res;
                             }
                             // SCF
                             0x37 => {
-                                self.mem.f.remove(FlagReg::SUBTRACT);
-                                self.mem.f.remove(FlagReg::HALF_CARRY);
-                                self.mem.f.insert(FlagReg::CARRY);
+                                self.reg.f.remove(FlagReg::SUBTRACT);
+                                self.reg.f.remove(FlagReg::HALF_CARRY);
+                                self.reg.f.insert(FlagReg::CARRY);
                             }
                             _ => panic!("Invalid instruction: {:#04X}", opcode),
                         };
@@ -175,20 +175,20 @@ impl CPU {
                     0x8 => {
                         // LD SP
                         if opcode == 0x08 {
-                            let bytes = self.mem.sp.to_le_bytes();
-                            let address = self.mem.read_operand_16();
-                            self.mem.write_mem(address, bytes[0]);
-                            self.mem.write_mem(address + 1, bytes[1]);
+                            let bytes = self.reg.sp.to_le_bytes();
+                            let address = self.read_operand_16();
+                            self.write(address, bytes[0]);
+                            self.write(address + 1, bytes[1]);
                             5
                         }
                         // JR
                         else {
-                            let step = self.mem.read_operand() as i8;
+                            let step = self.read_operand() as i8;
                             if (opcode == 0x18)
-                                || (opcode == 0x28 && self.mem.f.intersects(FlagReg::ZERO))
-                                || (opcode == 0x38 && self.mem.f.intersects(FlagReg::CARRY))
+                                || (opcode == 0x28 && self.reg.f.intersects(FlagReg::ZERO))
+                                || (opcode == 0x38 && self.reg.f.intersects(FlagReg::CARRY))
                             {
-                                self.mem.pc = self.mem.pc.wrapping_add_signed(step as i16);
+                                self.reg.pc = self.reg.pc.wrapping_add_signed(step as i16);
                                 3
                             } else {
                                 2
@@ -198,43 +198,43 @@ impl CPU {
                     // ADD r16
                     0x9 => {
                         let reg = Self::get_opcode_reg16(opcode).unwrap_or(Reg16::SP);
-                        let reg_val = self.mem.read_reg_16(&reg);
-                        let val = self.mem.read_reg_16(&Reg16::HL);
+                        let reg_val = self.reg.read_16(&reg);
+                        let val = self.reg.read_16(&Reg16::HL);
                         let (res, carry) = val.overflowing_add(reg_val);
 
-                        self.mem.f.remove(FlagReg::SUBTRACT);
-                        self.mem.f.set(
+                        self.reg.f.remove(FlagReg::SUBTRACT);
+                        self.reg.f.set(
                             FlagReg::HALF_CARRY,
                             ((reg_val & 0x0FFF) + (val & 0x0FFF)) & 0x1000 > 0,
                         );
-                        self.mem.f.set(FlagReg::CARRY, carry);
+                        self.reg.f.set(FlagReg::CARRY, carry);
 
-                        self.mem.write_reg_16(&Reg16::HL, res);
+                        self.reg.write_16(&Reg16::HL, res);
                         2
                     }
                     0xF => {
                         match opcode {
                             // RRC
                             0x0F => {
-                                self.mem.a = self.rotate(self.mem.a, false, false);
-                                self.mem.f.remove(FlagReg::ZERO);
+                                self.reg.a = self.rotate(self.reg.a, false, false);
+                                self.reg.f.remove(FlagReg::ZERO);
                             }
                             // RR
                             0x1F => {
-                                self.mem.a = self.rotate(self.mem.a, false, true);
-                                self.mem.f.remove(FlagReg::ZERO);
+                                self.reg.a = self.rotate(self.reg.a, false, true);
+                                self.reg.f.remove(FlagReg::ZERO);
                             }
                             // CPL
                             0x2F => {
-                                self.mem.a = !self.mem.a;
-                                self.mem.f.insert(FlagReg::SUBTRACT);
-                                self.mem.f.insert(FlagReg::HALF_CARRY);
+                                self.reg.a = !self.reg.a;
+                                self.reg.f.insert(FlagReg::SUBTRACT);
+                                self.reg.f.insert(FlagReg::HALF_CARRY);
                             }
                             // CCF
                             0x3F => {
-                                self.mem.f.remove(FlagReg::SUBTRACT);
-                                self.mem.f.remove(FlagReg::HALF_CARRY);
-                                self.mem.f.toggle(FlagReg::CARRY);
+                                self.reg.f.remove(FlagReg::SUBTRACT);
+                                self.reg.f.remove(FlagReg::HALF_CARRY);
+                                self.reg.f.toggle(FlagReg::CARRY);
                             }
                             _ => panic!("Invalid instruction: {:#04X}", opcode),
                         };
@@ -249,25 +249,25 @@ impl CPU {
                 let val: u8;
                 let mut long = false;
                 if reg.is_none() {
-                    val = self.mem.read_mem(self.mem.read_reg_16(&Reg16::HL));
+                    val = self.read(self.reg.read_16(&Reg16::HL));
                     long = true;
                 } else {
-                    val = self.mem.read_reg(&reg.unwrap());
+                    val = self.reg.read(&reg.unwrap());
                 }
 
                 match opcode {
                     // LD
-                    0x40..=0x47 => self.mem.b = val,
-                    0x48..=0x4F => self.mem.c = val,
-                    0x50..=0x57 => self.mem.d = val,
-                    0x58..=0x5F => self.mem.e = val,
-                    0x60..=0x67 => self.mem.h = val,
-                    0x68..=0x6F => self.mem.l = val,
+                    0x40..=0x47 => self.reg.b = val,
+                    0x48..=0x4F => self.reg.c = val,
+                    0x50..=0x57 => self.reg.d = val,
+                    0x58..=0x5F => self.reg.e = val,
+                    0x60..=0x67 => self.reg.h = val,
+                    0x68..=0x6F => self.reg.l = val,
                     0x70..=0x77 => {
-                        self.mem.write_mem(self.mem.read_reg_16(&Reg16::HL), val);
+                        self.write(self.reg.read_16(&Reg16::HL), val);
                         long = true;
                     }
-                    0x78..=0x7F => self.mem.a = val,
+                    0x78..=0x7F => self.reg.a = val,
 
                     // ADD / ADC
                     0x80..=0x8F => self.add_a(val, opcode >= 0x88),
@@ -301,21 +301,21 @@ impl CPU {
                     0x0 | 0x2 | 0x3 | 0xA => {
                         // DI
                         if opcode == 0xF3 {
-                            self.mem.ime = false;
+                            self.istate.ime = false;
                             1
                         }
                         // LD
                         else if opcode & 0xF0 >= 0xE0 {
                             let (address, cycles) = match nibble {
-                                0x0 => (0xFF00u16 + self.mem.read_operand() as u16, 3),
-                                0x2 => (0xFF00u16 + self.mem.c as u16, 2),
-                                0xA => (self.mem.read_operand_16(), 4),
+                                0x0 => (0xFF00u16 + self.read_operand() as u16, 3),
+                                0x2 => (0xFF00u16 + self.reg.c as u16, 2),
+                                0xA => (self.read_operand_16(), 4),
                                 _ => panic!(),
                             };
                             if opcode & 0xF0 == 0xE0 {
-                                self.mem.write_mem(address, self.mem.a);
+                                self.write(address, self.reg.a);
                             } else {
-                                self.mem.a = self.mem.read_mem(address);
+                                self.reg.a = self.read(address);
                             }
                             cycles
                         } else {
@@ -325,7 +325,7 @@ impl CPU {
                                 0x0 => {
                                     if !condition {
                                         increment_pc = false;
-                                        self.mem.pc = self.mem.pop();
+                                        self.reg.pc = self.pop();
                                         5
                                     } else {
                                         2
@@ -340,10 +340,10 @@ impl CPU {
                                         condition = true;
                                     }
 
-                                    let address = self.mem.read_operand_16();
+                                    let address = self.read_operand_16();
                                     if condition {
                                         increment_pc = false;
-                                        self.mem.pc = address;
+                                        self.reg.pc = address;
                                         4
                                     } else {
                                         3
@@ -356,19 +356,19 @@ impl CPU {
                     // POP r16
                     0x1 => {
                         let reg = Self::get_opcode_reg16(opcode - 0xC0).unwrap_or(Reg16::AF);
-                        let val = self.mem.pop();
-                        self.mem.write_reg_16(&reg, val);
+                        let val = self.pop();
+                        self.reg.write_16(&reg, val);
                         3
                     }
                     // PUSH r16
                     0x5 => {
                         let reg = Self::get_opcode_reg16(opcode - 0xC0).unwrap_or(Reg16::AF);
-                        self.mem.push(self.mem.read_reg_16(&reg));
+                        self.push(self.reg.read_16(&reg));
                         4
                     }
                     // Arithmetics for d8
                     0x6 | 0xE => {
-                        let val = self.mem.read_operand();
+                        let val = self.read_operand();
                         match opcode {
                             0xC6 => self.add_a(val, false),
                             0xCE => self.add_a(val, true),
@@ -392,11 +392,11 @@ impl CPU {
                             condition = true;
                         }
 
-                        let address = self.mem.read_operand_16();
+                        let address = self.read_operand_16();
                         if condition {
                             increment_pc = false;
-                            self.mem.push(self.mem.pc + 1);
-                            self.mem.pc = address;
+                            self.push(self.reg.pc + 1);
+                            self.reg.pc = address;
                             6
                         } else {
                             3
@@ -406,7 +406,7 @@ impl CPU {
                     0x7 | 0xF => {
                         increment_pc = false;
                         self.halt = false;
-                        self.mem.push(self.mem.pc + 1);
+                        self.push(self.reg.pc + 1);
                         let address: u16 = match opcode {
                             0xC7 => 0x00,
                             0xCF => 0x08,
@@ -418,14 +418,14 @@ impl CPU {
                             0xFF => 0x38,
                             _ => panic!(),
                         };
-                        self.mem.pc = address;
+                        self.reg.pc = address;
                         4
                     }
                     0x8 => {
                         // ADD SP
                         if opcode >= 0xE0 {
-                            let offset = (self.mem.read_operand() as i8) as i16;
-                            let res = self.mem.sp.wrapping_add_signed(offset);
+                            let offset = (self.read_operand() as i8) as i16;
+                            let res = self.reg.sp.wrapping_add_signed(offset);
 
                             let (reg, cycles) = if opcode == 0xE8 {
                                 (Reg16::SP, 4)
@@ -433,28 +433,28 @@ impl CPU {
                                 (Reg16::HL, 3)
                             };
 
-                            self.mem.f.remove(FlagReg::ZERO);
-                            self.mem.f.remove(FlagReg::SUBTRACT);
-                            self.mem.f.set(
+                            self.reg.f.remove(FlagReg::ZERO);
+                            self.reg.f.remove(FlagReg::SUBTRACT);
+                            self.reg.f.set(
                                 FlagReg::HALF_CARRY,
-                                (self.mem.sp & 0x000F).wrapping_add_signed(offset & 0x000F)
+                                (self.reg.sp & 0x000F).wrapping_add_signed(offset & 0x000F)
                                     & 0x0010
                                     > 0,
                             );
-                            self.mem.f.set(
+                            self.reg.f.set(
                                 FlagReg::CARRY,
-                                (self.mem.sp & 0x00FF).wrapping_add_signed(offset & 0x00FF)
+                                (self.reg.sp & 0x00FF).wrapping_add_signed(offset & 0x00FF)
                                     & 0x0100
                                     > 0,
                             );
 
-                            self.mem.write_reg_16(&reg, res);
+                            self.reg.write_16(&reg, res);
                             cycles
                         }
                         // RET
                         else if self.get_opcode_condition(opcode) {
                             increment_pc = false;
-                            self.mem.pc = self.mem.pop();
+                            self.reg.pc = self.pop();
                             5
                         } else {
                             2
@@ -464,25 +464,25 @@ impl CPU {
                         // RET
                         0xC9 => {
                             increment_pc = false;
-                            self.mem.pc = self.mem.pop();
+                            self.reg.pc = self.pop();
                             4
                         }
                         // RETI
                         0xD9 => {
                             increment_pc = false;
-                            self.mem.pc = self.mem.pop();
-                            self.mem.ime = true;
+                            self.reg.pc = self.pop();
+                            self.istate.ime = true;
                             4
                         }
                         // JP
                         0xE9 => {
                             increment_pc = false;
-                            self.mem.pc = self.mem.read_reg_16(&Reg16::HL);
+                            self.reg.pc = self.reg.read_16(&Reg16::HL);
                             1
                         }
                         // LD
                         0xF9 => {
-                            self.mem.sp = self.mem.read_reg_16(&Reg16::HL);
+                            self.reg.sp = self.reg.read_16(&Reg16::HL);
                             2
                         }
                         _ => panic!("Invalid instruction: {:#04X}", opcode),
@@ -490,7 +490,7 @@ impl CPU {
                     0xB => {
                         // EI
                         if opcode == 0xFB {
-                            self.mem.ime = true;
+                            self.istate.ime = true;
                             1
                         }
                         // 0xCB 16-bit opcodes
@@ -503,20 +503,20 @@ impl CPU {
             }
         };
         if increment_pc {
-            self.mem.pc += 1;
+            self.reg.pc += 1;
         }
         cycles
     }
 
     /// Executes the 16-bit long arithmetic opcodes that start with 0xCB
     fn arithmetic(&mut self) -> u8 {
-        let opcode = self.mem.read_operand();
+        let opcode = self.read_operand();
         let reg = Self::get_opcode_reg(opcode);
 
         let val = if let Some(reg_val) = reg {
-            self.mem.read_reg(&reg_val)
+            self.reg.read(&reg_val)
         } else {
-            self.mem.read_mem(self.mem.read_reg_16(&Reg16::HL))
+            self.read(self.reg.read_16(&Reg16::HL))
         };
 
         let mut set_zero_flag = true;
@@ -536,8 +536,8 @@ impl CPU {
             // SWAP
             0x30..=0x37 => {
                 let res = val.rotate_right(4);
-                self.mem.f = FlagReg::from_bits_truncate(0);
-                self.mem.f.set(FlagReg::ZERO, res == 0);
+                self.reg.f = FlagReg::from_bits_truncate(0);
+                self.reg.f.set(FlagReg::ZERO, res == 0);
                 res
             }
             // SRL
@@ -549,9 +549,9 @@ impl CPU {
                 match opcode {
                     // BIT
                     0x40..=0x7F => {
-                        self.mem.f.remove(FlagReg::SUBTRACT);
-                        self.mem.f.insert(FlagReg::HALF_CARRY);
-                        self.mem.f.set(FlagReg::ZERO, val & mask == 0);
+                        self.reg.f.remove(FlagReg::SUBTRACT);
+                        self.reg.f.insert(FlagReg::HALF_CARRY);
+                        self.reg.f.set(FlagReg::ZERO, val & mask == 0);
                         return if reg.is_none() { 3 } else { 2 };
                     }
                     // RES
@@ -564,14 +564,14 @@ impl CPU {
         };
 
         if set_zero_flag {
-            self.mem.f.set(FlagReg::ZERO, res == 0);
+            self.reg.f.set(FlagReg::ZERO, res == 0);
         }
 
         if let Some(reg_val) = reg {
-            self.mem.write_reg(&reg_val, res);
+            self.reg.write(&reg_val, res);
             2
         } else {
-            self.mem.write_mem(self.mem.read_reg_16(&Reg16::HL), res);
+            self.write(self.reg.read_16(&Reg16::HL), res);
             4
         }
     }
@@ -584,89 +584,89 @@ impl CPU {
 
         let overflow_bit = if left { 0b00000001 } else { 0b10000000 };
         if through_carry {
-            if self.mem.f.intersects(FlagReg::CARRY) {
+            if self.reg.f.intersects(FlagReg::CARRY) {
                 res |= overflow_bit;
             }
         } else if carry {
             res |= overflow_bit;
         }
 
-        self.mem.f = FlagReg::from_bits_truncate(0);
-        self.mem.f.set(FlagReg::CARRY, carry);
+        self.reg.f = FlagReg::from_bits_truncate(0);
+        self.reg.f.set(FlagReg::CARRY, carry);
 
         res
     }
 
     fn add_a(&mut self, val: u8, with_carry: bool) {
-        let carry_val = if with_carry && self.mem.f.intersects(FlagReg::CARRY) {
+        let carry_val = if with_carry && self.reg.f.intersects(FlagReg::CARRY) {
             1
         } else {
             0
         };
         let (added_val, add_carry) = val.overflowing_add(carry_val);
-        let (res, carry) = self.mem.a.overflowing_add(added_val);
+        let (res, carry) = self.reg.a.overflowing_add(added_val);
 
-        self.mem.f.set(FlagReg::ZERO, res == 0);
-        self.mem.f.remove(FlagReg::SUBTRACT);
-        self.mem.f.set(
+        self.reg.f.set(FlagReg::ZERO, res == 0);
+        self.reg.f.remove(FlagReg::SUBTRACT);
+        self.reg.f.set(
             FlagReg::HALF_CARRY,
-            (self.mem.a & 0x0F)
+            (self.reg.a & 0x0F)
                 .wrapping_add(val & 0x0F)
                 .wrapping_add(carry_val)
                 & 0x10
                 > 0,
         );
-        self.mem.f.set(FlagReg::CARRY, carry || add_carry);
+        self.reg.f.set(FlagReg::CARRY, carry || add_carry);
 
-        self.mem.a = res;
+        self.reg.a = res;
     }
 
     fn sub_a(&mut self, val: u8, with_carry: bool, set_a: bool) {
-        let carry_val = if with_carry && self.mem.f.intersects(FlagReg::CARRY) {
+        let carry_val = if with_carry && self.reg.f.intersects(FlagReg::CARRY) {
             1
         } else {
             0
         };
         let (added_val, add_carry) = val.overflowing_add(carry_val);
-        let (res, carry) = self.mem.a.overflowing_sub(added_val);
+        let (res, carry) = self.reg.a.overflowing_sub(added_val);
 
-        self.mem.f.set(FlagReg::ZERO, res == 0);
-        self.mem.f.insert(FlagReg::SUBTRACT);
-        self.mem.f.set(
+        self.reg.f.set(FlagReg::ZERO, res == 0);
+        self.reg.f.insert(FlagReg::SUBTRACT);
+        self.reg.f.set(
             FlagReg::HALF_CARRY,
-            (self.mem.a & 0x0F)
+            (self.reg.a & 0x0F)
                 .wrapping_sub(val & 0x0F)
                 .wrapping_sub(carry_val)
                 & 0x10
                 > 0,
         );
-        self.mem.f.set(FlagReg::CARRY, carry || add_carry);
+        self.reg.f.set(FlagReg::CARRY, carry || add_carry);
 
         if set_a {
-            self.mem.a = res;
+            self.reg.a = res;
         }
     }
 
     fn and_a(&mut self, val: u8) {
-        self.mem.a &= val;
+        self.reg.a &= val;
 
-        self.mem.f = FlagReg::from_bits_truncate(0);
-        self.mem.f.set(FlagReg::ZERO, self.mem.a == 0);
-        self.mem.f.insert(FlagReg::HALF_CARRY);
+        self.reg.f = FlagReg::from_bits_truncate(0);
+        self.reg.f.set(FlagReg::ZERO, self.reg.a == 0);
+        self.reg.f.insert(FlagReg::HALF_CARRY);
     }
 
     fn xor_a(&mut self, val: u8) {
-        self.mem.a ^= val;
+        self.reg.a ^= val;
 
-        self.mem.f = FlagReg::from_bits_truncate(0);
-        self.mem.f.set(FlagReg::ZERO, self.mem.a == 0);
+        self.reg.f = FlagReg::from_bits_truncate(0);
+        self.reg.f.set(FlagReg::ZERO, self.reg.a == 0);
     }
 
     fn or_a(&mut self, val: u8) {
-        self.mem.a |= val;
+        self.reg.a |= val;
 
-        self.mem.f = FlagReg::from_bits_truncate(0);
-        self.mem.f.set(FlagReg::ZERO, self.mem.a == 0);
+        self.reg.f = FlagReg::from_bits_truncate(0);
+        self.reg.f.set(FlagReg::ZERO, self.reg.a == 0);
     }
 
     fn get_opcode_reg(opcode: u8) -> Option<Reg8> {
@@ -698,9 +698,9 @@ impl CPU {
 
     fn get_opcode_condition(&self, opcode: u8) -> bool {
         if opcode & 0xF0 == 0xC0 {
-            self.mem.f.intersects(FlagReg::ZERO)
+            self.reg.f.intersects(FlagReg::ZERO)
         } else {
-            self.mem.f.intersects(FlagReg::CARRY)
+            self.reg.f.intersects(FlagReg::CARRY)
         }
     }
 }

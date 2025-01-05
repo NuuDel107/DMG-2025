@@ -1,4 +1,4 @@
-use bitflags::bitflags;
+use super::*;
 
 #[derive(Clone, Copy, PartialEq)]
 pub struct TimerControl(u8);
@@ -122,8 +122,14 @@ impl IO {
             timer: Timer::new(),
         }
     }
+}
 
-    pub fn read(&self, address: u16) -> u8 {
+impl MemoryAccess for IO {
+    fn get_range(&self) -> Vec<RangeInclusive<u16>> {
+        vec![0xFF00..=0xFF7F]
+    }
+
+    fn mem_read(&self, address: u16) -> u8 {
         match address {
             0xFF00 => self.input.read(),
             0xFF01 => self.serial,
@@ -132,13 +138,13 @@ impl IO {
             0xFF07 => self.timer.control.bits(),
             0xFF44 => 0x90,
             _ => {
-                eprintln!("IO not implemented for address {:#06X}", address);
+                eprintln!("IO read not implemented for address {:#06X}", address);
                 0
             }
         }
     }
 
-    pub fn write(&mut self, address: u16, value: u8) {
+    fn mem_write(&mut self, address: u16, value: u8) {
         match address {
             0xFF00 => self.input.write(value),
             0xFF01 => self.serial = value,
@@ -147,8 +153,8 @@ impl IO {
             }
             0xFF05 => self.timer.counter = value,
             0xFF06 => self.timer.modulo = value,
-            0xFF07 => self.timer.control = TimerControl::from_bits_truncate(value),
-            _ => eprintln!("IO not implemented for address {:#06X}", address),
+            0xFF07 => self.timer.control(value),
+            _ => eprintln!("IO write not implemented for address {:#06X}", address),
         }
     }
 }

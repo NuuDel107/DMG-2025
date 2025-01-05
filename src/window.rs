@@ -1,5 +1,5 @@
 use super::{
-    cpu::{io::*, memory::*},
+    cpu::{interrupts::*, io::*, registers::*},
     Options, CPU,
 };
 use egui::epaint::*;
@@ -82,15 +82,15 @@ impl Window {
             let mut cpu = cpu_ref.lock().unwrap();
             // If program counter is at specified breakpoint,
             // stop the clock
-            if options.breakpoints.contains(&cpu.mem.pc) {
+            if options.breakpoints.contains(&cpu.reg.pc) {
                 cpu.breakpoint();
                 running_ref.store(false, Ordering::Relaxed);
                 break;
             }
 
-            if logfile.is_some() && cpu.cycles == 0 {
+            if logfile.is_some() && cpu.dots == 0 && cpu.cycles == 0 {
                 #[allow(clippy::unnecessary_unwrap)]
-                Self::log(logfile.as_mut().unwrap(), &cpu.mem);
+                Self::log(logfile.as_mut().unwrap(), &cpu);
             }
 
             // Cycle CPU and refresh the GUI
@@ -169,6 +169,12 @@ impl Window {
                         Key::F3 => {
                             if !self.cpu_running.load(Ordering::Relaxed) {
                                 self.cpu.lock().unwrap().cycle(true)
+                            }
+                        }
+                        // Manually cycle a dot
+                        Key::F4 => {
+                            if !self.cpu_running.load(Ordering::Relaxed) {
+                                self.cpu.lock().unwrap().cycle(false)
                             }
                         }
                         // Manually activate breakpoint
