@@ -6,7 +6,8 @@ mod window;
 use window::Window;
 
 const WINDOW_SCALE: u8 = 4;
-const ROM_PATH: &str = "roms/test.gb";
+const ROM_PATH: &str = "roms/gb-test-roms-master/cpu_instrs/individual/02-interrupts.gb";
+// const ROM_PATH: &str = "roms/test.gb";
 
 fn load_rom_file(path: &str) -> Vec<u8> {
     match std::fs::read(path) {
@@ -28,9 +29,9 @@ fn main() -> eframe::Result {
 
     let rom_file = load_rom_file(ROM_PATH);
     let cpu = CPU::new(rom_file);
-    let window = Window::new(cpu, WINDOW_SCALE);
 
     // Initialize main window
+    let window = Window::new(cpu, WINDOW_SCALE);
     let icon = std::fs::read("icon.png").unwrap();
     let options = eframe::NativeOptions {
         viewport: egui::ViewportBuilder::default()

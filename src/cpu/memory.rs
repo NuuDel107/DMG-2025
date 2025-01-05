@@ -1,3 +1,6 @@
+use super::IO;
+use bitflags::bitflags;
+
 #[derive(Clone, Copy)]
 pub enum Reg8 {
     A,
@@ -20,48 +23,33 @@ pub enum Reg16 {
     PC,
 }
 
-#[derive(Clone, Copy)]
-pub struct FlagRegister {
-    pub zero: bool,
-    pub subtract: bool,
-    pub half_carry: bool,
-    pub carry: bool,
-}
+#[derive(Clone, Copy, PartialEq)]
+pub struct InterruptFlag(u8);
+#[derive(Clone, Copy, PartialEq)]
+pub struct FlagReg(u8);
 
-impl From<u8> for FlagRegister {
-    fn from(value: u8) -> Self {
-        Self {
-            zero: (value & 0b10000000) > 0,
-            subtract: (value & 0b01000000) > 0,
-            half_carry: (value & 0b00100000) > 0,
-            carry: (value & 0b00010000) > 0,
-        }
+bitflags! {
+    impl InterruptFlag: u8 {
+        const JOYPAD = 0b0001_0000;
+        const SERIAL = 0b0000_1000;
+        const TIMER  = 0b0000_0100;
+        const LCD    = 0b0000_0010;
+        const VBLANK = 0b0000_0001;
     }
-}
 
-impl From<FlagRegister> for u8 {
-    fn from(reg: FlagRegister) -> Self {
-        let mut value = 0;
-        if reg.zero {
-            value |= 0b10000000;
-        }
-        if reg.subtract {
-            value |= 0b01000000;
-        }
-        if reg.half_carry {
-            value |= 0b00100000;
-        }
-        if reg.carry {
-            value |= 0b00010000;
-        }
-        value
+    impl FlagReg: u8 {
+        const ZERO       = 0b1000_0000;
+        const SUBTRACT   = 0b0100_0000;
+        const HALF_CARRY = 0b0010_0000;
+        const CARRY      = 0b0001_0000;
     }
 }
 
 pub struct Memory {
+    pub io: IO,
     // Registers
     pub a: u8,
-    pub f: FlagRegister,
+    pub f: FlagReg,
     pub b: u8,
     pub c: u8,
     pub d: u8,
@@ -78,27 +66,38 @@ pub struct Memory {
     pub wram: [u8; 0x2000],
     pub oam: [u8; 0xA0],
     pub hram: [u8; 0x7F],
+
+    // Interrupts
+    pub ime: bool,
+    pub iflag: InterruptFlag,
+    pub ie: InterruptFlag,
 }
 
 impl Memory {
     pub fn new(rom_file: Vec<u8>) -> Self {
         Self {
-            a: 0,
-            f: 0.into(),
+            io: IO::new(),
+            a: 0x01,
+            f: FlagReg::from_bits_truncate(0xB0),
             b: 0,
-            c: 0,
-            d: 0,
-            e: 0,
-            h: 0,
-            l: 0,
+            c: 0x13,
+            d: 0x00,
+            e: 0xD8,
+            h: 0x01,
+            l: 0x4D,
             sp: 0xFFFE,
             pc: 0x0100,
+
             rom: Self::load_range::<0x4000>(&rom_file, 0x0000),
             bank: Self::load_range::<0x4000>(&rom_file, 0x4000),
             vram: [0; 0x2000],
             wram: [0; 0x2000],
             oam: [0; 0xA0],
             hram: [0; 0x7F],
+
+            ime: false,
+            iflag: InterruptFlag::from_bits_truncate(0),
+            ie: InterruptFlag::from_bits_truncate(0),
         }
     }
 
@@ -116,7 +115,15 @@ impl Memory {
             0xC000..=0xDFFF => self.wram[(address - 0xC000) as usize],
             0xFE00..=0xFE9F => self.oam[(address - 0xFE00) as usize],
             0xFF80..=0xFFFE => self.hram[(address - 0xFF80) as usize],
-            _ => todo!(),
+
+            0xFF00..=0xFF0E | 0xFF10..=0xFF7F => self.io.read(address),
+            0xFF0F => self.iflag.bits(),
+            0xFFFF => self.ie.bits(),
+            // _ => todo!("{:#06X}", address),
+            _ => {
+                eprintln!("Memory reading not implemented for {:#06X}", address);
+                0
+            }
         }
     }
 
@@ -127,7 +134,7 @@ impl Memory {
     pub fn read_reg(&self, register: &Reg8) -> u8 {
         match register {
             Reg8::A => self.a,
-            Reg8::F => self.f.into(),
+            Reg8::F => self.f.bits(),
             Reg8::B => self.b,
             Reg8::C => self.c,
             Reg8::D => self.d,
@@ -139,7 +146,7 @@ impl Memory {
 
     pub fn read_reg_16(&self, register: &Reg16) -> u16 {
         match register {
-            Reg16::AF => u16::from_be_bytes([self.a, self.f.into()]),
+            Reg16::AF => u16::from_be_bytes([self.a, self.f.bits()]),
             Reg16::BC => u16::from_be_bytes([self.b, self.c]),
             Reg16::DE => u16::from_be_bytes([self.d, self.e]),
             Reg16::HL => u16::from_be_bytes([self.h, self.l]),
@@ -162,20 +169,24 @@ impl Memory {
 
     pub fn write_mem(&mut self, address: u16, value: u8) {
         match address {
-            0x0000..0x4000 => self.rom[address as usize] = value,
-            0x4000..0x8000 => self.bank[(address - 0x4000) as usize] = value,
-            0x8000..0xA000 => self.vram[(address - 0x8000) as usize] = value,
+            0x8000..=0x9FFF => self.vram[(address - 0x8000) as usize] = value,
+            0xA000..=0xBFFF => println!("External RAM write at {:#06X}", address),
             0xC000..=0xDFFF => self.wram[(address - 0xC000) as usize] = value,
             0xFE00..=0xFE9F => self.oam[(address - 0xFE00) as usize] = value,
             0xFF80..=0xFFFE => self.hram[(address - 0xFF80) as usize] = value,
-            _ => todo!(),
+
+            0xFF00..=0xFF0E | 0xFF10..=0xFF7F => self.io.write(address, value),
+            0xFF0F => self.iflag = InterruptFlag::from_bits_truncate(value),
+            0xFFFF => self.ie = InterruptFlag::from_bits_truncate(value),
+            // _ => todo!("{:#06X}", address),
+            _ => eprintln!("Memory writing not implemented for {:#06X}", address),
         }
     }
 
     pub fn write_reg(&mut self, register: &Reg8, value: u8) {
         match register {
             Reg8::A => self.a = value,
-            Reg8::F => self.f = value.into(),
+            Reg8::F => self.f = FlagReg::from_bits_truncate(value),
             Reg8::B => self.b = value,
             Reg8::C => self.c = value,
             Reg8::D => self.d = value,
@@ -190,7 +201,7 @@ impl Memory {
             Reg16::AF => {
                 let bytes = value.to_be_bytes();
                 self.a = bytes[0];
-                self.f = bytes[1].into();
+                self.f = FlagReg::from_bits_truncate(bytes[1]);
             }
             Reg16::BC => {
                 let bytes = value.to_be_bytes();
@@ -222,8 +233,8 @@ impl Memory {
     // Pushes word into memory stack and decrements stack pointer
     pub fn push(&mut self, value: u16) {
         let bytes = value.to_le_bytes();
-        self.write_mem(self.sp - 1, bytes[0]);
-        self.write_mem(self.sp - 2, bytes[1]);
+        self.write_mem(self.sp - 1, bytes[1]);
+        self.write_mem(self.sp - 2, bytes[0]);
         self.sp -= 2;
     }
 }

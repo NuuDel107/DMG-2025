@@ -1,16 +1,27 @@
+use super::cpu::io::*;
 use super::cpu::memory::*;
 use super::CPU;
 use egui::epaint::*;
+use std::fs::{self, OpenOptions, File};
+use std::io::prelude::*;
+use std::io::LineWriter;
+use std::sync::atomic::AtomicBool;
+use std::sync::atomic::Ordering;
+use std::sync::{mpsc, Arc, Mutex};
+use std::thread;
 
 mod debug;
 mod instructions;
 use instructions::InstructionDB;
 
 pub struct Window {
-    cpu: CPU,
+    cpu: Arc<Mutex<CPU>>,
+    ctx: Arc<Mutex<Option<egui::Context>>>,
     window_scale: u8,
     display: [[u8; 144]; 160],
     instruction_db: InstructionDB,
+    has_updated: bool,
+    cpu_running: Arc<AtomicBool>,
     show_debug: bool,
     show_instruction_info: bool,
 }
@@ -18,13 +29,69 @@ pub struct Window {
 impl Window {
     pub fn new(cpu: CPU, window_scale: u8) -> Window {
         Window {
-            cpu,
+            cpu: Arc::new(Mutex::new(cpu)),
+            ctx: Arc::new(Mutex::new(None)),
             window_scale,
             display: [[0; 144]; 160],
             instruction_db: InstructionDB::init(),
+
+            cpu_running: Arc::new(AtomicBool::new(false)),
+            has_updated: false,
             show_debug: false,
             show_instruction_info: false,
         }
+    }
+
+    fn start_clock(&mut self) {
+        let cpu_ref = Arc::clone(&self.cpu);
+        let ctx_ref = Arc::clone(&self.ctx);
+        let running_ref = Arc::clone(&self.cpu_running);
+
+        let breakpoints: Vec<u16> = vec![];
+
+        let _ = fs::remove_file("log.txt");
+        let logfile = File::create("log.txt").unwrap();
+        let mut logfile = LineWriter::new(logfile);
+
+        thread::spawn(move || loop {
+            // thread::sleep(Duration::from_millis(1));
+            if !running_ref.load(Ordering::Relaxed) {
+                break;
+            }
+
+            let mut cpu = cpu_ref.lock().unwrap();
+            if breakpoints.contains(&cpu.mem.pc) {
+                cpu.breakpoint();
+                running_ref.store(false, Ordering::Release);
+                break;
+            }
+            if cpu.cycles == 0 {
+                Self::log(&mut logfile, &cpu.mem);
+            }
+            cpu.cycle(false);
+            egui::Context::request_repaint(ctx_ref.lock().unwrap().as_ref().unwrap());
+        });
+    }
+
+    fn log(logfile: &mut LineWriter<File>, mem: &Memory) {
+        let line = format!(
+            "A:{:02X} F:{:02X} B:{:02X} C:{:02X} D:{:02X} E:{:02X} H:{:02X} L:{:02X} SP:{:04X} PC:{:04X} PCMEM:{:02X},{:02X},{:02X},{:02X}\n",
+            mem.a, 
+            mem.f, 
+            mem.b, 
+            mem.c, 
+            mem.d,  
+            mem.e, 
+            mem.h, 
+            mem.l, 
+            mem.sp, 
+            mem.pc, 
+            mem.read_mem(mem.pc), 
+            mem.read_mem(mem.pc + 1), 
+            mem.read_mem(mem.pc + 2), 
+            mem.read_mem(mem.pc + 3)
+        );
+        let _ = logfile.write_all(line.as_bytes()).inspect_err(|e| eprintln!("{e}"));
     }
 
     fn set_pixel(&mut self, x: u8, y: u8, color: u8) {
@@ -51,7 +118,7 @@ impl Window {
         }
     }
 
-    fn handle_input(&mut self, input: &egui::InputState) {
+    fn handle_input(&mut self, input: &egui::InputState, in_main_window: bool) {
         for event in &input.events {
             if let egui::Event::Key {
                 key,
@@ -60,14 +127,47 @@ impl Window {
                 ..
             } = event
             {
-                if !pressed || *repeat {
+                use egui::Key;
+
+                if *repeat {
                     continue;
                 }
-                use egui::Key;
-                match *key {
-                    Key::Space => self.cpu.execute(),
-                    Key::F3 => self.show_debug = !self.show_debug,
-                    _ => {}
+
+                if in_main_window {
+                    let input_option = match *key {
+                        Key::ArrowRight => Some(InputFlag::RIGHT),
+                        Key::ArrowLeft => Some(InputFlag::LEFT),
+                        Key::ArrowUp => Some(InputFlag::UP),
+                        Key::ArrowDown => Some(InputFlag::DOWN),
+                        Key::X => Some(InputFlag::A),
+                        Key::Z => Some(InputFlag::B),
+                        Key::Backspace => Some(InputFlag::SELECT),
+                        Key::Enter => Some(InputFlag::START),
+                        _ => None,
+                    };
+                    if let Some(input) = input_option {
+                        self.cpu.lock().unwrap().update_input(input, *pressed);
+                    }
+                }
+
+                if *pressed {
+                    match *key {
+                        Key::Space => {
+                            if !self.cpu_running.fetch_not(Ordering::Relaxed) {
+                                self.start_clock();
+                            };
+                        }
+                        Key::F1 => self.show_debug = !self.show_debug,
+                        Key::F3 => {
+                            if !self.cpu_running.load(Ordering::Relaxed) {
+                                self.cpu.lock().unwrap().cycle(true)
+                            }
+                        }
+                        Key::F5 => {
+                            self.cpu.lock().unwrap().breakpoint();
+                        }
+                        _ => {}
+                    };
                 }
             }
         }
@@ -76,12 +176,21 @@ impl Window {
 
 impl eframe::App for Window {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
+        if !self.has_updated {
+            self.has_updated = true;
+
+            self.ctx = Arc::new(Mutex::new(Some(ctx.clone())));
+            if self.cpu_running.load(Ordering::Relaxed) {
+                self.start_clock();
+            }
+        }
+
         let central_frame = egui::Frame::central_panel(&ctx.style()).inner_margin(Margin::ZERO);
         egui::CentralPanel::default()
             .frame(central_frame)
             .show(ctx, |ui| {
                 ctx.input(|input| {
-                    self.handle_input(input);
+                    self.handle_input(input, true);
                 });
                 // Paint background white (empty color)
                 let (_id, screen_rect) = ui.allocate_space(ui.available_size());
@@ -127,7 +236,7 @@ impl eframe::App for Window {
 
                     egui::CentralPanel::default().show(ctx, |ui| {
                         ctx.input(|input| {
-                            self.handle_input(input);
+                            self.handle_input(input, false);
                         });
                         // Run rendering code
                         self.render_debug(ctx, ui);
