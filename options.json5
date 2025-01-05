@@ -1,7 +1,7 @@
 {
-    rom_path: "roms/gb-test-roms-master/cpu_instrs/individual/02-interrupts.gb",
+    rom_path: "roms/gb-test-roms-master/cpu_instrs/individual/01-special.gb",
     window_scale: 4,
-    start_immediately: false,
-    log: true,
+    start_immediately: true,
+    log: false,
     breakpoints: [],
 }

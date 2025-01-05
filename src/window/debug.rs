@@ -106,6 +106,11 @@ impl Window {
                     _ => "".to_string(),
                 };
                 ui.monospace(format!("Operand: {}", operand));
+                ui.monospace(if cpu_ref.istate.executing {
+                    "Interrupted"
+                } else {
+                    ""
+                });
 
                 egui::Window::new(format!("{} ({:#04X})", &instruction.mnemonic, next_opcode))
                     .open(&mut self.show_instruction_info)

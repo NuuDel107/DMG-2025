@@ -21,7 +21,6 @@ pub struct Window {
     ctx: Arc<Mutex<Option<egui::Context>>>,
     cpu_running: Arc<AtomicBool>,
     options: Options,
-    display: [[u8; 144]; 160],
     instruction_db: InstructionDB,
 
     has_initialized: bool,
@@ -36,7 +35,6 @@ impl Window {
             ctx: Arc::new(Mutex::new(None)),
             cpu_running: Arc::new(AtomicBool::new(options.start_immediately)),
             options,
-            display: [[0; 144]; 160],
             instruction_db: InstructionDB::init(),
 
             has_initialized: false,
@@ -97,30 +95,6 @@ impl Window {
             cpu.cycle(false);
             egui::Context::request_repaint(ctx_ref.lock().unwrap().as_ref().unwrap());
         });
-    }
-
-    fn set_pixel(&mut self, x: u8, y: u8, color: u8) {
-        self.display[x as usize][y as usize] = color;
-    }
-
-    fn draw_tile(&mut self, x: u8, y: u8, tile_data: [u8; 16]) {
-        for tile_y in 0..8 {
-            for tile_x in 0..8 {
-                let a = tile_data[usize::from(tile_y * 2)].reverse_bits() & (1 << tile_x) != 0;
-                let b = tile_data[usize::from(tile_y * 2 + 1)].reverse_bits() & (1 << tile_x) != 0;
-
-                let mut color: u8 = 0;
-                if a && b {
-                    color = 3;
-                } else if a {
-                    color = 1;
-                } else if b {
-                    color = 2;
-                }
-
-                self.set_pixel(x + tile_x, y + tile_y, color);
-            }
-        }
     }
 
     fn handle_input(&mut self, input: &egui::InputState, in_main_window: bool) {
@@ -212,10 +186,11 @@ impl eframe::App for Window {
                     RectShape::new(screen_rect, Rounding::ZERO, Color32::WHITE, Stroke::NONE);
 
                 let mut pixels = vec![Shape::Rect(background)];
+                let display = self.cpu.lock().unwrap().ppu.front_display;
                 for x in 0..160 {
                     for y in 0..144 {
-                        // Loop through display table
-                        let pixel = self.display[x][y];
+                        // Loop through front display
+                        let pixel = display[x][y];
                         let color = match pixel {
                             1 => Color32::GRAY,
                             2 => Color32::DARK_GRAY,

@@ -60,6 +60,7 @@ impl CPU {
         for _ in 0..n {
             // PPU is cycled on every dot
             self.ppu.cycle();
+            self.request_interrupt(self.ppu.interrupt_request);
 
             // If three dots have been executed since the last M-cycle,
             // reset dot counter and tick the rest of CPU alongside PPU
