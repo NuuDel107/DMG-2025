@@ -90,6 +90,8 @@ impl CPU {
         self.mem.pc = address;
     }
 
+    /// Triggered when program hits a breakpoint.
+    /// Set a breakpoint here when debugging
     pub fn breakpoint(&mut self) {
         println!("Breakpoint at {:#06X}", self.mem.pc);
     }

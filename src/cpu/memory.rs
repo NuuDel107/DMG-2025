@@ -4,6 +4,7 @@ use bitflags::bitflags;
 #[derive(Clone, Copy)]
 pub enum Reg8 {
     A,
+    #[allow(dead_code)]
     F,
     B,
     C,

@@ -10,6 +10,7 @@ impl Window {
         }
     }
 
+    /// Renders a debug window with displays for the current state of the CPU
     pub fn render_debug(&mut self, ctx: &Context, ui: &mut Ui) {
         ctx.set_visuals(Visuals {
             override_text_color: Some(Color32::WHITE),

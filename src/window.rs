@@ -1,44 +1,59 @@
-use super::cpu::io::*;
-use super::cpu::memory::*;
-use super::CPU;
+use super::{
+    cpu::{io::*, memory::*},
+    Options, CPU,
+};
 use egui::epaint::*;
-use std::fs::{self, OpenOptions, File};
-use std::io::prelude::*;
-use std::io::LineWriter;
-use std::sync::atomic::AtomicBool;
-use std::sync::atomic::Ordering;
-use std::sync::{mpsc, Arc, Mutex};
+use std::fs::{self, File, OpenOptions};
+use std::io::{prelude::*, LineWriter};
+use std::sync::{
+    atomic::{AtomicBool, Ordering},
+    Arc, Mutex,
+};
 use std::thread;
 
 mod debug;
 mod instructions;
+mod logging;
 use instructions::InstructionDB;
 
 pub struct Window {
     cpu: Arc<Mutex<CPU>>,
     ctx: Arc<Mutex<Option<egui::Context>>>,
-    window_scale: u8,
+    cpu_running: Arc<AtomicBool>,
+    options: Options,
     display: [[u8; 144]; 160],
     instruction_db: InstructionDB,
-    has_updated: bool,
-    cpu_running: Arc<AtomicBool>,
+
+    has_initialized: bool,
     show_debug: bool,
     show_instruction_info: bool,
 }
 
 impl Window {
-    pub fn new(cpu: CPU, window_scale: u8) -> Window {
+    pub fn new(cpu: CPU, options: Options) -> Window {
         Window {
             cpu: Arc::new(Mutex::new(cpu)),
             ctx: Arc::new(Mutex::new(None)),
-            window_scale,
+            cpu_running: Arc::new(AtomicBool::new(options.start_immediately)),
+            options,
             display: [[0; 144]; 160],
             instruction_db: InstructionDB::init(),
 
-            cpu_running: Arc::new(AtomicBool::new(false)),
-            has_updated: false,
+            has_initialized: false,
             show_debug: false,
             show_instruction_info: false,
+        }
+    }
+
+    fn init(&mut self) {
+        // Clear logfile
+        if self.options.log {
+            let _ = fs::remove_file("log.txt");
+            let _ = File::create("log.txt");
+        }
+        // Start clock if CPU should start immediately
+        if self.options.start_immediately {
+            self.start_clock();
         }
     }
 
@@ -47,51 +62,41 @@ impl Window {
         let ctx_ref = Arc::clone(&self.ctx);
         let running_ref = Arc::clone(&self.cpu_running);
 
-        let breakpoints: Vec<u16> = vec![];
+        let options = self.options.clone();
 
-        let _ = fs::remove_file("log.txt");
-        let logfile = File::create("log.txt").unwrap();
-        let mut logfile = LineWriter::new(logfile);
+        let mut logfile = if options.log {
+            Some(LineWriter::new(
+                OpenOptions::new().write(true).open("log.txt").unwrap(),
+            ))
+        } else {
+            None
+        };
 
         thread::spawn(move || loop {
             // thread::sleep(Duration::from_millis(1));
+            // Stop the loop when clock gets paused
             if !running_ref.load(Ordering::Relaxed) {
                 break;
             }
 
             let mut cpu = cpu_ref.lock().unwrap();
-            if breakpoints.contains(&cpu.mem.pc) {
+            // If program counter is at specified breakpoint,
+            // stop the clock
+            if options.breakpoints.contains(&cpu.mem.pc) {
                 cpu.breakpoint();
-                running_ref.store(false, Ordering::Release);
+                running_ref.store(false, Ordering::Relaxed);
                 break;
             }
-            if cpu.cycles == 0 {
-                Self::log(&mut logfile, &cpu.mem);
+
+            if logfile.is_some() && cpu.cycles == 0 {
+                #[allow(clippy::unnecessary_unwrap)]
+                Self::log(logfile.as_mut().unwrap(), &cpu.mem);
             }
+
+            // Cycle CPU and refresh the GUI
             cpu.cycle(false);
             egui::Context::request_repaint(ctx_ref.lock().unwrap().as_ref().unwrap());
         });
-    }
-
-    fn log(logfile: &mut LineWriter<File>, mem: &Memory) {
-        let line = format!(
-            "A:{:02X} F:{:02X} B:{:02X} C:{:02X} D:{:02X} E:{:02X} H:{:02X} L:{:02X} SP:{:04X} PC:{:04X} PCMEM:{:02X},{:02X},{:02X},{:02X}\n",
-            mem.a, 
-            mem.f, 
-            mem.b, 
-            mem.c, 
-            mem.d,  
-            mem.e, 
-            mem.h, 
-            mem.l, 
-            mem.sp, 
-            mem.pc, 
-            mem.read_mem(mem.pc), 
-            mem.read_mem(mem.pc + 1), 
-            mem.read_mem(mem.pc + 2), 
-            mem.read_mem(mem.pc + 3)
-        );
-        let _ = logfile.write_all(line.as_bytes()).inspect_err(|e| eprintln!("{e}"));
     }
 
     fn set_pixel(&mut self, x: u8, y: u8, color: u8) {
@@ -152,17 +157,21 @@ impl Window {
 
                 if *pressed {
                     match *key {
+                        // Toggle the clock
                         Key::Space => {
                             if !self.cpu_running.fetch_not(Ordering::Relaxed) {
                                 self.start_clock();
                             };
                         }
+                        // Toggle debug window
                         Key::F1 => self.show_debug = !self.show_debug,
+                        // Manually step over an instruction
                         Key::F3 => {
                             if !self.cpu_running.load(Ordering::Relaxed) {
                                 self.cpu.lock().unwrap().cycle(true)
                             }
                         }
+                        // Manually activate breakpoint
                         Key::F5 => {
                             self.cpu.lock().unwrap().breakpoint();
                         }
@@ -176,15 +185,14 @@ impl Window {
 
 impl eframe::App for Window {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
-        if !self.has_updated {
-            self.has_updated = true;
-
+        if !self.has_initialized {
+            self.has_initialized = true;
             self.ctx = Arc::new(Mutex::new(Some(ctx.clone())));
-            if self.cpu_running.load(Ordering::Relaxed) {
-                self.start_clock();
-            }
+
+            self.init();
         }
 
+        // Render the main display window
         let central_frame = egui::Frame::central_panel(&ctx.style()).inner_margin(Margin::ZERO);
         egui::CentralPanel::default()
             .frame(central_frame)
@@ -211,7 +219,7 @@ impl eframe::App for Window {
                             _ => continue,
                         };
                         // Create shape representing pixel
-                        let scale = self.window_scale as f32;
+                        let scale = self.options.window_scale as f32;
                         let pos = Pos2::new(x as f32 * scale, y as f32 * scale);
                         let rect = Rect::from_min_size(pos, vec2(scale, scale));
                         let pixel = RectShape::new(rect, Rounding::ZERO, color, Stroke::NONE);

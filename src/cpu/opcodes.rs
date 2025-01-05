@@ -508,6 +508,7 @@ impl CPU {
         cycles
     }
 
+    /// Executes the 16-bit long arithmetic opcodes that start with 0xCB
     fn arithmetic(&mut self) -> u8 {
         let opcode = self.mem.read_operand();
         let reg = Self::get_opcode_reg(opcode);

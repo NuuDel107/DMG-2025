@@ -1,0 +1,7 @@
+{
+    rom_path: "roms/gb-test-roms-master/cpu_instrs/individual/08-misc instrs.gb",
+    window_scale: 4,
+    start_immediately: false,
+    log: false,
+    breakpoints: [],
+}
