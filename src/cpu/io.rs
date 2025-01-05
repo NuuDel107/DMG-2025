@@ -32,6 +32,7 @@ pub struct Timer {
     pub control: TimerControl,
     pub target: u8,
     pub enabled: bool,
+    pub overflowed: bool,
 }
 
 impl Timer {
@@ -43,6 +44,7 @@ impl Timer {
             control: TimerControl::from_bits_truncate(0),
             target: 255,
             enabled: false,
+            overflowed: false,
         }
     }
 
@@ -54,8 +56,10 @@ impl Timer {
         if self.cycles == self.target {
             self.cycles = 0;
             if self.counter == 255 {
+                self.overflowed = true;
                 self.counter = self.modulo;
             } else {
+                self.overflowed = false;
                 self.counter += 1;
             }
         } else {
@@ -126,7 +130,7 @@ impl IO {
 
 impl MemoryAccess for IO {
     fn get_range(&self) -> Vec<RangeInclusive<u16>> {
-        vec![0xFF00..=0xFF7F]
+        vec![0xFF00..=0xFF07]
     }
 
     fn mem_read(&self, address: u16) -> u8 {
@@ -136,7 +140,6 @@ impl MemoryAccess for IO {
             0xFF05 => self.timer.counter,
             0xFF06 => self.timer.modulo,
             0xFF07 => self.timer.control.bits(),
-            0xFF44 => 0x90,
             _ => {
                 eprintln!("IO read not implemented for address {:#06X}", address);
                 0

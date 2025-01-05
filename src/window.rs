@@ -88,7 +88,7 @@ impl Window {
                 break;
             }
 
-            if logfile.is_some() && cpu.dots == 0 && cpu.cycles == 0 {
+            if logfile.is_some() && cpu.dots == 0 && cpu.cycles == 0 && !cpu.istate.executing {
                 #[allow(clippy::unnecessary_unwrap)]
                 Self::log(logfile.as_mut().unwrap(), &cpu);
             }

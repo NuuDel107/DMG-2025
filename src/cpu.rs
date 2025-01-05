@@ -71,6 +71,10 @@ impl CPU {
 
             // Tick timer on every M-cycle
             self.io.timer.cycle();
+            // Request interrupt if timer overflows
+            if self.io.timer.overflowed {
+                self.request_interrupt(InterruptFlag::TIMER);
+            }
 
             // Return if CPU is still "executing" last instruction
             if self.cycles > 0 {
@@ -85,6 +89,8 @@ impl CPU {
 
             // Execute next CPU instruction if no interrupts should be executed
             if !self.halt {
+                // Reset executing flag as CPU is now done moving to interrupt handler
+                self.istate.executing = false;
                 self.cycles = self.execute();
             }
         }

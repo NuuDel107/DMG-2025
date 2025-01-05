@@ -13,7 +13,7 @@ pub trait MemoryAccess {
 impl CPU {
     /// Reads from given memory address
     pub fn read(&self, address: u16) -> u8 {
-        let targets: Vec<&dyn MemoryAccess> = vec![&self.mem, &self.ppu, &self.io];
+        let targets: Vec<&dyn MemoryAccess> = vec![&self.mem, &self.ppu, &self.io, &self.istate];
         for target in targets {
             for range in target.get_range() {
                 if range.contains(&address) {
@@ -21,7 +21,7 @@ impl CPU {
                 }
             }
         }
-        eprintln!("No target found for reading from address {:#06X}", address);
+        // eprintln!("No target found for reading from address {:#06X}", address);
         0
     }
 
@@ -32,7 +32,8 @@ impl CPU {
 
     /// Writes to given memory address
     pub fn write(&mut self, address: u16, value: u8) {
-        let targets: Vec<&mut dyn MemoryAccess> = vec![&mut self.mem, &mut self.ppu, &mut self.io];
+        let targets: Vec<&mut dyn MemoryAccess> =
+            vec![&mut self.mem, &mut self.ppu, &mut self.io, &mut self.istate];
         for target in targets {
             for range in target.get_range() {
                 if range.contains(&address) {

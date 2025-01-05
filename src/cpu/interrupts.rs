@@ -20,6 +20,8 @@ pub struct InterruptState {
     pub ie: InterruptFlag,
     /// Interrupt request flag
     pub iflag: InterruptFlag,
+    // If CPU is moving to an interrupt
+    pub executing: bool,
 }
 
 impl InterruptState {
@@ -28,6 +30,7 @@ impl InterruptState {
             ime: false,
             iflag: InterruptFlag::from_bits_truncate(0),
             ie: InterruptFlag::from_bits_truncate(0),
+            executing: false,
         }
     }
 }
@@ -80,6 +83,7 @@ impl CPU {
         self.push(self.reg.pc);
         self.reg.pc = address;
         // Interrupt handling takes 5 M-cycles before executing actual instruction
+        self.istate.executing = true;
         self.cycles = 5;
     }
 
