@@ -3,6 +3,7 @@ use std::ops::RangeInclusive;
 
 pub mod interrupts;
 pub mod io;
+mod mbc;
 pub mod memory;
 mod opcodes;
 pub mod ppu;
@@ -10,6 +11,7 @@ pub mod readwrite;
 pub mod registers;
 use interrupts::*;
 use io::*;
+use mbc::*;
 use memory::*;
 use ppu::*;
 use readwrite::*;
