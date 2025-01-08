@@ -91,9 +91,12 @@ impl Window {
                 Self::log(logfile.as_mut().unwrap(), &cpu);
             }
 
-            // Cycle CPU and refresh the GUI
+            // Cycle CPU
             cpu.cycle(false);
-            egui::Context::request_repaint(ctx_ref.lock().unwrap().as_ref().unwrap());
+            // Request repaint on VBLANK
+            if cpu.ppu.interrupt_request.intersects(InterruptFlag::VBLANK) {
+                egui::Context::request_repaint(ctx_ref.lock().unwrap().as_ref().unwrap());
+            }
         });
     }
 

@@ -94,12 +94,6 @@ impl Memory {
             mbc,
         }
     }
-
-    pub fn load_range<const SIZE: usize>(rom: &[u8], start: usize) -> [u8; SIZE] {
-        let mut range: [u8; SIZE] = [0; SIZE];
-        range[..SIZE].copy_from_slice(&rom[start..(SIZE + start)]);
-        range
-    }
 }
 
 impl MemoryAccess for Memory {

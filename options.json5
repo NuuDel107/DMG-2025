@@ -1,5 +1,5 @@
 {
-    rom_path: "roms/blargg/cpu_instrs/cpu_instrs.gb",
+    rom_path: "roms/Tetris (World) (Rev A).gb",
     window_scale: 4,
     start_immediately: true,
     log: false,
