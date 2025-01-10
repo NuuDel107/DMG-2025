@@ -1,6 +1,6 @@
 use super::*;
 
-#[derive(Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub struct InterruptFlag(u8);
 
 bitflags! {
@@ -85,6 +85,7 @@ impl CPU {
         // Interrupt handling takes 5 M-cycles before executing actual instruction
         self.istate.executing = true;
         self.cycles = 5;
+        println!("INTERRUPTED: {:#010b}", interrupt.bits());
     }
 
     /// Checks for interrupts,

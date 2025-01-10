@@ -170,7 +170,7 @@ impl PPU {
             // If background and window are disabled, return blank
             if !self.control.intersects(PPUControl::BG_WINDOW_ENABLE) {
                 self.set_pixel(x, y, 0);
-                return;
+                continue;
             }
             // Get window pixel instead of background if
             // window is enabled and pixel is inside window bounds
@@ -203,7 +203,7 @@ impl MemoryAccess for PPU {
             0xFF40 => self.control.bits(),
             0xFF41 => {
                 let lyc = ((self.lyc == self.ly) as u8) << 2;
-                self.stat_enable.bits() & lyc & self.mode
+                self.stat_enable.bits() | lyc | self.mode
             }
             0xFF42 => self.bg_y,
             0xFF43 => self.bg_x,

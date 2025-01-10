@@ -21,8 +21,8 @@ impl CPU {
                 }
             }
         }
-        // eprintln!("No target found for reading from address {:#06X}", address);
-        0
+        eprintln!("No target found for reading from address {:#06X}", address);
+        0xFF
     }
 
     /// Reads 16-bit value from given memory address

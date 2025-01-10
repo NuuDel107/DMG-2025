@@ -7,9 +7,10 @@ use std::fs::{self, File, OpenOptions};
 use std::io::{prelude::*, LineWriter};
 use std::sync::{
     atomic::{AtomicBool, Ordering},
-    Arc, Mutex,
+    Arc, Mutex, mpsc
 };
 use std::thread;
+use std::time::Duration;
 
 mod debug;
 mod instructions;
@@ -20,6 +21,8 @@ pub struct Window {
     cpu: Arc<Mutex<CPU>>,
     ctx: Arc<Mutex<Option<egui::Context>>>,
     cpu_running: Arc<AtomicBool>,
+    clock_tx: Option<mpsc::SyncSender<bool>>,
+
     options: Options,
     instruction_db: InstructionDB,
 
@@ -34,6 +37,7 @@ impl Window {
             cpu: Arc::new(Mutex::new(cpu)),
             ctx: Arc::new(Mutex::new(None)),
             cpu_running: Arc::new(AtomicBool::new(options.start_immediately)),
+            clock_tx: None,
             options,
             instruction_db: InstructionDB::init(),
 
@@ -49,19 +53,23 @@ impl Window {
             let _ = fs::remove_file("log.txt");
             let _ = File::create("log.txt");
         }
+        // Start loop on thread that receives clock signal
+        // and cycles the CPU
+        // Function returns the sender channel
+        self.clock_tx = Some(self.start_executor());
+
         // Start clock if CPU should start immediately
         if self.options.start_immediately {
             self.start_clock();
         }
     }
 
-    fn start_clock(&mut self) {
+    fn start_executor(&mut self) -> mpsc::SyncSender<bool>{
         let cpu_ref = Arc::clone(&self.cpu);
         let ctx_ref = Arc::clone(&self.ctx);
         let running_ref = Arc::clone(&self.cpu_running);
-
+        
         let options = self.options.clone();
-
         let mut logfile = if options.log {
             Some(LineWriter::new(
                 OpenOptions::new().write(true).open("log.txt").unwrap(),
@@ -70,33 +78,52 @@ impl Window {
             None
         };
 
+        let (tx, rx) = mpsc::sync_channel(0);
+        thread::spawn(move || {
+            loop {
+                // Wait for timer
+                let _ = rx.recv().unwrap();
+                // Run emulation until next VBlank
+                let mut cpu = cpu_ref.lock().unwrap();
+                loop {
+                    // If program counter is at specified breakpoint,
+                    // stop the clock
+                    if options.breakpoints.contains(&cpu.reg.pc) {
+                        cpu.breakpoint();
+                        running_ref.store(false, Ordering::Relaxed);
+                        break;
+                    }
+                    
+                    if logfile.is_some() && cpu.dots == 0 && cpu.cycles == 0 && !cpu.istate.executing {
+                        #[allow(clippy::unnecessary_unwrap)]
+                        Self::log(logfile.as_mut().unwrap(), &cpu);
+                    }
+
+                    // Cycle CPU
+                    cpu.cycle(false);
+                    // Request repaint on VBLANK
+                    if cpu.ppu.interrupt_request.intersects(InterruptFlag::VBLANK) {
+                        egui::Context::request_repaint(ctx_ref.lock().unwrap().as_ref().unwrap());
+                        break;
+                    }
+                }
+            }
+        });
+        tx
+    }
+
+    fn start_clock(&mut self) {
+        let tx = self.clock_tx.as_ref().unwrap().clone();
+        let running_ref = Arc::clone(&self.cpu_running);
+
         thread::spawn(move || loop {
-            // thread::sleep(Duration::from_millis(1));
             // Stop the loop when clock gets paused
             if !running_ref.load(Ordering::Relaxed) {
                 break;
             }
-
-            let mut cpu = cpu_ref.lock().unwrap();
-            // If program counter is at specified breakpoint,
-            // stop the clock
-            if options.breakpoints.contains(&cpu.reg.pc) {
-                cpu.breakpoint();
-                running_ref.store(false, Ordering::Relaxed);
-                break;
-            }
-
-            if logfile.is_some() && cpu.dots == 0 && cpu.cycles == 0 && !cpu.istate.executing {
-                #[allow(clippy::unnecessary_unwrap)]
-                Self::log(logfile.as_mut().unwrap(), &cpu);
-            }
-
-            // Cycle CPU
-            cpu.cycle(false);
-            // Request repaint on VBLANK
-            if cpu.ppu.interrupt_request.intersects(InterruptFlag::VBLANK) {
-                egui::Context::request_repaint(ctx_ref.lock().unwrap().as_ref().unwrap());
-            }
+            let _ = tx.send(false);
+            // Wait for the duration between VBlanks (59.7 hZ)
+            thread::sleep(Duration::from_micros(16742));
         });
     }
 
@@ -145,13 +172,13 @@ impl Window {
                         // Manually step over an instruction
                         Key::F3 => {
                             if !self.cpu_running.load(Ordering::Relaxed) {
-                                self.cpu.lock().unwrap().cycle(true)
+                                let _ = self.clock_tx.clone().unwrap().send(true);
                             }
                         }
                         // Manually cycle a dot
                         Key::F4 => {
                             if !self.cpu_running.load(Ordering::Relaxed) {
-                                self.cpu.lock().unwrap().cycle(false)
+                                let _ = self.clock_tx.clone().unwrap().send(false);
                             }
                         }
                         // Manually activate breakpoint
