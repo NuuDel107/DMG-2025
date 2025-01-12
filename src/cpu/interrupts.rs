@@ -20,8 +20,6 @@ pub struct InterruptState {
     pub ie: InterruptFlag,
     /// Interrupt request flag
     pub iflag: InterruptFlag,
-    // If CPU is moving to an interrupt
-    pub executing: bool,
 }
 
 impl InterruptState {
@@ -30,7 +28,6 @@ impl InterruptState {
             ime: false,
             iflag: InterruptFlag::from_bits_truncate(0),
             ie: InterruptFlag::from_bits_truncate(0),
-            executing: false,
         }
     }
 }
@@ -60,7 +57,7 @@ impl MemoryAccess for InterruptState {
 impl CPU {
     /// Executed from outside the CPU when input state should be updated
     pub fn update_input(&mut self, input: InputFlag, pressed: bool) {
-        self.io.input.flags.set(input, !pressed);
+        self.input.flags.set(input, !pressed);
         self.request_interrupt(InterruptFlag::JOYPAD);
     }
 
@@ -71,6 +68,8 @@ impl CPU {
 
     /// Executes interrupt handler
     fn run_interrupt(&mut self, interrupt: InterruptFlag) {
+        println!("INTERRUPTED: {:05b}", interrupt.bits());
+
         self.istate.iflag.remove(interrupt);
         let address: u16 = match interrupt {
             InterruptFlag::VBLANK => 0x40,
@@ -80,17 +79,17 @@ impl CPU {
             InterruptFlag::JOYPAD => 0x60,
             _ => panic!(),
         };
+        // CPU waits for 2 M-cycles (for some reason)
+        self.cycle(2);
+        // Move program counter to interrupt address
         self.push(self.reg.pc);
         self.reg.pc = address;
-        // Interrupt handling takes 5 M-cycles before executing actual instruction
-        self.istate.executing = true;
-        self.cycles = 5;
-        println!("INTERRUPTED: {:#010b}", interrupt.bits());
+        // In total interrupt handling takes 5 M-cycles before executing instructions
+        self.cycle(1);
     }
 
-    /// Checks for interrupts,
-    /// returns true if interrupt should be ran instead of next instruction
-    pub fn check_for_interrupt(&mut self) -> bool {
+    /// Checks for interrupts and moves program flow to interrupt if needed
+    pub fn check_for_interrupt(&mut self) {
         let interrupt_requests = self.istate.ie.intersection(self.istate.iflag);
         if interrupt_requests.bits() > 0 {
             // Exit halt mode even if IME is disabled
@@ -109,9 +108,7 @@ impl CPU {
                     self.run_interrupt(InterruptFlag::JOYPAD);
                 }
                 self.istate.ime = false;
-                return true;
             }
         }
-        false
     }
 }

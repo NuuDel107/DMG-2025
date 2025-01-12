@@ -1,6 +1,6 @@
 use super::*;
 
-/// Trait implemented by objects that have values that need to be accessed from the address bus
+/// Trait implemented by objects whose registers can be accessed from the address bus
 pub trait MemoryAccess {
     /// Returns vec of memory address ranges supported by this object
     fn get_range(&self) -> Vec<RangeInclusive<u16>>;
@@ -13,7 +13,8 @@ pub trait MemoryAccess {
 impl CPU {
     /// Reads from given memory address
     pub fn read(&self, address: u16) -> u8 {
-        let targets: Vec<&dyn MemoryAccess> = vec![&self.mem, &self.ppu, &self.io, &self.istate];
+        let targets: Vec<&dyn MemoryAccess> =
+            vec![&self.mem, &self.ppu, &self.input, &self.timer, &self.istate];
         for target in targets {
             for range in target.get_range() {
                 if range.contains(&address) {
@@ -32,8 +33,13 @@ impl CPU {
 
     /// Writes to given memory address
     pub fn write(&mut self, address: u16, value: u8) {
-        let targets: Vec<&mut dyn MemoryAccess> =
-            vec![&mut self.mem, &mut self.ppu, &mut self.io, &mut self.istate];
+        let targets: Vec<&mut dyn MemoryAccess> = vec![
+            &mut self.mem,
+            &mut self.ppu,
+            &mut self.input,
+            &mut self.timer,
+            &mut self.istate,
+        ];
         for target in targets {
             for range in target.get_range() {
                 if range.contains(&address) {
@@ -44,27 +50,35 @@ impl CPU {
         eprintln!("No target found for writing to address {:#06X}", address);
     }
 
-    /// Returns the immediate 8-bit operand from memory and increments program counter
+    /// Returns the immediate 8-bit operand from memory.
+    /// Increments program counter and cycles the system for one M-cycle
     pub fn read_operand(&mut self) -> u8 {
+        self.cycle(1);
         self.reg.pc += 1;
         self.read(self.reg.pc)
     }
 
-    /// Returns the 16-bit immediate operand from memory and increments program counter
+    /// Returns the immediate 16-bit operand from memory.
+    /// Increments program counter and cycles the system for two M-cycles
     pub fn read_operand_16(&mut self) -> u16 {
+        self.cycle(2);
         self.reg.pc += 2;
         self.read_16(self.reg.pc - 1)
     }
 
-    // Pops word from memory stack and increments stack pointer
+    /// Pops word from memory stack and increments stack pointer.
+    /// Also cycles system for two M-cycles
     pub fn pop(&mut self) -> u16 {
+        self.cycle(2);
         let val = self.read_16(self.reg.sp);
         self.reg.sp += 2;
         val
     }
 
-    // Pushes word into memory stack and decrements stack pointer
+    /// Pushes word into memory stack and decrements stack pointer
+    /// Also cycles system for two M-cycles
     pub fn push(&mut self, value: u16) {
+        self.cycle(2);
         let bytes = value.to_le_bytes();
         self.write(self.reg.sp - 1, bytes[1]);
         self.write(self.reg.sp - 2, bytes[0]);

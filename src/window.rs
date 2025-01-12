@@ -1,5 +1,5 @@
 use super::{
-    cpu::{interrupts::*, io::*, registers::*},
+    cpu::{input::*, interrupts::*, registers::*},
     Options, CPU,
 };
 use egui::epaint::*;
@@ -7,7 +7,7 @@ use std::fs::{self, File, OpenOptions};
 use std::io::{prelude::*, LineWriter};
 use std::sync::{
     atomic::{AtomicBool, Ordering},
-    Arc, Mutex, mpsc
+    mpsc, Arc, Mutex,
 };
 use std::thread;
 use std::time::Duration;
@@ -64,11 +64,11 @@ impl Window {
         }
     }
 
-    fn start_executor(&mut self) -> mpsc::SyncSender<bool>{
+    fn start_executor(&mut self) -> mpsc::SyncSender<bool> {
         let cpu_ref = Arc::clone(&self.cpu);
         let ctx_ref = Arc::clone(&self.ctx);
         let running_ref = Arc::clone(&self.cpu_running);
-        
+
         let options = self.options.clone();
         let mut logfile = if options.log {
             Some(LineWriter::new(
@@ -78,34 +78,43 @@ impl Window {
             None
         };
 
-        let (tx, rx) = mpsc::sync_channel(0);
+        let (tx, rx) = mpsc::sync_channel::<bool>(0);
         thread::spawn(move || {
             loop {
                 // Wait for timer
-                let _ = rx.recv().unwrap();
-                // Run emulation until next VBlank
+                let run_until_vblank = rx.recv().unwrap();
                 let mut cpu = cpu_ref.lock().unwrap();
-                loop {
-                    // If program counter is at specified breakpoint,
-                    // stop the clock
-                    if options.breakpoints.contains(&cpu.reg.pc) {
-                        cpu.breakpoint();
-                        running_ref.store(false, Ordering::Relaxed);
-                        break;
-                    }
-                    
-                    if logfile.is_some() && cpu.dots == 0 && cpu.cycles == 0 && !cpu.istate.executing {
-                        #[allow(clippy::unnecessary_unwrap)]
-                        Self::log(logfile.as_mut().unwrap(), &cpu);
-                    }
 
-                    // Cycle CPU
-                    cpu.cycle(false);
-                    // Request repaint on VBLANK
-                    if cpu.ppu.interrupt_request.intersects(InterruptFlag::VBLANK) {
-                        egui::Context::request_repaint(ctx_ref.lock().unwrap().as_ref().unwrap());
-                        break;
+                // If message was sent from main clock, run emulation until next VBlank
+                if run_until_vblank {
+                    loop {
+                        // If program counter is at specified breakpoint,
+                        // stop the clock
+                        if options.breakpoints.contains(&cpu.reg.pc) {
+                            cpu.breakpoint();
+                            running_ref.store(false, Ordering::Relaxed);
+                            break;
+                        }
+
+                        if logfile.is_some() {
+                            #[allow(clippy::unnecessary_unwrap)]
+                            Self::log(logfile.as_mut().unwrap(), &cpu);
+                        }
+
+                        // Break loop if execution function returns true (meaning VBlank was hit)
+                        if cpu.execute() {
+                            // Request repaint to refresh display
+                            egui::Context::request_repaint(
+                                ctx_ref.lock().unwrap().as_ref().unwrap(),
+                            );
+                            break;
+                        }
                     }
+                }
+                // Otherwise only execute one instruction manually
+                else {
+                    cpu.execute();
+                    egui::Context::request_repaint(ctx_ref.lock().unwrap().as_ref().unwrap());
                 }
             }
         });
@@ -121,7 +130,7 @@ impl Window {
             if !running_ref.load(Ordering::Relaxed) {
                 break;
             }
-            let _ = tx.send(false);
+            let _ = tx.send(true);
             // Wait for the duration between VBlanks (59.7 hZ)
             thread::sleep(Duration::from_micros(16742));
         });
@@ -138,7 +147,7 @@ impl Window {
             {
                 use egui::Key;
 
-                if *repeat {
+                if *repeat && !matches!(*key, Key::F3 | Key::F4) {
                     continue;
                 }
 
@@ -171,12 +180,6 @@ impl Window {
                         Key::F1 => self.show_debug = !self.show_debug,
                         // Manually step over an instruction
                         Key::F3 => {
-                            if !self.cpu_running.load(Ordering::Relaxed) {
-                                let _ = self.clock_tx.clone().unwrap().send(true);
-                            }
-                        }
-                        // Manually cycle a dot
-                        Key::F4 => {
                             if !self.cpu_running.load(Ordering::Relaxed) {
                                 let _ = self.clock_tx.clone().unwrap().send(false);
                             }

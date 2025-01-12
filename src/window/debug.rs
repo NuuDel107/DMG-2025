@@ -68,16 +68,17 @@ impl Window {
             ui.vertical(|ui| {
                 ui.monospace(format!(
                     "Input {}{} {:0>8b}",
-                    Self::bool_to_emoji(cpu_ref.io.input.select_button),
-                    Self::bool_to_emoji(cpu_ref.io.input.select_dpad),
-                    cpu_ref.io.input.flags.bits()
+                    Self::bool_to_emoji(cpu_ref.input.select_button),
+                    Self::bool_to_emoji(cpu_ref.input.select_dpad),
+                    cpu_ref.input.flags.bits()
                 ));
                 ui.monospace(format!(
-                    "Timer {} {}/{} %{}",
-                    Self::bool_to_emoji(cpu_ref.io.timer.enabled),
-                    cpu_ref.io.timer.counter,
-                    cpu_ref.io.timer.target,
-                    cpu_ref.io.timer.modulo
+                    "Timer {} {:#06X}/{}%{}={} ",
+                    Self::bool_to_emoji(cpu_ref.timer.enabled),
+                    cpu_ref.timer.div,
+                    (0b1 << (cpu_ref.timer.div_bit + 1)) / 4,
+                    cpu_ref.timer.tma,
+                    cpu_ref.timer.tima,
                 ))
             });
 
@@ -89,9 +90,6 @@ impl Window {
                 } else {
                     self.instruction_db.get(next_opcode, false)
                 };
-
-                ui.monospace(format!("Dots:    {}", cpu_ref.dots));
-                ui.monospace(format!("Cycles:  {}", cpu_ref.cycles));
 
                 ui.horizontal(|ui| {
                     ui.monospace(format!("Next:    {}", &instruction.mnemonic));
@@ -106,11 +104,6 @@ impl Window {
                     _ => "".to_string(),
                 };
                 ui.monospace(format!("Operand: {}", operand));
-                ui.monospace(if cpu_ref.istate.executing {
-                    "Interrupted"
-                } else {
-                    ""
-                });
 
                 egui::Window::new(format!("{} ({:#04X})", &instruction.mnemonic, next_opcode))
                     .open(&mut self.show_instruction_info)
