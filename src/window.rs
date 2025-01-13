@@ -29,6 +29,7 @@ pub struct Window {
     has_initialized: bool,
     show_debug: bool,
     show_instruction_info: bool,
+    input_state: Arc<Mutex<InputFlag>>,
 }
 
 impl Window {
@@ -44,6 +45,7 @@ impl Window {
             has_initialized: false,
             show_debug: false,
             show_instruction_info: false,
+            input_state: Arc::new(Mutex::new(InputFlag::from_bits_truncate(0xFF))),
         }
     }
 
@@ -68,6 +70,7 @@ impl Window {
         let cpu_ref = Arc::clone(&self.cpu);
         let ctx_ref = Arc::clone(&self.ctx);
         let running_ref = Arc::clone(&self.cpu_running);
+        let input_ref = Arc::clone(&self.input_state);
 
         let options = self.options.clone();
         let mut logfile = if options.log {
@@ -84,6 +87,11 @@ impl Window {
                 // Wait for timer
                 let run_until_vblank = rx.recv().unwrap();
                 let mut cpu = cpu_ref.lock().unwrap();
+                
+                // Update input
+                let input = input_ref.lock().unwrap();
+                cpu.update_input(&input);
+                drop(input);
 
                 // If message was sent from main clock, run emulation until next VBlank
                 if run_until_vblank {
@@ -164,7 +172,7 @@ impl Window {
                         _ => None,
                     };
                     if let Some(input) = input_option {
-                        self.cpu.lock().unwrap().update_input(input, *pressed);
+                        self.input_state.lock().unwrap().set(input, !pressed);
                     }
                 }
 

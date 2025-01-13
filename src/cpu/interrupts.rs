@@ -56,9 +56,10 @@ impl MemoryAccess for InterruptState {
 
 impl CPU {
     /// Executed from outside the CPU when input state should be updated
-    pub fn update_input(&mut self, input: InputFlag, pressed: bool) {
-        self.input.flags.set(input, !pressed);
-        self.request_interrupt(InterruptFlag::JOYPAD);
+    pub fn update_input(&mut self, input: &InputFlag) {
+        if self.input.update(*input) {
+            self.request_interrupt(InterruptFlag::JOYPAD);
+        }
     }
 
     /// Sets corresponding interrupt flag to true
