@@ -192,6 +192,12 @@ impl Window {
                                 let _ = self.clock_tx.clone().unwrap().send(false);
                             }
                         }
+                        // Run until next frame
+                        Key::F4 => {
+                            if !self.cpu_running.load(Ordering::Relaxed) {
+                                let _ = self.clock_tx.clone().unwrap().send(true);
+                            }
+                        }
                         // Manually activate breakpoint
                         Key::F5 => {
                             self.cpu.lock().unwrap().breakpoint();

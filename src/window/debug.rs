@@ -79,7 +79,12 @@ impl Window {
                     (0b1 << (cpu_ref.timer.div_bit + 1)) / 4,
                     cpu_ref.timer.tma,
                     cpu_ref.timer.tima,
-                ))
+                ));
+                ui.monospace(format!(
+                    "PPU {} {:0>10b}",
+                    cpu_ref.ppu.mode,
+                    cpu_ref.ppu.control
+                ));
             });
 
             ui.vertical(|ui| {

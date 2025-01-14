@@ -205,10 +205,13 @@ impl PPU {
         }
     }
 
-    /// Saves current color of given color ID into the display buffer 
-    fn set_pixel(&mut self, x: u8, y: u8, col_id: u8, palette: u8) {
-        // Get correct color value from the given palette
-        let col = (palette >> (2 * col_id)) & 0b11;
+    /// Get color value from given palette
+    fn get_palette_color(&mut self, col_id: u8, palette: u8)-> u8 {
+        (palette >> (2 * col_id)) & 0b11
+    }
+
+    /// Saves given color into the display buffer 
+    fn set_pixel(&mut self, x: u8, y: u8, col: u8) {
         self.back_display[x as usize][y as usize] = col;
     }
 
@@ -274,37 +277,65 @@ impl PPU {
     fn draw_scanline(&mut self, y: u8) {
         let sprites = self.get_sprites(y);
         for x in 0..=159u8 {
+            let mut drawn_sprite: Option<&OAMSprite> = None;
+            let mut sprite_col = 0u8;
             if self.control.intersects(PPUControl::OBJ_ENABLE) {
-                let mut drew_object = false;
                 // Convert screen X to object space
                 let obj_x = x + 8;
                 for sprite in &sprites {
                     if obj_x < sprite.x.saturating_add(8) && obj_x >= sprite.x {
-                        let col_id = self.get_tile_color(x, y, sprite.tile_index, false);
+                        let mut tile_x = (x as i16) - ((sprite.x as i16) - 8);
+                        tile_x %= 8;
+                        if sprite.flags.intersects(SpriteFlags::X_FLIP) {
+                            tile_x = 7 - tile_x;
+                        }
+
+                        let mut tile_y = (y as i16) - ((sprite.y as i16) - 16);
+                        tile_y %= 8;
+                        if sprite.flags.intersects(SpriteFlags::Y_FLIP) {
+                            tile_y = 7 - tile_y;
+                        }
+
+                        let col_id = self.get_tile_color(tile_x as u8, tile_y as u8, sprite.tile_index, false);
                         // With objects, color ID of 0 means transparent, 
                         // so render background or window instead
                         if col_id != 0 {
+                            drawn_sprite = Some(sprite);
                             let palette = if sprite.flags.intersects(SpriteFlags::PALETTE) {
                                 self.palettes.obj1
                             } else {
                                 self.palettes.obj0
                             };
-                            self.set_pixel(x, y, col_id, palette);
-                            drew_object = true;
+                            sprite_col = self.get_palette_color(col_id, palette);
                             break;
                         }
                     }
                 }
-                if drew_object {
+            }
+            
+            let mut use_bg_sprite = false;
+            if let Some(sprite) = drawn_sprite {
+                // If object priority flag is true,
+                // background / window can be rendered on top of it
+                if !sprite.flags.intersects(SpriteFlags::PRIORITY) {
+                    self.set_pixel(x, y, sprite_col);
                     continue;
                 }
+                use_bg_sprite = true;
             }
         
-            // If background and window are disabled, return blank
+            // If background and window are disabled, render object or just blank
             if !self.control.intersects(PPUControl::BG_WINDOW_ENABLE) {
-                self.set_pixel(x, y, 0, self.palettes.bg);
+                if use_bg_sprite {
+                    self.set_pixel(x, y, sprite_col);
+                }
+                else {
+                    let col = self.get_palette_color(0, self.palettes.bg);
+                    self.set_pixel(x, y, col);
+                }
                 continue;
             }
+
             // Get window pixel instead of background if
             // window is enabled and pixel is inside window bounds
             let col_id = if self.control.intersects(PPUControl::WINDOW_ENABLE)
@@ -322,7 +353,15 @@ impl PPU {
                     !self.control.intersects(PPUControl::TILE_DATA_AREA)
                 )
             };
-            self.set_pixel(x, y, col_id, self.palettes.bg);
+            // If pixel color ID is 0, render sprite instead
+            if col_id == 0 && use_bg_sprite {
+                self.set_pixel(x, y, sprite_col);
+            }
+            // Otherwise render background / window pixel
+            else {
+                let col = self.get_palette_color(col_id, self.palettes.bg);
+                self.set_pixel(x, y, col);
+            }
         }
     }
 }
