@@ -54,6 +54,9 @@ impl CPU {
         // Rest of the system runs on T-cycles, which is 1/4 of an M-cycle
         for _ in 0..(4 * cycles) {
             // Cycle PPU
+            if self.ppu.oam_dma_timer == 640 {
+                self.oam_dma(self.ppu.oam_dma_source);
+            }
             self.ppu.cycle();
             self.request_interrupt(self.ppu.interrupt_request);
 

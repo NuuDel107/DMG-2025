@@ -22,7 +22,7 @@ impl CPU {
                 }
             }
         }
-        eprintln!("No target found for reading from address {:#06X}", address);
+        // eprintln!("No target found for reading from address {:#06X}", address);
         0xFF
     }
 
@@ -47,7 +47,7 @@ impl CPU {
                 }
             }
         }
-        eprintln!("No target found for writing to address {:#06X}", address);
+        // eprintln!("No target found for writing to address {:#06X}", address);
     }
 
     /// Returns the immediate 8-bit operand from memory.
@@ -83,5 +83,18 @@ impl CPU {
         self.write(self.reg.sp - 1, bytes[1]);
         self.write(self.reg.sp - 2, bytes[0]);
         self.reg.sp -= 2;
+    }
+
+    /// Starts OAM DMA transfer, which copies memory from given source address to OAM
+    pub fn oam_dma(&mut self, address: u8) {
+        let source_address = (address as u16) * 0x100;
+        for sprite_index in 0..40 {
+            let sprite_address = source_address + (sprite_index * 4);
+            let mut data = [0u8; 4];
+            for i in 0..4u16 {
+                data[i as usize] = self.read(sprite_address + i);
+            }
+            self.ppu.oam.sprites[sprite_index as usize] = OAMSprite::from(data);
+        }
     }
 }
