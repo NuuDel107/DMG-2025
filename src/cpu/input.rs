@@ -38,11 +38,9 @@ impl InputReg {
         // Mask out pressed button based on selected input type
         let send_interrupt = if self.select_button {
             (pressed >> 4) > 0
-        }
-        else if self.select_dpad {
+        } else if self.select_dpad {
             pressed & 0x0F > 0
-        }
-        else {
+        } else {
             false
         };
         // Return if interrupt should be sent
@@ -57,9 +55,7 @@ impl MemoryAccess for InputReg {
     }
 
     fn mem_read(&self, _: u16) -> u8 {
-        let select_bits = 
-            ((self.select_button as u8) << 5) 
-            | ((self.select_dpad as u8) << 4);
+        let select_bits = ((self.select_button as u8) << 5) | ((self.select_dpad as u8) << 4);
 
         let input = if self.select_button {
             (self.flags.bits() & 0xF0) >> 4

@@ -82,8 +82,7 @@ impl Window {
                 ));
                 ui.monospace(format!(
                     "PPU {} {:0>10b}",
-                    cpu_ref.ppu.mode,
-                    cpu_ref.ppu.control
+                    cpu_ref.ppu.mode, cpu_ref.ppu.control
                 ));
             });
 

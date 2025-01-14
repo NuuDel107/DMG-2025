@@ -3,8 +3,25 @@ use super::*;
 /// Shared behavior and access points between MBC cartridges
 #[allow(clippy::upper_case_acronyms)]
 pub trait MBC {
+    /// Returns value from memory at address
+    /// Should handle addresses between $0000-$7FFF and $A000-$BFFF
     fn read(&self, address: u16) -> u8;
+    /// Writes value into memory or register
+    /// Should handle addresses between $0000-$7FFF and $A000-$BFFF
     fn write(&mut self, address: u16, value: u8);
+
+    /// Used to mask bank number register value to wrap around
+    /// based on maximum number of banks
+    fn mask_bank_number(&self, number: u8, bank_amount: u16) -> u8 {
+        // Calculate amount of bits needed to contain number
+        let bit_amount = (bank_amount as f32).log(2.0).ceil() as u8;
+        // Mask number with amount of bits
+        if bit_amount == 0 {
+            0
+        } else {
+            number & (u8::MAX >> (8 - bit_amount))
+        }
+    }
 }
 
 pub struct NoMBC {
@@ -103,10 +120,9 @@ impl MBC for MBC1 {
                 }
                 address -= 0xA000;
                 // RAM banks can only be changed when using advanced banking mode
-                if self.advanced_banking && self.info.ram_banks > 1 {
-                    // Mask out upper bit of bank number if not enough banks
-                    let bank = self.ram_bank & if self.info.ram_banks <= 2 { 0b01 } else { 0b11 };
-                    address += bank as usize * 0x2000;
+                if self.advanced_banking {
+                    address +=
+                        self.mask_bank_number(self.ram_bank, self.info.ram_banks) as usize * 0x2000;
                 }
 
                 if self.ram.len() <= address {
@@ -131,28 +147,18 @@ impl MBC for MBC1 {
             0x2000..=0x3FFF => {
                 // Only needed amount of bits to change between all ROM banks
                 // are saved to the register, rest are masked out
-                let mask = if self.info.rom_banks <= 4 {
-                    0b11
-                } else if self.info.rom_banks <= 8 {
-                    0b111
-                } else if self.info.rom_banks <= 16 {
-                    0b1111
-                } else {
-                    0b1_1111
-                };
-                let mut masked = value & mask;
-
+                let mut masked = self.mask_bank_number(value, self.info.rom_banks.clamp(0, 32));
                 // If register is tried to set to 0, it should be incremented to 1
                 // The check is only done for the 5-bit version for the value though,
                 // so for example if only 3 bits are used,
                 // register value 0b1000 maps the second block to ROM bank 0
                 if value & 0b1_1111 == 0 {
-                    masked = 1
-                };
+                    masked += 1;
+                }
                 self.rom_bank = masked;
             }
             // 2 bit bank register that is used to select both ROM and RAM banks
-            0x4000..=0x5FFF => self.ram_bank = value & 0b0000_0011,
+            0x4000..=0x5FFF => self.ram_bank = value & 0b11,
             // Toggle between banking modes
             // The above register only has effect if this is set to true
             0x6000..=0x7FFF => self.advanced_banking = value & 0b1 > 0,
@@ -210,9 +216,7 @@ impl MBC for MBC3 {
     fn read(&self, address: u16) -> u8 {
         let mut address = address as usize;
         match address {
-            0x0000..=0x3FFF => {
-                self.rom[address]
-            }
+            0x0000..=0x3FFF => self.rom[address],
             0x4000..=0x7FFF => {
                 address += 0x4000 * ((self.rom_bank as usize) - 1);
 
@@ -253,39 +257,19 @@ impl MBC for MBC3 {
             0x0000..=0x1FFF => self.ram_enabled = (value & 0x0F) == 0x0A,
             // ROM bank register
             0x2000..=0x3FFF => {
-                // Only needed amount of bits to change between all ROM banks
-                // are saved to the register, rest are masked out
-                let mask = if self.info.rom_banks <= 4 {
-                    0b11
-                } else if self.info.rom_banks <= 8 {
-                    0b111
-                } else if self.info.rom_banks <= 16 {
-                    0b1111
-                } else if self.info.rom_banks <= 32 {
-                    0b1_1111
-                } else if self.info.rom_banks <= 64 {
-                    0b11_1111
-                } else {
-                    0b111_1111
-                };
-                let mut masked = value & mask;
-
+                let mut masked = self.mask_bank_number(value, self.info.rom_banks);
                 if masked == 0 {
                     masked = 1
                 };
                 self.rom_bank = masked;
+                println!("Selected ROM bank {}", self.rom_bank);
             }
             // 2 bit bank register that is used to select both ROM and RAM banks
             0x4000..=0x5FFF => {
-                let mask = if self.info.ram_banks >= 1 {
-                    0
-                } else if self.info.ram_banks == 2 {
-                    0b1
-                } else {
-                    0b11
-                };
-                self.ram_bank = value & mask
-            },
+                if self.info.ram_banks != 0 {
+                    self.ram_bank = self.mask_bank_number(value, self.info.ram_banks);
+                }
+            }
             // Write to RAM
             0xA000..=0xBFFF => {
                 if !self.ram_enabled {
@@ -294,7 +278,7 @@ impl MBC for MBC3 {
                 let mut address = address as usize;
                 address -= 0xA000;
                 address += self.ram_bank as usize * 0x2000;
-                
+
                 if self.ram.len() <= address {
                     eprintln!(
                         "Tried to write {:#04X} into external RAM at {:#06X}, but RAM size is only {:#06X}",

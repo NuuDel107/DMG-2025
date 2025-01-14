@@ -50,20 +50,20 @@ impl OAMSprite {
             y: data[0],
             x: data[1],
             tile_index: data[2],
-            flags: SpriteFlags::from_bits_truncate(data[3])
+            flags: SpriteFlags::from_bits_truncate(data[3]),
         }
     }
 }
 
 #[allow(clippy::upper_case_acronyms)]
 pub struct OAM {
-    pub sprites: [OAMSprite; 40]
+    pub sprites: [OAMSprite; 40],
 }
 
 impl OAM {
     pub fn new() -> Self {
         Self {
-            sprites: [OAMSprite::from([0; 4]); 40]
+            sprites: [OAMSprite::from([0; 4]); 40],
         }
     }
 
@@ -74,7 +74,7 @@ impl OAM {
             1 => sprite.x,
             2 => sprite.tile_index,
             3 => sprite.flags.bits(),
-            _ => unreachable!()
+            _ => unreachable!(),
         }
     }
 
@@ -85,7 +85,7 @@ impl OAM {
             1 => sprite.x = value,
             2 => sprite.tile_index = value,
             3 => sprite.flags = SpriteFlags::from_bits_truncate(value),
-            _ => unreachable!()
+            _ => unreachable!(),
         }
     }
 }
@@ -93,7 +93,7 @@ impl OAM {
 pub struct DMGPalettes {
     bg: u8,
     obj0: u8,
-    obj1: u8
+    obj1: u8,
 }
 
 pub type DisplayMatrix = [[u8; 144]; 160];
@@ -138,7 +138,11 @@ impl PPU {
             bg_y: 0,
             win_x: 0,
             win_y: 0,
-            palettes: DMGPalettes { bg: 0, obj0: 0, obj1: 0 },
+            palettes: DMGPalettes {
+                bg: 0,
+                obj0: 0,
+                obj1: 0,
+            },
             interrupt_request: InterruptFlag::from_bits_truncate(0),
             stat_enable: STATEnable::from_bits_truncate(0),
             mode: 2,
@@ -206,11 +210,11 @@ impl PPU {
     }
 
     /// Get color value from given palette
-    fn get_palette_color(&mut self, col_id: u8, palette: u8)-> u8 {
+    fn get_palette_color(&mut self, col_id: u8, palette: u8) -> u8 {
         (palette >> (2 * col_id)) & 0b11
     }
 
-    /// Saves given color into the display buffer 
+    /// Saves given color into the display buffer
     fn set_pixel(&mut self, x: u8, y: u8, col: u8) {
         self.back_display[x as usize][y as usize] = col;
     }
@@ -236,7 +240,7 @@ impl PPU {
 
         // When using alternative addressing mode, tile data at index < 128
         // are found at address 0x9000-0x97FF
-        let tile_data_root = if addressing_mode && tile_index < 128  {
+        let tile_data_root = if addressing_mode && tile_index < 128 {
             0x1000
         } else {
             0x0000
@@ -254,11 +258,15 @@ impl PPU {
 
     /// Returns list of sprites that occupy given scanline
     fn get_sprites(&self, y: u8) -> Vec<OAMSprite> {
-        // Convert screen Y to object space, 
+        // Convert screen Y to object space,
         // where y = 0 completely hides the object
         let obj_y = y + 16;
         // Get object height based on current LCD control
-        let height = if self.control.intersects(PPUControl::OBJ_SIZE) {16} else {8};
+        let height = if self.control.intersects(PPUControl::OBJ_SIZE) {
+            16
+        } else {
+            8
+        };
 
         let mut sprites: Vec<OAMSprite> = vec![];
         for sprite in self.oam.sprites {
@@ -268,7 +276,7 @@ impl PPU {
             if sprites.len() == 10 {
                 break;
             }
-        };
+        }
         // Sort sprites by their x coordinate
         sprites.sort_by_key(|sprite| sprite.x);
         sprites
@@ -296,8 +304,13 @@ impl PPU {
                             tile_y = 7 - tile_y;
                         }
 
-                        let col_id = self.get_tile_color(tile_x as u8, tile_y as u8, sprite.tile_index, false);
-                        // With objects, color ID of 0 means transparent, 
+                        let col_id = self.get_tile_color(
+                            tile_x as u8,
+                            tile_y as u8,
+                            sprite.tile_index,
+                            false,
+                        );
+                        // With objects, color ID of 0 means transparent,
                         // so render background or window instead
                         if col_id != 0 {
                             drawn_sprite = Some(sprite);
@@ -312,7 +325,7 @@ impl PPU {
                     }
                 }
             }
-            
+
             let mut use_bg_sprite = false;
             if let Some(sprite) = drawn_sprite {
                 // If object priority flag is true,
@@ -323,13 +336,12 @@ impl PPU {
                 }
                 use_bg_sprite = true;
             }
-        
+
             // If background and window are disabled, render object or just blank
             if !self.control.intersects(PPUControl::BG_WINDOW_ENABLE) {
                 if use_bg_sprite {
                     self.set_pixel(x, y, sprite_col);
-                }
-                else {
+                } else {
                     let col = self.get_palette_color(0, self.palettes.bg);
                     self.set_pixel(x, y, col);
                 }
@@ -341,16 +353,23 @@ impl PPU {
             let col_id = if self.control.intersects(PPUControl::WINDOW_ENABLE)
                 && (x >= self.win_x || y >= self.win_y)
             {
-                let tile = self.get_tile_index(x, y, self.control.intersects(PPUControl::WINDOW_TILE_MAP));
-                self.get_tile_color(x, y, tile, !self.control.intersects(PPUControl::TILE_DATA_AREA))
+                let tile =
+                    self.get_tile_index(x, y, self.control.intersects(PPUControl::WINDOW_TILE_MAP));
+                self.get_tile_color(
+                    x,
+                    y,
+                    tile,
+                    !self.control.intersects(PPUControl::TILE_DATA_AREA),
+                )
             } else {
-                let tile = self.get_tile_index(x, y, self.control.intersects(PPUControl::BG_TILE_MAP));
+                let tile =
+                    self.get_tile_index(x, y, self.control.intersects(PPUControl::BG_TILE_MAP));
                 // Coordinates of background tiles may wrap around
                 self.get_tile_color(
                     x.wrapping_add(self.bg_x),
                     y.wrapping_add(self.bg_y),
                     tile,
-                    !self.control.intersects(PPUControl::TILE_DATA_AREA)
+                    !self.control.intersects(PPUControl::TILE_DATA_AREA),
                 )
             };
             // If pixel color ID is 0, render sprite instead
@@ -407,7 +426,7 @@ impl MemoryAccess for PPU {
                 self.oam_dma_source = value;
                 // Setting the timer activates OAM DMA transfer on CPU
                 self.oam_dma_timer = 640;
-            },
+            }
             0xFF47 => self.palettes.bg = value,
             0xFF48 => self.palettes.obj0 = value,
             0xFF49 => self.palettes.obj1 = value,
