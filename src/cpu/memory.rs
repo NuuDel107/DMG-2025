@@ -84,6 +84,7 @@ impl Memory {
         let mbc: Box<dyn MBC + Send + Sync> = match info.mbc {
             MBCType::NoMBC => Box::new(NoMBC::init(rom_file, info)),
             MBCType::MBC1 => Box::new(MBC1::init(rom_file, info)),
+            MBCType::MBC3 => Box::new(MBC3::init(rom_file, info)),
             _ => todo!("MBC type not supported"),
         };
 

@@ -183,3 +183,130 @@ impl MBC for MBC1 {
         };
     }
 }
+
+pub struct MBC3 {
+    rom: Vec<u8>,
+    rom_bank: u8,
+    ram: Vec<u8>,
+    ram_bank: u8,
+    ram_enabled: bool,
+    info: CartridgeInfo,
+}
+
+impl MBC3 {
+    pub fn init(rom_file: Vec<u8>, info: CartridgeInfo) -> Self {
+        Self {
+            rom: rom_file,
+            rom_bank: 1,
+            ram: vec![0; usize::from(0x2000 * info.ram_banks)],
+            ram_bank: 0,
+            ram_enabled: false,
+            info,
+        }
+    }
+}
+
+impl MBC for MBC3 {
+    fn read(&self, address: u16) -> u8 {
+        let mut address = address as usize;
+        match address {
+            0x0000..=0x3FFF => {
+                self.rom[address]
+            }
+            0x4000..=0x7FFF => {
+                address += 0x4000 * ((self.rom_bank as usize) - 1);
+
+                if self.rom.len() <= address {
+                    eprintln!(
+                        "Tried to access ROM at {:#06X}, but length is only {:#06X}",
+                        address,
+                        self.rom.len()
+                    );
+                    return 0;
+                }
+                self.rom[address]
+            }
+            0xA000..=0xBFFF => {
+                if !self.ram_enabled {
+                    return 0xFF;
+                }
+                address -= 0xA000;
+                address += self.ram_bank as usize * 0x2000;
+
+                if self.ram.len() <= address {
+                    eprintln!(
+                        "Tried to access external RAM at {:#06X}, but RAM size is only {:#06X}",
+                        address,
+                        self.ram.len()
+                    );
+                    return 0xFF;
+                }
+                self.ram[address]
+            }
+            _ => 0,
+        }
+    }
+
+    fn write(&mut self, address: u16, value: u8) {
+        match address {
+            // Enable the RAM
+            0x0000..=0x1FFF => self.ram_enabled = (value & 0x0F) == 0x0A,
+            // ROM bank register
+            0x2000..=0x3FFF => {
+                // Only needed amount of bits to change between all ROM banks
+                // are saved to the register, rest are masked out
+                let mask = if self.info.rom_banks <= 4 {
+                    0b11
+                } else if self.info.rom_banks <= 8 {
+                    0b111
+                } else if self.info.rom_banks <= 16 {
+                    0b1111
+                } else if self.info.rom_banks <= 32 {
+                    0b1_1111
+                } else if self.info.rom_banks <= 64 {
+                    0b11_1111
+                } else {
+                    0b111_1111
+                };
+                let mut masked = value & mask;
+
+                if masked == 0 {
+                    masked = 1
+                };
+                self.rom_bank = masked;
+            }
+            // 2 bit bank register that is used to select both ROM and RAM banks
+            0x4000..=0x5FFF => {
+                let mask = if self.info.ram_banks >= 1 {
+                    0
+                } else if self.info.ram_banks == 2 {
+                    0b1
+                } else {
+                    0b11
+                };
+                self.ram_bank = value & mask
+            },
+            // Write to RAM
+            0xA000..=0xBFFF => {
+                if !self.ram_enabled {
+                    return;
+                }
+                let mut address = address as usize;
+                address -= 0xA000;
+                address += self.ram_bank as usize * 0x2000;
+                
+                if self.ram.len() <= address {
+                    eprintln!(
+                        "Tried to write {:#04X} into external RAM at {:#06X}, but RAM size is only {:#06X}",
+                        value,
+                        address,
+                        self.ram.len()
+                    );
+                    return;
+                }
+                self.ram[address] = value;
+            }
+            _ => {}
+        };
+    }
+}
