@@ -323,7 +323,6 @@ impl CPU {
             0x40..=0x75 | 0x77..=0xBF => {
                 let reg = Self::get_opcode_reg(opcode);
                 let val: u8;
-                let mut long = false;
                 if reg.is_none() {
                     val = self.read(self.reg.read_16(&Reg16::HL));
                     self.cycle(1);

@@ -16,7 +16,7 @@ impl Window {
         println!("Saving CPU state to {}", self.get_save_path());
         let cpu = self.cpu.lock().unwrap();
         let state = json5::to_string::<CPU>(&cpu).expect("Couldn't serialize CPU state");
-        
+
         let _ = fs::remove_file(self.get_save_path());
         let file_res = File::create(self.get_save_path()).inspect_err(on_error);
 
@@ -27,18 +27,18 @@ impl Window {
         }
     }
 
-    /// Loads saved emulator state from file, a.k.a. deserializes CPU 
+    /// Loads saved emulator state from file, a.k.a. deserializes CPU
     pub fn load_state(&mut self) {
         println!("Loading CPU state from {}", self.get_save_path());
         let save_file = fs::read_to_string(self.get_save_path()).inspect_err(on_error);
         if let Ok(save) = save_file {
             let mut cpu = self.cpu.lock().unwrap();
             let rom = cpu.mem.mbc.rom.clone();
-            
-            let mut loaded_cpu = json5::from_str::<CPU>(&save).expect("Couldn't deserialize CPU state");
+
+            let mut loaded_cpu =
+                json5::from_str::<CPU>(&save).expect("Couldn't deserialize CPU state");
             loaded_cpu.mem.mbc.load_rom(rom);
             *cpu = loaded_cpu;
-
         } else {
             on_error(&save_file.unwrap_err());
         }

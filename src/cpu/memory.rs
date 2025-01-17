@@ -151,15 +151,15 @@ impl MBC {
             ram_bank: 0,
             ram_enabled: false,
             advanced_banking: false,
-            info
+            info,
         }
     }
 
-    /// Loads ROM file into the simulated cartridge 
+    /// Loads ROM file into the simulated cartridge
     pub fn load_rom(&mut self, rom_file: Vec<u8>) {
         self.rom = rom_file;
     }
-    
+
     /// Returns value from memory at address
     /// Should handle addresses between $0000-$7FFF and $A000-$BFFF
     pub fn read(&self, address: u16) -> u8 {
@@ -167,7 +167,7 @@ impl MBC {
             MBCType::NoMBC => self.read_nombc(address),
             MBCType::MBC1 => self.read_mbc1(address),
             MBCType::MBC3 => self.read_mbc3(address),
-            _ => todo!("MBC type not supported")
+            _ => todo!("MBC type not supported"),
         }
     }
     /// Writes value into memory or register
@@ -177,7 +177,7 @@ impl MBC {
             MBCType::NoMBC => self.write_nombc(address, value),
             MBCType::MBC1 => self.write_mbc1(address, value),
             MBCType::MBC3 => self.write_mbc3(address, value),
-            _ => todo!("MBC type not supported")
+            _ => todo!("MBC type not supported"),
         }
     }
 

@@ -106,34 +106,39 @@ const EMPTY_DISPLAY: DisplayMatrix = [[0; 144]; 160];
 
 /// Serializes 2D display matrix as a 1D array
 fn serialize_display<S>(display: &DisplayMatrix, serializer: S) -> Result<S::Ok, S::Error>
-    where S: Serializer
-    {
-        let mut seq = serializer.serialize_seq(Some(160*144))?;
-        for x in display {
-            for y in x {
-                seq.serialize_element(y)?;
-            }
+where
+    S: Serializer,
+{
+    let mut seq = serializer.serialize_seq(Some(160 * 144))?;
+    for x in display {
+        for y in x {
+            seq.serialize_element(y)?;
         }
-        seq.end()
     }
+    seq.end()
+}
 
 struct DisplayVisitor;
-impl <'de> Visitor<'de> for DisplayVisitor {
+impl<'de> Visitor<'de> for DisplayVisitor {
     type Value = DisplayMatrix;
 
     fn expecting(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(formatter, "an array with length = pixels in display (160*144)")
+        write!(
+            formatter,
+            "an array with length = pixels in display (160*144)"
+        )
     }
 
     fn visit_seq<A>(self, mut seq: A) -> Result<Self::Value, A::Error>
-        where A: serde::de::SeqAccess<'de>, {
+    where
+        A: serde::de::SeqAccess<'de>,
+    {
         let mut display = EMPTY_DISPLAY;
         for x in 0..160 {
             for y in 0..144 {
                 if let Ok(Some(pixel)) = seq.next_element() {
                     display[x][y] = pixel;
-                }
-                else {
+                } else {
                     return Err(serde::de::Error::custom("Display array too short!"));
                 }
             }
@@ -144,10 +149,11 @@ impl <'de> Visitor<'de> for DisplayVisitor {
 
 /// Deserializes 2D display matrix from a 1D array
 fn deserialize_display<'de, D>(deserializer: D) -> Result<DisplayMatrix, D::Error>
-    where D: Deserializer<'de>
-    {
-        deserializer.deserialize_seq(DisplayVisitor)
-    }
+where
+    D: Deserializer<'de>,
+{
+    deserializer.deserialize_seq(DisplayVisitor)
+}
 
 /// The graphics processing unit
 #[allow(clippy::upper_case_acronyms)]
@@ -412,14 +418,17 @@ impl PPU {
                 let tile =
                     self.get_tile_index(x, y, self.control.intersects(PPUControl::WINDOW_TILE_MAP));
                 self.get_tile_color(
-                    x,
-                    y,
+                    x - self.win_x,
+                    y - self.win_x,
                     tile,
                     !self.control.intersects(PPUControl::TILE_DATA_AREA),
                 )
             } else {
-                let tile =
-                    self.get_tile_index(x, y, self.control.intersects(PPUControl::BG_TILE_MAP));
+                let tile = self.get_tile_index(
+                    x.wrapping_add(self.bg_x),
+                    y.wrapping_add(self.bg_y),
+                    self.control.intersects(PPUControl::BG_TILE_MAP),
+                );
                 // Coordinates of background tiles may wrap around
                 self.get_tile_color(
                     x.wrapping_add(self.bg_x),
