@@ -1,6 +1,6 @@
 use super::*;
 
-#[derive(Clone, Copy, PartialEq)]
+#[derive(Deserialize, Serialize, Clone, Copy, PartialEq)]
 pub struct TimerControl(u8);
 
 bitflags! {
@@ -11,6 +11,7 @@ bitflags! {
     }
 }
 
+#[derive(Deserialize, Serialize)]
 pub struct Timer {
     pub div: u16,
     pub tima: u8,

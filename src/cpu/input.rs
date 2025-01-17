@@ -1,6 +1,6 @@
 use super::*;
 
-#[derive(Clone, Copy, PartialEq)]
+#[derive(Deserialize, Serialize, Clone, Copy, PartialEq)]
 pub struct InputFlag(u8);
 
 bitflags! {
@@ -16,6 +16,7 @@ bitflags! {
     }
 }
 
+#[derive(Deserialize, Serialize)]
 pub struct InputReg {
     pub select_button: bool,
     pub select_dpad: bool,

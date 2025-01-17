@@ -1,6 +1,6 @@
 use super::*;
 
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Deserialize, Serialize, Clone, Copy, PartialEq)]
 pub struct InterruptFlag(u8);
 
 bitflags! {
@@ -13,6 +13,7 @@ bitflags! {
     }
 }
 
+#[derive(Deserialize, Serialize)]
 pub struct InterruptState {
     /// Master interrupt enable
     pub ime: bool,

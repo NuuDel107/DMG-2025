@@ -4,6 +4,7 @@ use std::fs;
 #[derive(Deserialize, Debug, Clone, PartialEq)]
 pub struct Options {
     pub rom_path: String,
+    pub save_folder: String,
     pub window_scale: u8,
     pub start_immediately: bool,
     pub log: bool,

@@ -15,6 +15,7 @@ use std::time::Duration;
 mod debug;
 mod instructions;
 mod logging;
+mod saving;
 use instructions::InstructionDB;
 
 pub struct Window {
@@ -111,6 +112,7 @@ impl Window {
 
                         // Break loop if execution function returns true (meaning VBlank was hit)
                         if cpu.execute() {
+                            drop(cpu);
                             // Request repaint to refresh display
                             egui::Context::request_repaint(
                                 ctx_ref.lock().unwrap().as_ref().unwrap(),
@@ -201,6 +203,12 @@ impl Window {
                         // Manually activate breakpoint
                         Key::F5 => {
                             self.cpu.lock().unwrap().breakpoint();
+                        }
+                        Key::F7 => {
+                            self.save_state();
+                        }
+                        Key::F8 => {
+                            self.load_state();
                         }
                         _ => {}
                     };

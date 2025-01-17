@@ -23,7 +23,7 @@ pub enum Reg16 {
     PC,
 }
 
-#[derive(Clone, Copy, PartialEq)]
+#[derive(Deserialize, Serialize, Clone, Copy, PartialEq)]
 pub struct FlagReg(u8);
 
 bitflags! {
@@ -35,6 +35,7 @@ bitflags! {
     }
 }
 
+#[derive(Deserialize, Serialize)]
 pub struct Registers {
     pub a: u8,
     pub f: FlagReg,

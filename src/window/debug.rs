@@ -16,80 +16,80 @@ impl Window {
             override_text_color: Some(Color32::WHITE),
             ..Default::default()
         });
-        let cpu_ref = self.cpu.lock().unwrap();
+        let cpu = self.cpu.lock().unwrap();
         Grid::new("debug_grid").min_col_width(200.0).show(ui, |ui| {
             ui.vertical(|ui| {
                 ui.monospace(format!(
                     "AF: {:#06X}   BC: {:#06X}",
-                    cpu_ref.reg.read_16(&Reg16::AF),
-                    cpu_ref.reg.read_16(&Reg16::BC)
+                    cpu.reg.read_16(&Reg16::AF),
+                    cpu.reg.read_16(&Reg16::BC)
                 ));
                 ui.monospace(format!(
                     "DE: {:#06X}   HL: {:#06X}",
-                    cpu_ref.reg.read_16(&Reg16::DE),
-                    cpu_ref.reg.read_16(&Reg16::HL)
+                    cpu.reg.read_16(&Reg16::DE),
+                    cpu.reg.read_16(&Reg16::HL)
                 ));
                 ui.monospace(format!(
                     "SP: {:#06X}   PC: {:#06X}",
-                    cpu_ref.reg.read_16(&Reg16::SP),
-                    cpu_ref.reg.read_16(&Reg16::PC)
+                    cpu.reg.read_16(&Reg16::SP),
+                    cpu.reg.read_16(&Reg16::PC)
                 ));
                 ui.monospace("");
                 ui.monospace(format!(
                     "Z{}    N{}    H{}    C{}",
-                    Self::bool_to_emoji(cpu_ref.reg.f.intersects(FlagReg::ZERO)),
-                    Self::bool_to_emoji(cpu_ref.reg.f.intersects(FlagReg::SUBTRACT)),
-                    Self::bool_to_emoji(cpu_ref.reg.f.intersects(FlagReg::HALF_CARRY)),
-                    Self::bool_to_emoji(cpu_ref.reg.f.intersects(FlagReg::CARRY)),
+                    Self::bool_to_emoji(cpu.reg.f.intersects(FlagReg::ZERO)),
+                    Self::bool_to_emoji(cpu.reg.f.intersects(FlagReg::SUBTRACT)),
+                    Self::bool_to_emoji(cpu.reg.f.intersects(FlagReg::HALF_CARRY)),
+                    Self::bool_to_emoji(cpu.reg.f.intersects(FlagReg::CARRY)),
                 ));
                 ui.monospace(format!(
                     "IME{}    HALT{}",
-                    Self::bool_to_emoji(cpu_ref.istate.ime),
-                    Self::bool_to_emoji(cpu_ref.halt)
+                    Self::bool_to_emoji(cpu.istate.ime),
+                    Self::bool_to_emoji(cpu.halt)
                 ));
                 ui.monospace(format!(
                     "IF: J{} S{} T{} L{} V{}",
-                    Self::bool_to_emoji(cpu_ref.istate.iflag.intersects(InterruptFlag::JOYPAD)),
-                    Self::bool_to_emoji(cpu_ref.istate.iflag.intersects(InterruptFlag::SERIAL)),
-                    Self::bool_to_emoji(cpu_ref.istate.iflag.intersects(InterruptFlag::TIMER)),
-                    Self::bool_to_emoji(cpu_ref.istate.iflag.intersects(InterruptFlag::LCD)),
-                    Self::bool_to_emoji(cpu_ref.istate.iflag.intersects(InterruptFlag::VBLANK)),
+                    Self::bool_to_emoji(cpu.istate.iflag.intersects(InterruptFlag::JOYPAD)),
+                    Self::bool_to_emoji(cpu.istate.iflag.intersects(InterruptFlag::SERIAL)),
+                    Self::bool_to_emoji(cpu.istate.iflag.intersects(InterruptFlag::TIMER)),
+                    Self::bool_to_emoji(cpu.istate.iflag.intersects(InterruptFlag::LCD)),
+                    Self::bool_to_emoji(cpu.istate.iflag.intersects(InterruptFlag::VBLANK)),
                 ));
                 ui.monospace(format!(
                     "IE: J{} S{} T{} L{} V{}",
-                    Self::bool_to_emoji(cpu_ref.istate.ie.intersects(InterruptFlag::JOYPAD)),
-                    Self::bool_to_emoji(cpu_ref.istate.ie.intersects(InterruptFlag::SERIAL)),
-                    Self::bool_to_emoji(cpu_ref.istate.ie.intersects(InterruptFlag::TIMER)),
-                    Self::bool_to_emoji(cpu_ref.istate.ie.intersects(InterruptFlag::LCD)),
-                    Self::bool_to_emoji(cpu_ref.istate.ie.intersects(InterruptFlag::VBLANK)),
+                    Self::bool_to_emoji(cpu.istate.ie.intersects(InterruptFlag::JOYPAD)),
+                    Self::bool_to_emoji(cpu.istate.ie.intersects(InterruptFlag::SERIAL)),
+                    Self::bool_to_emoji(cpu.istate.ie.intersects(InterruptFlag::TIMER)),
+                    Self::bool_to_emoji(cpu.istate.ie.intersects(InterruptFlag::LCD)),
+                    Self::bool_to_emoji(cpu.istate.ie.intersects(InterruptFlag::VBLANK)),
                 ));
             });
 
             ui.vertical(|ui| {
                 ui.monospace(format!(
                     "Input {}{} {:0>8b}",
-                    Self::bool_to_emoji(cpu_ref.input.select_button),
-                    Self::bool_to_emoji(cpu_ref.input.select_dpad),
-                    cpu_ref.input.flags.bits()
+                    Self::bool_to_emoji(cpu.input.select_button),
+                    Self::bool_to_emoji(cpu.input.select_dpad),
+                    cpu.input.flags.bits()
                 ));
                 ui.monospace(format!(
                     "Timer {} {:#06X}/{}%{}={} ",
-                    Self::bool_to_emoji(cpu_ref.timer.enabled),
-                    cpu_ref.timer.div,
-                    (0b1 << (cpu_ref.timer.div_bit + 1)) / 4,
-                    cpu_ref.timer.tma,
-                    cpu_ref.timer.tima,
+                    Self::bool_to_emoji(cpu.timer.enabled),
+                    cpu.timer.div,
+                    (0b1 << (cpu.timer.div_bit + 1)) / 4,
+                    cpu.timer.tma,
+                    cpu.timer.tima,
                 ));
                 ui.monospace(format!(
                     "PPU {} {:0>10b}",
-                    cpu_ref.ppu.mode, cpu_ref.ppu.control
+                    cpu.ppu.mode, cpu.ppu.control
                 ));
             });
 
             ui.vertical(|ui| {
-                let next_opcode = cpu_ref.read(cpu_ref.reg.pc);
+                let next_opcode = cpu.read(cpu.reg.pc);
                 let instruction = if next_opcode == 0xCB {
-                    let long_opcode = cpu_ref.read(cpu_ref.reg.pc + 1);
+                    let long_opcode = cpu.read(cpu.reg.pc + 1);
                     self.instruction_db.get(long_opcode, true)
                 } else {
                     self.instruction_db.get(next_opcode, false)
@@ -103,8 +103,8 @@ impl Window {
                 });
 
                 let operand: String = match &instruction.bytes {
-                    2 => format!("{:#04X}", cpu_ref.read(cpu_ref.reg.pc + 1)),
-                    3 => format!("{:#06X}", cpu_ref.read_16(cpu_ref.reg.pc + 1)),
+                    2 => format!("{:#04X}", cpu.read(cpu.reg.pc + 1)),
+                    3 => format!("{:#06X}", cpu.read_16(cpu.reg.pc + 1)),
                     _ => "".to_string(),
                 };
                 ui.monospace(format!("Operand: {}", operand));

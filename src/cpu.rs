@@ -1,9 +1,10 @@
 use bitflags::bitflags;
 use std::ops::RangeInclusive;
+use serde::{Deserialize, Deserializer, Serialize, Serializer};
+use serde_big_array::BigArray;
 
 pub mod input;
 pub mod interrupts;
-mod mbc;
 pub mod memory;
 pub mod ppu;
 pub mod readwrite;
@@ -11,7 +12,6 @@ pub mod registers;
 pub mod timer;
 use input::*;
 use interrupts::*;
-use mbc::*;
 use memory::*;
 use ppu::*;
 use readwrite::*;
@@ -20,6 +20,7 @@ use timer::*;
 
 /// The main processing unit
 #[allow(clippy::upper_case_acronyms)]
+#[derive(Deserialize, Serialize)]
 pub struct CPU {
     pub reg: Registers,
     pub mem: Memory,
