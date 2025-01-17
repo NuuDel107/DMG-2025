@@ -298,18 +298,17 @@ impl PPU {
         // Get memory position of tile inside VRAM (one tile is 16 bytes)
         // and add target row to it to get address of the two bytes
         // that make up a tile row of color data
-        let byte_index = (16 * (tile_index as u16)) + (2 * ((y as u16) % 8));
+        let mut byte_index = (16 * (tile_index as u16)) + (2 * ((y as u16) % 8));
 
         // When using alternative addressing mode, tile data at index < 128
         // are found at address 0x9000-0x97FF
-        let tile_data_root = if addressing_mode && tile_index < 128 {
-            0x1000
-        } else {
-            0x0000
-        };
+        if addressing_mode && tile_index < 128 {
+            byte_index += 0x1000;
+        }
+
         // Get the color bytes from VRAM
-        let a_byte = self.vram[usize::from(tile_data_root + byte_index)];
-        let b_byte = self.vram[usize::from(tile_data_root + byte_index + 1)];
+        let a_byte = self.vram[usize::from(byte_index)];
+        let b_byte = self.vram[usize::from(byte_index + 1)];
         // Get the bit values of correct tile column
         let a = a_byte & (0b1000_0000 >> (x % 8)) != 0;
         let b = b_byte & (0b1000_0000 >> (x % 8)) != 0;
@@ -413,13 +412,17 @@ impl PPU {
             // Get window pixel instead of background if
             // window is enabled and pixel is inside window bounds
             let col_id = if self.control.intersects(PPUControl::WINDOW_ENABLE)
-                && (x >= self.win_x || y >= self.win_y)
+                && x >= self.win_x
+                && y >= self.win_y
             {
-                let tile =
-                    self.get_tile_index(x, y, self.control.intersects(PPUControl::WINDOW_TILE_MAP));
+                let tile = self.get_tile_index(
+                    x - self.win_x,
+                    y - self.win_y,
+                    self.control.intersects(PPUControl::WINDOW_TILE_MAP),
+                );
                 self.get_tile_color(
                     x - self.win_x,
-                    y - self.win_x,
+                    y - self.win_y,
                     tile,
                     !self.control.intersects(PPUControl::TILE_DATA_AREA),
                 )
