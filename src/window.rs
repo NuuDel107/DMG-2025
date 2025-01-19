@@ -3,6 +3,11 @@ use super::{
     Options, CPU,
 };
 use egui::epaint::*;
+use rodio::{
+    buffer::SamplesBuffer,
+    queue::{queue, SourcesQueueInput},
+    OutputStream, Source,
+};
 use std::fs::{self, File, OpenOptions};
 use std::io::{prelude::*, LineWriter};
 use std::sync::{
@@ -24,6 +29,9 @@ pub struct Window {
     cpu_running: Arc<AtomicBool>,
     clock_tx: Option<mpsc::SyncSender<bool>>,
 
+    _stream: OutputStream,
+    audio_queue: Arc<SourcesQueueInput<f32>>,
+
     options: Options,
     instruction_db: InstructionDB,
 
@@ -35,11 +43,22 @@ pub struct Window {
 
 impl Window {
     pub fn new(cpu: CPU, options: Options) -> Window {
+        // Initialize audio queue and playback
+        let (stream, stream_handle) = OutputStream::try_default().unwrap();
+        let (queue, queue_output) = queue(true);
+        let _ = stream_handle
+            .play_raw(queue_output.convert_samples())
+            .inspect_err(|e| eprintln!("Failed to start queue playback: {e}"));
+
         Window {
             cpu: Arc::new(Mutex::new(cpu)),
             ctx: Arc::new(Mutex::new(None)),
             cpu_running: Arc::new(AtomicBool::new(options.start_immediately)),
             clock_tx: None,
+
+            _stream: stream,
+            audio_queue: queue,
+
             options,
             instruction_db: InstructionDB::init(),
 
@@ -72,6 +91,7 @@ impl Window {
         let ctx_ref = Arc::clone(&self.ctx);
         let running_ref = Arc::clone(&self.cpu_running);
         let input_ref = Arc::clone(&self.input_state);
+        let audio_queue_ref = Arc::clone(&self.audio_queue);
 
         let options = self.options.clone();
         let mut logfile = if options.log {
@@ -88,7 +108,7 @@ impl Window {
                 // Wait for timer
                 let run_until_vblank = rx.recv().unwrap();
                 let mut cpu = cpu_ref.lock().unwrap();
-                
+
                 // Update input
                 let input = input_ref.lock().unwrap();
                 cpu.update_input(&input);
@@ -112,6 +132,13 @@ impl Window {
 
                         // Break loop if execution function returns true (meaning VBlank was hit)
                         if cpu.execute() {
+                            // Append currently sampled audio buffer to playback queue
+                            audio_queue_ref.append(SamplesBuffer::new(
+                                1,
+                                options.audio_sample_rate,
+                                cpu.apu.receive_buffer(),
+                            ));
+                            // Drop CPU before requesting repaint
                             drop(cpu);
                             // Request repaint to refresh display
                             egui::Context::request_repaint(

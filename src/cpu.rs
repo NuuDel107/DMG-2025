@@ -1,8 +1,9 @@
 use bitflags::bitflags;
-use std::ops::RangeInclusive;
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use serde_big_array::BigArray;
+use std::ops::RangeInclusive;
 
+pub mod apu;
 pub mod input;
 pub mod interrupts;
 pub mod memory;
@@ -10,6 +11,8 @@ pub mod ppu;
 pub mod readwrite;
 pub mod registers;
 pub mod timer;
+use super::Options;
+use apu::*;
 use input::*;
 use interrupts::*;
 use memory::*;
@@ -25,6 +28,7 @@ pub struct CPU {
     pub reg: Registers,
     pub mem: Memory,
     pub ppu: PPU,
+    pub apu: APU,
     pub timer: Timer,
     pub input: InputReg,
     pub istate: InterruptState,
@@ -32,10 +36,11 @@ pub struct CPU {
 }
 
 impl CPU {
-    pub fn new(rom_file: Vec<u8>) -> Self {
+    pub fn new(rom_file: Vec<u8>, options: &Options) -> Self {
         Self {
             reg: Registers::new(),
             ppu: PPU::new(),
+            apu: APU::new(options.audio_sample_rate),
             mem: Memory::new(rom_file),
             timer: Timer::new(),
             input: InputReg::new(),
@@ -67,6 +72,9 @@ impl CPU {
             if self.timer.request_interrupt {
                 self.request_interrupt(InterruptFlag::TIMER);
             }
+
+            // Cycle APU based on timer state
+            self.apu.cycle(self.timer.div);
         }
     }
 

@@ -27,7 +27,7 @@ fn main() -> eframe::Result {
 
     let options = Options::load();
     let rom_file = load_rom_file(&options.rom_path);
-    let cpu = CPU::new(rom_file);
+    let cpu = CPU::new(rom_file, &options);
 
     // Initialize main window
     let scale = options.window_scale;

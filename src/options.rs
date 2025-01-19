@@ -6,6 +6,7 @@ pub struct Options {
     pub rom_path: String,
     pub save_folder: String,
     pub window_scale: u8,
+    pub audio_sample_rate: u32,
     pub start_immediately: bool,
     pub log: bool,
     pub breakpoints: Vec<u16>,

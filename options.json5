@@ -1,7 +1,8 @@
 {
-    rom_path: "roms/Pokemon Red (UE) [S][!].gb",
+    rom_path: "roms/Pokemon - Red Version (USA, Europe) (SGB Enhanced).gb",
     save_folder: "saves/",
     window_scale: 4,
+    audio_sample_rate: 48000,
     start_immediately: true,
     log: false,
     breakpoints: [],

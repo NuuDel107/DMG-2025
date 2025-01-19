@@ -13,8 +13,14 @@ pub trait MemoryAccess {
 impl CPU {
     /// Reads from given memory address
     pub fn read(&self, address: u16) -> u8 {
-        let targets: Vec<&dyn MemoryAccess> =
-            vec![&self.mem, &self.ppu, &self.input, &self.timer, &self.istate];
+        let targets: Vec<&dyn MemoryAccess> = vec![
+            &self.mem,
+            &self.ppu,
+            &self.apu,
+            &self.input,
+            &self.timer,
+            &self.istate,
+        ];
         for target in targets {
             for range in target.get_range() {
                 if range.contains(&address) {
@@ -36,6 +42,7 @@ impl CPU {
         let targets: Vec<&mut dyn MemoryAccess> = vec![
             &mut self.mem,
             &mut self.ppu,
+            &mut self.apu,
             &mut self.input,
             &mut self.timer,
             &mut self.istate,
