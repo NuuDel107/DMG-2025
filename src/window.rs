@@ -133,11 +133,15 @@ impl Window {
                         // Break loop if execution function returns true (meaning VBlank was hit)
                         if cpu.execute() {
                             // Append currently sampled audio buffer to playback queue
-                            audio_queue_ref.append(SamplesBuffer::new(
-                                1,
-                                options.audio_sample_rate,
-                                cpu.apu.receive_buffer(),
-                            ));
+                            audio_queue_ref.append(
+                                SamplesBuffer::new(
+                                    1,
+                                    options.audio_sample_rate,
+                                    cpu.apu.receive_buffer(),
+                                )
+                                .convert_samples(),
+                            );
+
                             // Drop CPU before requesting repaint
                             drop(cpu);
                             // Request repaint to refresh display
@@ -151,6 +155,8 @@ impl Window {
                 // Otherwise only execute one instruction manually
                 else {
                     cpu.execute();
+                    // Clear APU buffer
+                    cpu.apu.receive_buffer();
                     egui::Context::request_repaint(ctx_ref.lock().unwrap().as_ref().unwrap());
                 }
             }
