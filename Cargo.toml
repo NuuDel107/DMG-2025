@@ -13,3 +13,10 @@ json5 = "0.4.1"
 rodio = "0.20.1"
 serde = {version = "1.0.217", features = ["derive"]}
 serde-big-array = "0.5.1"
+
+[build-dependencies]
+winresource = "0.1.19"
+
+[package.metadata.winresource]
+LegalCopyright = "https://github.com/NuuDel107/DMG-2025"
+FileDescription = "DMG-2025 - The worst Game Boy emulator"
