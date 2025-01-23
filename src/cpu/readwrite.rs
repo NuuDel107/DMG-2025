@@ -61,7 +61,7 @@ impl CPU {
     /// Increments program counter and cycles the system for one M-cycle
     pub fn read_operand(&mut self) -> u8 {
         self.cycle(1);
-        self.reg.pc += 1;
+        self.reg.pc = self.reg.pc.wrapping_add(1);
         self.read(self.reg.pc)
     }
 
@@ -69,7 +69,7 @@ impl CPU {
     /// Increments program counter and cycles the system for two M-cycles
     pub fn read_operand_16(&mut self) -> u16 {
         self.cycle(2);
-        self.reg.pc += 2;
+        self.reg.pc = self.reg.pc.wrapping_add(2);
         self.read_16(self.reg.pc - 1)
     }
 
@@ -78,7 +78,7 @@ impl CPU {
     pub fn pop(&mut self) -> u16 {
         self.cycle(2);
         let val = self.read_16(self.reg.sp);
-        self.reg.sp += 2;
+        self.reg.sp = self.reg.sp.wrapping_add(2);
         val
     }
 
@@ -87,9 +87,9 @@ impl CPU {
     pub fn push(&mut self, value: u16) {
         self.cycle(2);
         let bytes = value.to_le_bytes();
-        self.write(self.reg.sp - 1, bytes[1]);
-        self.write(self.reg.sp - 2, bytes[0]);
-        self.reg.sp -= 2;
+        self.reg.sp = self.reg.sp.wrapping_sub(2);
+        self.write(self.reg.sp.wrapping_add(1), bytes[1]);
+        self.write(self.reg.sp, bytes[0]);
     }
 
     /// Starts OAM DMA transfer, which copies memory from given source address to OAM

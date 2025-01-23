@@ -2,7 +2,7 @@ use super::{
     cpu::{input::*, interrupts::*, registers::*},
     Options, CPU,
 };
-use egui::epaint::*;
+use egui::{epaint::*, TextureOptions};
 use rodio::{
     buffer::SamplesBuffer,
     queue::{queue, SourcesQueueInput},
@@ -29,8 +29,10 @@ pub struct Window {
     cpu_running: Arc<AtomicBool>,
     clock_tx: Option<mpsc::SyncSender<bool>>,
 
+    display_texture: Arc<Mutex<TextureHandle>>,
     _stream: OutputStream,
     audio_queue: Arc<SourcesQueueInput<f32>>,
+    input_state: Arc<Mutex<InputFlag>>,
 
     options: Options,
     instruction_db: InstructionDB,
@@ -38,11 +40,16 @@ pub struct Window {
     has_initialized: bool,
     show_debug: bool,
     show_instruction_info: bool,
-    input_state: Arc<Mutex<InputFlag>>,
 }
 
 impl Window {
-    pub fn new(cpu: CPU, options: Options) -> Window {
+    pub fn new(cpu: CPU, options: Options, cc: &eframe::CreationContext<'_>) -> Window {
+        // Initialize display texture with just white
+        let texture = cc.egui_ctx.load_texture(
+            "display",
+            ColorImage::from_gray([160, 144], &[255; 160 * 144]),
+            TextureOptions::NEAREST,
+        );
         // Initialize audio queue and playback
         let (stream, stream_handle) = OutputStream::try_default().unwrap();
         let (queue, queue_output) = queue(true);
@@ -56,8 +63,10 @@ impl Window {
             cpu_running: Arc::new(AtomicBool::new(options.start_immediately)),
             clock_tx: None,
 
+            display_texture: Arc::new(Mutex::new(texture)),
             _stream: stream,
             audio_queue: queue,
+            input_state: Arc::new(Mutex::new(InputFlag::from_bits_truncate(0xFF))),
 
             options,
             instruction_db: InstructionDB::init(),
@@ -65,7 +74,6 @@ impl Window {
             has_initialized: false,
             show_debug: false,
             show_instruction_info: false,
-            input_state: Arc::new(Mutex::new(InputFlag::from_bits_truncate(0xFF))),
         }
     }
 
@@ -89,6 +97,7 @@ impl Window {
     fn start_executor(&mut self) -> mpsc::SyncSender<bool> {
         let cpu_ref = Arc::clone(&self.cpu);
         let ctx_ref = Arc::clone(&self.ctx);
+        let display_ref = Arc::clone(&self.display_texture);
         let running_ref = Arc::clone(&self.cpu_running);
         let input_ref = Arc::clone(&self.input_state);
         let audio_queue_ref = Arc::clone(&self.audio_queue);
@@ -132,6 +141,29 @@ impl Window {
 
                         // Break loop if execution function returns true (meaning VBlank was hit)
                         if cpu.execute() {
+                            // Update display texture
+                            let mut pixels = vec![];
+                            for y in 0..144 {
+                                for x in 0..160 {
+                                    // Loop through front display
+                                    let pixel = cpu.ppu.display[x][y];
+                                    let color = match pixel {
+                                        0 => Color32::WHITE,
+                                        1 => Color32::GRAY,
+                                        2 => Color32::DARK_GRAY,
+                                        3 => Color32::BLACK,
+                                        _ => unreachable!(),
+                                    };
+                                    pixels.push(color);
+                                }
+                            }
+                            display_ref.lock().unwrap().set(
+                                ColorImage {
+                                    size: [160, 144],
+                                    pixels,
+                                },
+                                TextureOptions::NEAREST,
+                            );
                             // Append currently sampled audio buffer to playback queue
                             audio_queue_ref.append(
                                 SamplesBuffer::new(
@@ -141,7 +173,6 @@ impl Window {
                                 )
                                 .convert_samples(),
                             );
-
                             // Drop CPU before requesting repaint
                             drop(cpu);
                             // Request repaint to refresh display
@@ -268,35 +299,28 @@ impl eframe::App for Window {
                 ctx.input(|input| {
                     self.handle_input(input, true);
                 });
-                // Paint background white (empty color)
-                let (_id, screen_rect) = ui.allocate_space(ui.available_size());
-                let background =
-                    RectShape::new(screen_rect, Rounding::ZERO, Color32::WHITE, Stroke::NONE);
 
-                let mut pixels = vec![Shape::Rect(background)];
-                let display = self.cpu.lock().unwrap().ppu.front_display;
-                for x in 0..160 {
-                    for y in 0..144 {
-                        // Loop through front display
-                        let pixel = display[x][y];
-                        let color = match pixel {
-                            1 => Color32::GRAY,
-                            2 => Color32::DARK_GRAY,
-                            3 => Color32::BLACK,
-                            // Don't bother drawing empty pixels (color 0)
-                            // since background is already white
-                            _ => continue,
-                        };
-                        // Create shape representing pixel
-                        let scale = self.options.window_scale as f32;
-                        let pos = Pos2::new(x as f32 * scale, y as f32 * scale);
-                        let rect = Rect::from_min_size(pos, vec2(scale, scale));
-                        let pixel = RectShape::new(rect, Rounding::ZERO, color, Stroke::NONE);
-                        pixels.push(Shape::Rect(pixel));
-                    }
-                }
-                // Paint all pixels
-                ui.painter().extend(pixels);
+                // Calculate how texture should be resized on the screen to keep aspect ratio
+                let screen_size = ui.available_size();
+                let mut rect = ui.allocate_space(screen_size).1;
+                let x_diff = rect.width() / 160.0;
+                let y_diff = rect.height() / 144.0;
+                let offset: Vec2 = if x_diff > y_diff {
+                    rect.set_width(rect.width() / (x_diff / y_diff));
+                    Vec2::new((screen_size.x - rect.width()) / 2.0, 0.0)
+                } else {
+                    rect.set_height(rect.height() / (y_diff / x_diff));
+                    Vec2::new(0.0, (screen_size.y - rect.height()) / 2.0)
+                };
+                let uv = Rect::from_min_max(pos2(0.0, 0.0), pos2(1.0, 1.0));
+
+                // Paint pixel texture
+                ui.painter().image(
+                    self.display_texture.lock().unwrap().id(),
+                    rect.translate(offset),
+                    uv,
+                    Color32::WHITE,
+                );
             });
 
         if self.show_debug {

@@ -161,10 +161,7 @@ where
 pub struct PPU {
     #[serde(serialize_with = "serialize_display")]
     #[serde(deserialize_with = "deserialize_display")]
-    pub front_display: DisplayMatrix,
-    #[serde(serialize_with = "serialize_display")]
-    #[serde(deserialize_with = "deserialize_display")]
-    pub back_display: DisplayMatrix,
+    pub display: DisplayMatrix,
     #[serde(with = "BigArray")]
     pub vram: [u8; 0x2000],
     pub oam: OAM,
@@ -187,8 +184,7 @@ pub struct PPU {
 impl PPU {
     pub fn new() -> Self {
         Self {
-            front_display: EMPTY_DISPLAY,
-            back_display: EMPTY_DISPLAY,
+            display: EMPTY_DISPLAY,
             vram: [0; 0x2000],
             oam: OAM::new(),
             oam_dma_source: 0,
@@ -240,9 +236,6 @@ impl PPU {
                 144 => {
                     self.interrupt_request.insert(InterruptFlag::VBLANK);
                     self.update_mode(1);
-                    // VSync (very cool)
-                    self.front_display = self.back_display;
-                    self.back_display = EMPTY_DISPLAY;
                 }
                 153 => {
                     self.ly = 0;
@@ -278,7 +271,7 @@ impl PPU {
 
     /// Saves given color into the display buffer
     fn set_pixel(&mut self, x: u8, y: u8, col: u8) {
-        self.back_display[x as usize][y as usize] = col;
+        self.display[x as usize][y as usize] = col;
     }
 
     /// Returns the tile index from specified tile map at specified coordinates

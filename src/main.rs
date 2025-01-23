@@ -31,19 +31,19 @@ fn main() -> eframe::Result {
 
     // Initialize main window
     let scale = options.window_scale;
-    let window = Window::new(cpu, options);
 
     let icon = std::fs::read("icon.png").unwrap();
+    let size = [160.0 * scale as f32, 144.0 * scale as f32];
     let eframe_options = eframe::NativeOptions {
         viewport: egui::ViewportBuilder::default()
-            .with_resizable(false)
-            .with_inner_size([160.0 * scale as f32, 144.0 * scale as f32])
+            .with_min_inner_size(size)
+            .with_inner_size(size)
             .with_icon(Arc::new(eframe::icon_data::from_png_bytes(&icon).unwrap())),
         ..Default::default()
     };
     eframe::run_native(
         "DMG-2025",
         eframe_options,
-        Box::new(|_| Ok(Box::new(window))),
+        Box::new(|cc| Ok(Box::new(Window::new(cpu, options, cc)))),
     )
 }
