@@ -4,37 +4,45 @@ use super::*;
 pub struct SquareChannel {
     // State variables
     pub on: bool,
-    pub sweep: bool,
     pub period_div: u16,
     pub duty_cycle_pointer: u8,
     pub length_timer: u8,
     pub volume: u8,
+    pub period: u16,
+    pub sweep_timer: u8,
     pub envelope_timer: u8,
     // Register variables
+    pub sweep_pace: u8,
+    pub sweep_increase: bool,
+    pub sweep_step: u8,
     pub duty_cycle_index: u8,
     pub initial_length_timer: u8,
     pub length_timer_enabled: bool,
-    pub period_value: u16,
+    pub initial_period: u16,
     pub initial_volume: u8,
     pub envelope_increase: bool,
     pub envelope_pace: u8,
 }
 
 impl SquareChannel {
-    pub fn new(sweep: bool) -> Self {
+    pub fn new() -> Self {
         Self {
             on: false,
-            sweep,
             period_div: 0,
             duty_cycle_pointer: 0,
             length_timer: 64,
             volume: 0,
+            period: 0,
+            sweep_timer: 1,
             envelope_timer: 1,
 
+            sweep_pace: 0,
+            sweep_increase: true,
+            sweep_step: 0,
             duty_cycle_index: 0,
             initial_length_timer: 0,
             length_timer_enabled: false,
-            period_value: 0,
+            initial_period: 0,
             initial_volume: 0,
             envelope_increase: false,
             envelope_pace: 0,
@@ -50,15 +58,20 @@ impl SquareChannel {
                     | ((self.envelope_increase as u8) << 3)
                     | self.envelope_pace
             }
-            3 => (self.period_value & 0xFF) as u8,
-            4 => (self.period_value >> 8) as u8 | ((self.length_timer_enabled as u8) << 6),
+            3 => (self.initial_period & 0xFF) as u8,
+            4 => (self.initial_period >> 8) as u8 | ((self.length_timer_enabled as u8) << 6),
             _ => unreachable!(),
         }
     }
 
     pub fn write_register(&mut self, reg_index: u16, value: u8) {
         match reg_index {
-            0 => {}
+            0 => {
+                self.sweep_pace = value >> 4;
+                // 0 == increase
+                self.sweep_increase = value & 0b1000 == 0;
+                self.sweep_step = value & 0b0111;
+            }
             1 => {
                 self.duty_cycle_index = value >> 6;
                 self.initial_length_timer = value & 0b11_1111;
@@ -68,10 +81,14 @@ impl SquareChannel {
                 self.envelope_increase = value & 0b1000 > 0;
                 self.envelope_pace = value & 0b0111;
             }
-            3 => self.period_value = (self.period_value & 0xFF00) | value as u16,
+            3 => self.initial_period = (self.initial_period & 0xFF00) | value as u16,
             4 => {
                 self.length_timer_enabled = value & 0b0100_0000 > 0;
-                self.period_value = (self.period_value & 0xFF) | (((value & 0b111) as u16) << 8);
+                self.initial_period =
+                    (self.initial_period & 0xFF) | (((value & 0b111) as u16) << 8);
+                if value & 0b1000_0000 > 0 {
+                    self.trigger();
+                }
             }
             _ => unreachable!(),
         }
@@ -84,6 +101,28 @@ impl SquareChannel {
             }
         } else {
             self.length_timer += 1;
+        }
+    }
+
+    pub fn update_sweep(&mut self) {
+        // Pace of 0 disables period sweep
+        if self.sweep_pace == 0 {
+            return;
+        }
+        if self.sweep_timer < self.sweep_pace {
+            self.sweep_timer += 1;
+        } else {
+            self.sweep_timer = 1;
+            let period_change = self.period / 2u16.pow(self.sweep_step.into());
+            if self.sweep_increase {
+                self.period += period_change;
+            } else if self.volume > 0 {
+                self.period -= period_change;
+            }
+            if self.period > 0x7FF {
+                self.period = 0x7FF;
+                self.on = false;
+            }
         }
     }
 
@@ -113,7 +152,7 @@ impl SquareChannel {
             } else {
                 self.duty_cycle_pointer += 1;
             }
-            self.period_div = self.period_value;
+            self.period_div = self.period;
         } else {
             self.period_div += 1;
         }
@@ -121,9 +160,11 @@ impl SquareChannel {
 
     pub fn trigger(&mut self) {
         self.on = true;
-        self.period_div = self.period_value;
+        self.period = self.initial_period;
+        self.period_div = self.period;
         self.volume = self.initial_volume;
         self.envelope_timer = 1;
+        self.sweep_timer = 1;
         if self.length_timer == 64 {
             self.length_timer = self.initial_length_timer;
         }
@@ -154,6 +195,140 @@ impl SquareChannel {
     }
 }
 
+#[derive(Deserialize, Serialize)]
+pub struct WaveChannel {
+    // State variables
+    pub on: bool,
+    pub period_div: u16,
+    pub wave_pointer: u8,
+    pub length_timer: u8,
+    pub output_level: u8,
+    pub period: u16,
+    // Register variables
+    pub initial_length_timer: u8,
+    pub length_timer_enabled: bool,
+    pub initial_period: u16,
+    pub wave_ram: [u8; 0x10],
+}
+
+impl WaveChannel {
+    pub fn new() -> Self {
+        Self {
+            on: false,
+            period_div: 0,
+            wave_pointer: 0,
+            length_timer: 64,
+            output_level: 0,
+            period: 0,
+
+            initial_length_timer: 0,
+            length_timer_enabled: false,
+            initial_period: 0,
+            wave_ram: [0; 0x10],
+        }
+    }
+
+    pub fn read_register(&self, address: u16) -> u8 {
+        match address {
+            0xFF1A => (self.on as u8) << 7,
+            0xFF1B => self.initial_length_timer,
+            0xFF1C => self.output_level << 5,
+            0xFF1D => (self.initial_period & 0xFF) as u8,
+            0xFF1E => (self.initial_period >> 8) as u8 | ((self.length_timer_enabled as u8) << 6),
+            0xFF30..=0xFF3F => self.wave_ram[(address - 0xFF30) as usize],
+            _ => unreachable!(),
+        }
+    }
+
+    pub fn write_register(&mut self, address: u16, value: u8) {
+        match address {
+            0xFF1A => self.on = value & 0b1000_0000 > 0,
+            0xFF1B => self.initial_length_timer = value,
+            0xFF1C => self.output_level = (value >> 5) & 0b11,
+            0xFF1D => self.initial_period = (self.initial_period & 0xFF00) | value as u16,
+            0xFF1E => {
+                self.length_timer_enabled = value & 0b0100_0000 > 0;
+                self.initial_period =
+                    (self.initial_period & 0xFF) | (((value & 0b111) as u16) << 8);
+                if value & 0b1000_0000 > 0 {
+                    self.trigger();
+                }
+            }
+            0xFF30..=0xFF3F => self.wave_ram[(address - 0xFF30) as usize] = value,
+            _ => unreachable!(),
+        }
+    }
+
+    pub fn update_length_timer(&mut self) {
+        if self.length_timer == 255 {
+            if self.length_timer_enabled {
+                self.on = false;
+            }
+        } else {
+            self.length_timer += 1;
+        }
+    }
+
+    pub fn update_period(&mut self) {
+        if self.period_div == 0x7FF {
+            if self.wave_pointer == 31 {
+                self.wave_pointer = 0;
+            } else {
+                self.wave_pointer += 1;
+            }
+            self.period_div = self.period;
+        } else {
+            self.period_div += 1;
+        }
+    }
+
+    pub fn trigger(&mut self) {
+        self.on = true;
+        self.period = self.initial_period;
+        self.period_div = self.period;
+        if self.length_timer == 64 {
+            self.length_timer = self.initial_length_timer;
+        }
+    }
+
+    pub fn get_sample(&self) -> f32 {
+        if self.on {
+            let byte = self.wave_ram[(self.wave_pointer / 2) as usize];
+            let nibble = if self.wave_pointer & 2 == 0 {
+                byte >> 4
+            } else {
+                byte & 0xF
+            };
+            let val = match self.output_level {
+                0 => 0,
+                1 => nibble,
+                2 => nibble >> 1,
+                3 => nibble >> 2,
+                _ => unreachable!(),
+            };
+            val as f32 / 15.0
+        } else {
+            0.0
+        }
+    }
+}
+
+#[derive(Deserialize, Serialize, Clone, Copy, PartialEq)]
+pub struct PanRegister(u8);
+
+bitflags! {
+    impl PanRegister: u8 {
+        const CH4_LEFT  = 0b1000_0000;
+        const CH3_LEFT  = 0b0100_0000;
+        const CH2_LEFT  = 0b0010_0000;
+        const CH1_LEFT  = 0b0001_0000;
+        const CH4_RIGHT = 0b0000_1000;
+        const CH3_RIGHT = 0b0000_0100;
+        const CH2_RIGHT = 0b0000_0010;
+        const CH1_RIGHT = 0b0000_0001;
+    }
+}
+
 /// Audio processing unit
 #[allow(clippy::upper_case_acronyms)]
 #[derive(Deserialize, Serialize)]
@@ -165,8 +340,12 @@ pub struct APU {
     pub period_delay_counter: u8,
     pub div_apu: u8,
     pub last_div_bit: bool,
+    pub pan_options: PanRegister,
+    pub left_volume: u8,
+    pub right_volume: u8,
     pub square_channel_1: SquareChannel,
     pub square_channel_2: SquareChannel,
+    pub wave_channel: WaveChannel,
 }
 
 impl APU {
@@ -180,14 +359,19 @@ impl APU {
             period_delay_counter: 0,
             div_apu: 0,
             last_div_bit: false,
+            pan_options: PanRegister::from_bits_truncate(0),
+            left_volume: 0,
+            right_volume: 0,
 
-            square_channel_1: SquareChannel::new(true),
-            square_channel_2: SquareChannel::new(false),
+            square_channel_1: SquareChannel::new(),
+            square_channel_2: SquareChannel::new(),
+            wave_channel: WaveChannel::new(),
         }
     }
 
     pub fn cycle(&mut self, timer_div: u16) {
-        // Increment DIV-APU when DIV bit 4 (actual divider bit 12) goes from 1 to 0
+        // Increment DIV-APU when DIV register bit 4 (actual divider bit 12)
+        // goes from 1 to 0
         let div_bit = timer_div & 0b1_0000_0000_0000 > 0;
         if self.last_div_bit && !div_bit {
             self.div_apu = self.div_apu.wrapping_add(1);
@@ -195,22 +379,29 @@ impl APU {
             if self.div_apu % 2 == 0 {
                 self.square_channel_1.update_length_timer();
                 self.square_channel_2.update_length_timer();
-            }
-            // Update envelopes at 64hz (every 8 ticks)
-            if self.div_apu % 8 == 0 {
-                self.square_channel_1.update_envelope();
-                self.square_channel_2.update_envelope();
+                self.wave_channel.update_length_timer();
+                // Update CH1 period sweep at 128hz (every 4 ticks)
+                if self.div_apu % 4 == 0 {
+                    self.square_channel_1.update_sweep();
+                    // Update envelopes at 64hz (every 8 ticks)
+                    if self.div_apu % 8 == 0 {
+                        self.square_channel_1.update_envelope();
+                        self.square_channel_2.update_envelope();
+                    }
+                }
             }
         }
         self.last_div_bit = div_bit;
 
-        // Increment period divider every 4 T-cycles
-        if self.period_delay_counter == 3 {
-            self.period_delay_counter = 0;
-            self.square_channel_1.update_period();
-            self.square_channel_2.update_period();
-        } else {
-            self.period_delay_counter += 1;
+        self.period_delay_counter = self.period_delay_counter.wrapping_add(1);
+        // Update wave channel period every 2 T-cycles
+        if self.period_delay_counter % 2 == 0 {
+            self.wave_channel.update_period();
+            // Update square channel period every 4 T-cycles
+            if self.period_delay_counter % 4 == 0 {
+                self.square_channel_1.update_period();
+                self.square_channel_2.update_period();
+            }
         }
 
         // Only calculate next sample when needed
@@ -223,13 +414,40 @@ impl APU {
         // If APU is turned off, just push silence to the buffer
         if !self.on {
             self.buffer.push(0.0);
+            self.buffer.push(0.0);
             return;
         }
 
         let ch1 = self.square_channel_1.get_sample();
         let ch2 = self.square_channel_2.get_sample();
-        let val = (ch1 + ch2).clamp(0.0, 1.0) * 0.1;
-        self.buffer.push(val);
+        let ch3 = self.wave_channel.get_sample();
+
+        let mut left_channel = 0f32;
+        if self.pan_options.intersects(PanRegister::CH1_LEFT) {
+            left_channel += ch1;
+        }
+        if self.pan_options.intersects(PanRegister::CH2_LEFT) {
+            left_channel += ch2;
+        }
+        if self.pan_options.intersects(PanRegister::CH3_LEFT) {
+            left_channel += ch3;
+        }
+
+        let mut right_channel = 0f32;
+        if self.pan_options.intersects(PanRegister::CH1_RIGHT) {
+            right_channel += ch1;
+        }
+        if self.pan_options.intersects(PanRegister::CH2_RIGHT) {
+            right_channel += ch2;
+        }
+        if self.pan_options.intersects(PanRegister::CH3_RIGHT) {
+            right_channel += ch3;
+        }
+
+        left_channel *= (self.left_volume as f32) / 8.0;
+        self.buffer.push(left_channel * 0.1);
+        right_channel *= (self.right_volume as f32) / 8.0;
+        self.buffer.push(right_channel * 0.1);
     }
 
     /// Called from outside:
@@ -251,6 +469,9 @@ impl MemoryAccess for APU {
         match address {
             0xFF10..=0xFF14 => self.square_channel_1.read_register(address - 0xFF10),
             0xFF16..=0xFF19 => self.square_channel_2.read_register(address - 0xFF15),
+            0xFF1A..=0xFF1E | 0xFF30..=0xFF3F => self.wave_channel.read_register(address),
+            0xFF24 => ((self.left_volume - 1) << 4) | (self.right_volume - 1),
+            0xFF25 => self.pan_options.bits(),
             0xFF26 => {
                 ((self.on as u8) << 7)
                     | ((self.square_channel_2.on as u8) << 1)
@@ -265,17 +486,17 @@ impl MemoryAccess for APU {
             0xFF10..=0xFF14 => {
                 self.square_channel_1
                     .write_register(address - 0xFF10, value);
-                if address == 0xFF14 && (value & 0b1000_0000 > 0) {
-                    self.square_channel_1.trigger();
-                }
             }
             0xFF16..=0xFF19 => {
                 self.square_channel_2
                     .write_register(address - 0xFF15, value);
-                if address == 0xFF19 && (value & 0b1000_0000 > 0) {
-                    self.square_channel_2.trigger();
-                }
             }
+            0xFF1A..=0xFF1E | 0xFF30..=0xFF3F => self.wave_channel.write_register(address, value),
+            0xFF24 => {
+                self.left_volume = ((value >> 4) & 0b111) + 1;
+                self.right_volume = (value & 0b111) + 1;
+            }
+            0xFF25 => self.pan_options = PanRegister::from_bits_truncate(value),
             0xFF26 => {
                 self.on = value & 0b1000_0000 > 0;
             }

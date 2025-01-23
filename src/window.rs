@@ -167,7 +167,7 @@ impl Window {
                             // Append currently sampled audio buffer to playback queue
                             audio_queue_ref.append(
                                 SamplesBuffer::new(
-                                    1,
+                                    2,
                                     options.audio_sample_rate,
                                     cpu.apu.receive_buffer(),
                                 )
