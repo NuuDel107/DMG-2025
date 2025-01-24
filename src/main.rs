@@ -1,3 +1,4 @@
+#![windows_subsystem = "windows"]
 use std::sync::Arc;
 
 mod cpu;
@@ -7,43 +8,29 @@ use window::Window;
 mod options;
 use options::Options;
 
-fn load_rom_file(path: &str) -> Vec<u8> {
-    match std::fs::read(path) {
-        Ok(rom_file) => rom_file,
-        Err(e) => {
-            if e.kind() == std::io::ErrorKind::NotFound {
-                eprintln!("ROM file not found!");
-            }
-            panic!("{}", e)
-        }
-    }
-}
-
 fn main() -> eframe::Result {
     // Display backtrace
     std::env::set_var("RUST_BACKTRACE", "1");
     // Log to stderr
     env_logger::init();
 
-    let options = Options::load();
-    let rom_file = load_rom_file(&options.rom_path);
-    let cpu = CPU::new(rom_file, &options);
-
     // Initialize main window
+    let options = Options::load();
     let scale = options.window_scale;
-
-    let icon = std::fs::read("icon.png").unwrap();
+    let icon = include_bytes!("../assets/icon.png");
     let size = [160.0 * scale as f32, 144.0 * scale as f32];
     let eframe_options = eframe::NativeOptions {
         viewport: egui::ViewportBuilder::default()
-            .with_min_inner_size(size)
+            .with_resizable(false)
+            .with_maximize_button(false)
             .with_inner_size(size)
-            .with_icon(Arc::new(eframe::icon_data::from_png_bytes(&icon).unwrap())),
+            .with_icon(Arc::new(eframe::icon_data::from_png_bytes(icon).unwrap())),
         ..Default::default()
     };
+    // Run app
     eframe::run_native(
         "DMG-2025",
         eframe_options,
-        Box::new(|cc| Ok(Box::new(Window::new(cpu, options, cc)))),
+        Box::new(|cc| Ok(Box::new(Window::new(options, cc)))),
     )
 }

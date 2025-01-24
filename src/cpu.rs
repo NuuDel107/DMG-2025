@@ -51,7 +51,7 @@ impl CPU {
 
     /// Triggered when program hits a breakpoint.
     /// Set a breakpoint here when debugging
-    pub fn breakpoint(&mut self) {
+    pub fn breakpoint(&self) {
         println!("Breakpoint at {:#06X}", self.reg.pc);
     }
 

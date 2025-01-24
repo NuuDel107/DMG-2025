@@ -1,5 +1,5 @@
 use super::*;
-use egui::{Align2, Context, Grid, Ui, Visuals};
+use egui::{Align2, Context, Grid, Ui};
 
 impl Window {
     fn bool_to_emoji(bool: bool) -> String {
@@ -12,11 +12,11 @@ impl Window {
 
     /// Renders a debug window with displays for the current state of the CPU
     pub fn render_debug(&mut self, ctx: &Context, ui: &mut Ui) {
-        ctx.set_visuals(Visuals {
-            override_text_color: Some(Color32::WHITE),
-            ..Default::default()
-        });
         let cpu = self.cpu.lock().unwrap();
+        if cpu.is_none() {
+            return;
+        }
+        let cpu = cpu.as_ref().unwrap();
         Grid::new("debug_grid").min_col_width(200.0).show(ui, |ui| {
             ui.vertical(|ui| {
                 ui.monospace(format!(
@@ -80,43 +80,17 @@ impl Window {
                     cpu.timer.tma,
                     cpu.timer.tima,
                 ));
-                ui.monospace(format!(
-                    "PPU {} {:0>10b}",
-                    cpu.ppu.mode, cpu.ppu.control
-                ));
+                ui.monospace(format!("PPU {} {:0>10b}", cpu.ppu.mode, cpu.ppu.control));
             });
 
             ui.vertical(|ui| {
-                let next_opcode = cpu.read(cpu.reg.pc);
-                let instruction = if next_opcode == 0xCB {
-                    let long_opcode = cpu.read(cpu.reg.pc + 1);
-                    self.instruction_db.get(long_opcode, true)
-                } else {
-                    self.instruction_db.get(next_opcode, false)
-                };
-
-                ui.horizontal(|ui| {
-                    ui.monospace(format!("Next:    {}", &instruction.mnemonic));
-                    if ui.button("?").clicked() {
-                        self.show_instruction_info = !self.show_instruction_info;
-                    }
-                });
-
-                let operand: String = match &instruction.bytes {
-                    2 => format!("{:#04X}", cpu.read(cpu.reg.pc + 1)),
-                    3 => format!("{:#06X}", cpu.read_16(cpu.reg.pc + 1)),
-                    _ => "".to_string(),
-                };
-                ui.monospace(format!("Operand: {}", operand));
-
-                egui::Window::new(format!("{} ({:#04X})", &instruction.mnemonic, next_opcode))
-                    .open(&mut self.show_instruction_info)
-                    .anchor(Align2::CENTER_CENTER, Vec2::ZERO)
-                    .resizable(false)
-                    .collapsible(false)
-                    .show(ctx, |ui| {
-                        ui.monospace(&instruction.desc);
-                    });
+                ui.monospace(format!(
+                    "Next: {:04X} {:04X} {:04X} {:04X}",
+                    cpu.read(cpu.reg.pc),
+                    cpu.read(cpu.reg.pc.wrapping_add(1)),
+                    cpu.read(cpu.reg.pc.wrapping_add(2)),
+                    cpu.read(cpu.reg.pc.wrapping_add(3))
+                ));
             });
 
             ui.end_row();

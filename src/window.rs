@@ -2,7 +2,7 @@ use super::{
     cpu::{input::*, interrupts::*, registers::*},
     Options, CPU,
 };
-use egui::{epaint::*, TextureOptions};
+use egui::{epaint::*, FontData, FontDefinitions, TextureOptions};
 use rodio::{
     buffer::SamplesBuffer,
     queue::{queue, SourcesQueueInput},
@@ -17,17 +17,25 @@ use std::sync::{
 use std::thread;
 use std::time::Duration;
 
+mod clock;
+use clock::ExecutorInstruction;
 mod debug;
-mod instructions;
-mod logging;
+mod menu;
 mod saving;
-use instructions::InstructionDB;
+
+#[derive(PartialEq)]
+pub enum MenuPage {
+    Main,
+    Options,
+    Info,
+}
 
 pub struct Window {
-    cpu: Arc<Mutex<CPU>>,
-    ctx: Arc<Mutex<Option<egui::Context>>>,
-    cpu_running: Arc<AtomicBool>,
-    clock_tx: Option<mpsc::SyncSender<bool>>,
+    cpu: Arc<Mutex<Option<CPU>>>,
+    ctx: Arc<egui::Context>,
+    paused: Arc<AtomicBool>,
+    rom_loaded: bool,
+    clock_tx: Option<mpsc::SyncSender<ExecutorInstruction>>,
 
     display_texture: Arc<Mutex<TextureHandle>>,
     _stream: OutputStream,
@@ -35,179 +43,117 @@ pub struct Window {
     input_state: Arc<Mutex<InputFlag>>,
 
     options: Options,
-    instruction_db: InstructionDB,
 
-    has_initialized: bool,
+    menu_page: MenuPage,
+    logo_texture: TextureHandle,
+
     show_debug: bool,
     show_instruction_info: bool,
 }
 
 impl Window {
-    pub fn new(cpu: CPU, options: Options, cc: &eframe::CreationContext<'_>) -> Window {
+    pub fn new(options: Options, cc: &eframe::CreationContext<'_>) -> Window {
         // Initialize display texture with just white
-        let texture = cc.egui_ctx.load_texture(
+        let img_data = include_bytes!("../assets/logo.png");
+        let img_buf = ::image::load_from_memory(img_data).unwrap().to_rgba8();
+
+        let img =
+            ColorImage::from_rgba_unmultiplied([96, 16], img_buf.as_flat_samples().as_slice());
+        let logo_texture = cc
+            .egui_ctx
+            .load_texture("display", img, TextureOptions::NEAREST);
+        let display_texture = cc.egui_ctx.load_texture(
             "display",
             ColorImage::from_gray([160, 144], &[255; 160 * 144]),
             TextureOptions::NEAREST,
         );
+
         // Initialize audio queue and playback
         let (stream, stream_handle) = OutputStream::try_default().unwrap();
         let (queue, queue_output) = queue(true);
         let _ = stream_handle
             .play_raw(queue_output.convert_samples())
             .inspect_err(|e| eprintln!("Failed to start queue playback: {e}"));
+        // Load UI fonts
+        let mut fonts = FontDefinitions::default();
+        fonts.font_data.insert(
+            "pixelmix".to_owned(),
+            std::sync::Arc::new(FontData::from_static(include_bytes!(
+                "../assets/pixelmix.ttf"
+            ))),
+        );
+        fonts
+            .families
+            .get_mut(&FontFamily::Proportional)
+            .unwrap()
+            .insert(0, "pixelmix".to_owned());
+        fonts.font_data.insert(
+            "pixelmix_bold".to_owned(),
+            std::sync::Arc::new(FontData::from_static(include_bytes!(
+                "../assets/pixelmix_bold.ttf"
+            ))),
+        );
+        fonts.families.insert(
+            FontFamily::Name("bold".into()),
+            vec!["pixelmix_bold".to_owned()],
+        );
+        cc.egui_ctx.set_fonts(fonts);
 
         Window {
-            cpu: Arc::new(Mutex::new(cpu)),
-            ctx: Arc::new(Mutex::new(None)),
-            cpu_running: Arc::new(AtomicBool::new(options.start_immediately)),
+            cpu: Arc::new(Mutex::new(None)),
+            ctx: Arc::new(cc.egui_ctx.clone()),
+            paused: Arc::new(AtomicBool::new(false)),
+            rom_loaded: false,
             clock_tx: None,
 
-            display_texture: Arc::new(Mutex::new(texture)),
+            display_texture: Arc::new(Mutex::new(display_texture)),
             _stream: stream,
             audio_queue: queue,
             input_state: Arc::new(Mutex::new(InputFlag::from_bits_truncate(0xFF))),
 
             options,
-            instruction_db: InstructionDB::init(),
 
-            has_initialized: false,
+            menu_page: MenuPage::Main,
+            logo_texture,
+
             show_debug: false,
             show_instruction_info: false,
         }
     }
 
-    fn init(&mut self) {
-        // Clear logfile
-        if self.options.log {
-            let _ = fs::remove_file("log.txt");
-            let _ = File::create("log.txt");
+    fn load_rom_file(path: &str) -> Vec<u8> {
+        match std::fs::read(path) {
+            Ok(rom_file) => rom_file,
+            Err(e) => {
+                if e.kind() == std::io::ErrorKind::NotFound {
+                    eprintln!("ROM file not found!");
+                }
+                panic!("{e}")
+            }
         }
+    }
+
+    fn init(&mut self) {
+        // Stop executor if running
+        if let Some(tx) = &self.clock_tx {
+            let _ = tx.send(ExecutorInstruction::Stop);
+        }
+        // Initialize CPU
+        *self.cpu.lock().unwrap() = Some(CPU::new(
+            Self::load_rom_file(&self.options.rom_path),
+            &self.options,
+        ));
+
         // Start loop on thread that receives clock signal
         // and cycles the CPU
         // Function returns the sender channel
         self.clock_tx = Some(self.start_executor());
 
-        // Start clock if CPU should start immediately
-        if self.options.start_immediately {
-            self.start_clock();
-        }
-    }
+        // Start clock
+        self.start_clock();
 
-    fn start_executor(&mut self) -> mpsc::SyncSender<bool> {
-        let cpu_ref = Arc::clone(&self.cpu);
-        let ctx_ref = Arc::clone(&self.ctx);
-        let display_ref = Arc::clone(&self.display_texture);
-        let running_ref = Arc::clone(&self.cpu_running);
-        let input_ref = Arc::clone(&self.input_state);
-        let audio_queue_ref = Arc::clone(&self.audio_queue);
-
-        let options = self.options.clone();
-        let mut logfile = if options.log {
-            Some(LineWriter::new(
-                OpenOptions::new().write(true).open("log.txt").unwrap(),
-            ))
-        } else {
-            None
-        };
-
-        let (tx, rx) = mpsc::sync_channel::<bool>(0);
-        thread::spawn(move || {
-            loop {
-                // Wait for timer
-                let run_until_vblank = rx.recv().unwrap();
-                let mut cpu = cpu_ref.lock().unwrap();
-
-                // Update input
-                let input = input_ref.lock().unwrap();
-                cpu.update_input(&input);
-                drop(input);
-
-                // If message was sent from main clock, run emulation until next VBlank
-                if run_until_vblank {
-                    loop {
-                        // If program counter is at specified breakpoint,
-                        // stop the clock
-                        if options.breakpoints.contains(&cpu.reg.pc) {
-                            cpu.breakpoint();
-                            running_ref.store(false, Ordering::Relaxed);
-                            break;
-                        }
-
-                        if logfile.is_some() {
-                            #[allow(clippy::unnecessary_unwrap)]
-                            Self::log(logfile.as_mut().unwrap(), &cpu);
-                        }
-
-                        // Break loop if execution function returns true (meaning VBlank was hit)
-                        if cpu.execute() {
-                            // Update display texture
-                            let mut pixels = vec![];
-                            for y in 0..144 {
-                                for x in 0..160 {
-                                    // Loop through front display
-                                    let pixel = cpu.ppu.display[x][y];
-                                    let color = match pixel {
-                                        0 => Color32::WHITE,
-                                        1 => Color32::GRAY,
-                                        2 => Color32::DARK_GRAY,
-                                        3 => Color32::BLACK,
-                                        _ => unreachable!(),
-                                    };
-                                    pixels.push(color);
-                                }
-                            }
-                            display_ref.lock().unwrap().set(
-                                ColorImage {
-                                    size: [160, 144],
-                                    pixels,
-                                },
-                                TextureOptions::NEAREST,
-                            );
-                            // Append currently sampled audio buffer to playback queue
-                            audio_queue_ref.append(
-                                SamplesBuffer::new(
-                                    2,
-                                    options.audio_sample_rate,
-                                    cpu.apu.receive_buffer(),
-                                )
-                                .convert_samples(),
-                            );
-                            // Drop CPU before requesting repaint
-                            drop(cpu);
-                            // Request repaint to refresh display
-                            egui::Context::request_repaint(
-                                ctx_ref.lock().unwrap().as_ref().unwrap(),
-                            );
-                            break;
-                        }
-                    }
-                }
-                // Otherwise only execute one instruction manually
-                else {
-                    cpu.execute();
-                    // Clear APU buffer
-                    cpu.apu.receive_buffer();
-                    egui::Context::request_repaint(ctx_ref.lock().unwrap().as_ref().unwrap());
-                }
-            }
-        });
-        tx
-    }
-
-    fn start_clock(&mut self) {
-        let tx = self.clock_tx.as_ref().unwrap().clone();
-        let running_ref = Arc::clone(&self.cpu_running);
-
-        thread::spawn(move || loop {
-            // Stop the loop when clock gets paused
-            if !running_ref.load(Ordering::Relaxed) {
-                break;
-            }
-            let _ = tx.send(true);
-            // Wait for the duration between VBlanks (59.7 hZ)
-            thread::sleep(Duration::from_micros(16742));
-        });
+        self.rom_loaded = true;
+        self.paused.store(false, Ordering::Relaxed);
     }
 
     fn handle_input(&mut self, input: &egui::InputState, in_main_window: bool) {
@@ -245,8 +191,8 @@ impl Window {
                 if *pressed {
                     match *key {
                         // Toggle the clock
-                        Key::Space => {
-                            if !self.cpu_running.fetch_not(Ordering::Relaxed) {
+                        Key::Escape => {
+                            if self.rom_loaded && self.paused.fetch_not(Ordering::Relaxed) {
                                 self.start_clock();
                             };
                         }
@@ -254,19 +200,31 @@ impl Window {
                         Key::F1 => self.show_debug = !self.show_debug,
                         // Manually step over an instruction
                         Key::F3 => {
-                            if !self.cpu_running.load(Ordering::Relaxed) {
-                                let _ = self.clock_tx.clone().unwrap().send(false);
+                            if self.paused.load(Ordering::Relaxed) {
+                                let _ = self
+                                    .clock_tx
+                                    .clone()
+                                    .unwrap()
+                                    .send(ExecutorInstruction::RunInstruction);
                             }
                         }
                         // Run until next frame
                         Key::F4 => {
-                            if !self.cpu_running.load(Ordering::Relaxed) {
-                                let _ = self.clock_tx.clone().unwrap().send(true);
+                            if self.paused.load(Ordering::Relaxed) {
+                                let _ = self
+                                    .clock_tx
+                                    .clone()
+                                    .unwrap()
+                                    .send(ExecutorInstruction::RunFrame);
                             }
                         }
                         // Manually activate breakpoint
                         Key::F5 => {
-                            self.cpu.lock().unwrap().breakpoint();
+                            self.cpu
+                                .lock()
+                                .unwrap()
+                                .as_ref()
+                                .inspect(|cpu| cpu.breakpoint());
                         }
                         Key::F7 => {
                             self.save_state();
@@ -284,12 +242,10 @@ impl Window {
 
 impl eframe::App for Window {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
-        if !self.has_initialized {
-            self.has_initialized = true;
-            self.ctx = Arc::new(Mutex::new(Some(ctx.clone())));
-
-            self.init();
-        }
+        // ctx.set_visuals(Visuals {
+        //     override_text_color: Some(Color32::WHITE),
+        //     ..Default::default()
+        // });
 
         // Render the main display window
         let central_frame = egui::Frame::central_panel(&ctx.style()).inner_margin(Margin::ZERO);
@@ -300,27 +256,35 @@ impl eframe::App for Window {
                     self.handle_input(input, true);
                 });
 
-                // Calculate how texture should be resized on the screen to keep aspect ratio
-                let screen_size = ui.available_size();
-                let mut rect = ui.allocate_space(screen_size).1;
-                let x_diff = rect.width() / 160.0;
-                let y_diff = rect.height() / 144.0;
-                let offset: Vec2 = if x_diff > y_diff {
-                    rect.set_width(rect.width() / (x_diff / y_diff));
-                    Vec2::new((screen_size.x - rect.width()) / 2.0, 0.0)
-                } else {
-                    rect.set_height(rect.height() / (y_diff / x_diff));
-                    Vec2::new(0.0, (screen_size.y - rect.height()) / 2.0)
-                };
-                let uv = Rect::from_min_max(pos2(0.0, 0.0), pos2(1.0, 1.0));
+                if self.rom_loaded {
+                    // Calculate how texture should be resized on the screen to keep aspect ratio
+                    let screen_size = ui.available_size();
+                    let mut rect =
+                        Rect::from_min_max(pos2(0.0, 0.0), pos2(screen_size.x, screen_size.y));
+                    let x_diff = rect.width() / 160.0;
+                    let y_diff = rect.height() / 144.0;
+                    let offset: Vec2 = if x_diff > y_diff {
+                        rect.set_width(rect.width() / (x_diff / y_diff));
+                        Vec2::new((screen_size.x - rect.width()) / 2.0, 0.0)
+                    } else {
+                        rect.set_height(rect.height() / (y_diff / x_diff));
+                        Vec2::new(0.0, (screen_size.y - rect.height()) / 2.0)
+                    };
+                    let uv = Rect::from_min_max(pos2(0.0, 0.0), pos2(1.0, 1.0));
 
-                // Paint pixel texture
-                ui.painter().image(
-                    self.display_texture.lock().unwrap().id(),
-                    rect.translate(offset),
-                    uv,
-                    Color32::WHITE,
-                );
+                    // Paint pixel texture
+                    ui.painter().image(
+                        self.display_texture.lock().unwrap().id(),
+                        rect.translate(offset),
+                        uv,
+                        Color32::WHITE,
+                    );
+                }
+
+                if !self.rom_loaded || self.paused.load(Ordering::Relaxed) {
+                    self.render_menu(ctx, ui);
+                };
+                ui.response()
             });
 
         if self.show_debug {
