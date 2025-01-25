@@ -4,6 +4,7 @@ use super::*;
 pub enum ExecutorInstruction {
     RunFrame,
     RunInstruction,
+    OptionsUpdated(Options),
     Stop,
 }
 
@@ -16,16 +17,22 @@ impl Window {
         let input_ref = Arc::clone(&self.input_state);
         let audio_queue_ref = Arc::clone(&self.audio_queue);
 
-        let options = self.options.clone();
+        let mut options = self.options.clone();
 
         let (tx, rx) = mpsc::sync_channel::<ExecutorInstruction>(0);
         thread::spawn(move || {
             loop {
                 // Wait for timer
                 let instruction = rx.recv().unwrap();
-                if instruction == ExecutorInstruction::Stop {
-                    break;
-                }
+
+                match instruction {
+                    ExecutorInstruction::Stop => break,
+                    ExecutorInstruction::OptionsUpdated(new_options) => {
+                        options = new_options;
+                        continue;
+                    }
+                    _ => {}
+                };
 
                 let mut cpu_option = cpu_ref.lock().unwrap();
                 let cpu = cpu_option.as_mut().unwrap();
@@ -49,28 +56,11 @@ impl Window {
                         // Break loop if execution function returns true (meaning VBlank was hit)
                         if cpu.execute() {
                             // Update display texture
-                            let mut pixels = vec![];
-                            for y in 0..144 {
-                                for x in 0..160 {
-                                    // Loop through front display
-                                    let pixel = cpu.ppu.display[x][y];
-                                    let color = match pixel {
-                                        0 => Color32::WHITE,
-                                        1 => Color32::GRAY,
-                                        2 => Color32::DARK_GRAY,
-                                        3 => Color32::BLACK,
-                                        _ => unreachable!(),
-                                    };
-                                    pixels.push(color);
-                                }
-                            }
-                            display_ref.lock().unwrap().set(
-                                ColorImage {
-                                    size: [160, 144],
-                                    pixels,
-                                },
-                                TextureOptions::NEAREST,
-                            );
+                            let image = Self::get_display_texture(cpu, &options);
+                            display_ref
+                                .lock()
+                                .unwrap()
+                                .set(image, TextureOptions::NEAREST);
                             // Append currently sampled audio buffer to playback queue
                             audio_queue_ref.append(
                                 SamplesBuffer::new(
@@ -96,6 +86,28 @@ impl Window {
             }
         });
         tx
+    }
+
+    pub fn get_display_texture(cpu: &CPU, options: &Options) -> ColorImage {
+        let palette = match options.palette_preset {
+            0 => Palette::original(),
+            1 => Palette::lcd(),
+            2 => options.custom_palette.clone(),
+            _ => unreachable!(),
+        };
+        let mut pixels = vec![];
+        for y in 0..144 {
+            for x in 0..160 {
+                // Loop through front display
+                let pixel = cpu.ppu.display[x][y];
+                let color = palette.get_col(pixel);
+                pixels.push(color);
+            }
+        }
+        ColorImage {
+            size: [160, 144],
+            pixels,
+        }
     }
 
     pub fn start_clock(&mut self) {

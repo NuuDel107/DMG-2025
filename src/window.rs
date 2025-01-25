@@ -1,7 +1,5 @@
-use super::{
-    cpu::{input::*, interrupts::*, registers::*},
-    Options, CPU,
-};
+use super::cpu::{input::*, interrupts::*, registers::*};
+use super::*;
 use egui::{epaint::*, FontData, FontDefinitions, TextureOptions};
 use rodio::{
     buffer::SamplesBuffer,
@@ -46,27 +44,33 @@ pub struct Window {
 
     menu_page: MenuPage,
     logo_texture: TextureHandle,
-
+    arrow_texture: TextureHandle,
     show_debug: bool,
-    show_instruction_info: bool,
+    show_color_picker: bool,
 }
 
 impl Window {
+    /// Loads texture from included bytes
+    /// Side note: why does this need to be so fucking hard
+    fn load_texture(cc: &eframe::CreationContext<'_>, name: &str, data: &[u8]) -> TextureHandle {
+        let img_data = ::image::load_from_memory(data).unwrap();
+        let img = ColorImage::from_rgba_unmultiplied(
+            [img_data.width() as usize, img_data.height() as usize],
+            img_data.to_rgba8().as_flat_samples().as_slice(),
+        );
+        cc.egui_ctx.load_texture(name, img, TextureOptions::NEAREST)
+    }
+
     pub fn new(options: Options, cc: &eframe::CreationContext<'_>) -> Window {
         // Initialize display texture with just white
-        let img_data = include_bytes!("../assets/logo.png");
-        let img_buf = ::image::load_from_memory(img_data).unwrap().to_rgba8();
-
-        let img =
-            ColorImage::from_rgba_unmultiplied([96, 16], img_buf.as_flat_samples().as_slice());
-        let logo_texture = cc
-            .egui_ctx
-            .load_texture("display", img, TextureOptions::NEAREST);
         let display_texture = cc.egui_ctx.load_texture(
             "display",
             ColorImage::from_gray([160, 144], &[255; 160 * 144]),
             TextureOptions::NEAREST,
         );
+        // Load UI textures
+        let logo_texture = Self::load_texture(cc, "logo", include_bytes!("../assets/logo.png"));
+        let arrow_texture = Self::load_texture(cc, "arrow", include_bytes!("../assets/arrow.png"));
 
         // Initialize audio queue and playback
         let (stream, stream_handle) = OutputStream::try_default().unwrap();
@@ -115,9 +119,9 @@ impl Window {
 
             menu_page: MenuPage::Main,
             logo_texture,
-
+            arrow_texture,
             show_debug: false,
-            show_instruction_info: false,
+            show_color_picker: false,
         }
     }
 
@@ -286,6 +290,10 @@ impl eframe::App for Window {
                 };
                 ui.response()
             });
+
+        if self.show_color_picker {
+            self.render_color_picker(ctx);
+        }
 
         if self.show_debug {
             ctx.show_viewport_immediate(

@@ -1,4 +1,7 @@
-#![windows_subsystem = "windows"]
+#![cfg_attr(
+    all(target_os = "windows", not(debug_assertions),),
+    windows_subsystem = "windows"
+)]
 use std::sync::Arc;
 
 mod cpu;
@@ -6,7 +9,7 @@ use cpu::CPU;
 mod window;
 use window::Window;
 mod options;
-use options::Options;
+use options::*;
 
 fn main() -> eframe::Result {
     // Display backtrace
