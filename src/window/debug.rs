@@ -1,5 +1,5 @@
 use super::*;
-use egui::{Align2, Context, Grid, Ui};
+use egui::{Context, Grid, Ui};
 
 impl Window {
     fn bool_to_emoji(bool: bool) -> String {
@@ -11,7 +11,7 @@ impl Window {
     }
 
     /// Renders a debug window with displays for the current state of the CPU
-    pub fn render_debug(&mut self, ctx: &Context, ui: &mut Ui) {
+    pub fn render_debug(&mut self, _ctx: &Context, ui: &mut Ui) {
         let cpu = self.cpu.lock().unwrap();
         if cpu.is_none() {
             return;

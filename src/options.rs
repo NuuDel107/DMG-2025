@@ -1,6 +1,6 @@
-use eframe::glow::COLOR;
 use egui::Color32;
 use serde::{de::Visitor, ser::SerializeSeq, Deserialize, Deserializer, Serialize, Serializer};
+use std::path::PathBuf;
 use std::{fs, io::Write};
 
 #[derive(Debug, Clone, PartialEq)]
@@ -143,17 +143,20 @@ impl Options {
     pub fn save(&self) {
         let default_folder = dirs_next::data_dir().unwrap().join("DMG-2025");
         if !default_folder.exists() {
-            let _ = fs::create_dir(&default_folder);
+            Self::init_folder(&default_folder);
         }
 
         let options_path = default_folder.join("options.json5");
-        if options_path.exists() {
-            let _ = fs::remove_file(&options_path);
-        }
+        let _ = fs::remove_file(&options_path);
 
         let mut file = fs::File::create(&options_path).unwrap();
         let json = json5::to_string(&self).unwrap();
         let _ = file.write_all(json.as_bytes());
+    }
+
+    fn init_folder(folder: &PathBuf) {
+        let _ = fs::create_dir(folder);
+        let _ = fs::create_dir(folder.join("saves"));
     }
 }
 

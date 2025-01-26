@@ -49,7 +49,7 @@ impl Window {
                         // stop the clock
                         if options.breakpoints.contains(&cpu.reg.pc) {
                             cpu.breakpoint();
-                            paused_ref.store(false, Ordering::Relaxed);
+                            paused_ref.store(true, Ordering::Relaxed);
                             break;
                         }
 
@@ -70,8 +70,11 @@ impl Window {
                                 )
                                 .convert_samples(),
                             );
+                            drop(cpu_option);
                             // Request repaint to refresh display
-                            egui::Context::request_repaint(&ctx);
+                            if !paused_ref.load(Ordering::Relaxed) {
+                                ctx.request_repaint();
+                            }
                             break;
                         }
                     }
@@ -81,7 +84,7 @@ impl Window {
                     cpu.execute();
                     // Clear APU buffer
                     cpu.apu.receive_buffer();
-                    egui::Context::request_repaint(&ctx);
+                    ctx.request_repaint();
                 }
             }
         });
@@ -119,7 +122,11 @@ impl Window {
             if paused_ref.load(Ordering::Relaxed) {
                 break;
             }
-            let _ = tx.send(ExecutorInstruction::RunFrame);
+            let res = tx.send(ExecutorInstruction::RunFrame);
+            // If send returns error, CPU has probably been reloaded
+            if res.is_err() {
+                break;
+            }
             // Wait for the duration between VBlanks (59.7 hZ)
             thread::sleep(Duration::from_micros(16742));
         });

@@ -6,8 +6,8 @@ use rodio::{
     queue::{queue, SourcesQueueInput},
     OutputStream, Source,
 };
-use std::fs::{self, File, OpenOptions};
-use std::io::{prelude::*, LineWriter};
+use std::fs::{self, File};
+use std::io::prelude::*;
 use std::sync::{
     atomic::{AtomicBool, Ordering},
     mpsc, Arc, Mutex,
@@ -246,11 +246,6 @@ impl Window {
 
 impl eframe::App for Window {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
-        // ctx.set_visuals(Visuals {
-        //     override_text_color: Some(Color32::WHITE),
-        //     ..Default::default()
-        // });
-
         // Render the main display window
         let central_frame = egui::Frame::central_panel(&ctx.style()).inner_margin(Margin::ZERO);
         egui::CentralPanel::default()

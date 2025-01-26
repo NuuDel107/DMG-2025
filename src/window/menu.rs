@@ -4,7 +4,7 @@ use std::collections::BTreeMap;
 use std::path::PathBuf;
 
 impl Window {
-    pub fn render_menu(&mut self, ctx: &Context, ui: &mut Ui) {
+    pub fn render_menu(&mut self, _ctx: &Context, ui: &mut Ui) {
         let scale = self.options.window_scale as f32;
         let mut global_style = ui.style_mut().clone();
 
@@ -242,7 +242,6 @@ impl Window {
                         });
                         ui.allocate_space(ui.available_size());
                     }
-                    _ => {}
                 }
             });
     }
