@@ -111,7 +111,10 @@ impl Window {
                                     self.save_state();
                                 }
                                 if ui
-                                    .add_enabled(self.rom_loaded && self.get_state_path().exists(), egui::Button::new("Load state"))
+                                    .add_enabled(
+                                        self.rom_loaded && self.get_state_path().exists(),
+                                        egui::Button::new("Load state"),
+                                    )
                                     .clicked()
                                 {
                                     self.load_state();
@@ -126,32 +129,26 @@ impl Window {
                                     self.init();
                                 }
                                 ui.add_space(scale * 16.0);
-                                
+
                                 ui.horizontal(|ui| {
-                                    if self.add_arrow(ui, false).clicked()
-                                    {
+                                    if self.add_arrow(ui, false).clicked() {
                                         if self.state_slot > 1 {
                                             self.state_slot -= 1;
-                                        }
-                                        else {
+                                        } else {
                                             self.state_slot = 9;
                                         }
                                     };
                                     ui.add_sized(
                                         [scale * 50.0, scale * 8.0],
                                         egui::Label::new(
-                                            RichText::new(
-                                                format!("Slot {}", self.state_slot),
-                                            )
-                                            .color(Color32::from_gray(200)),
+                                            RichText::new(format!("Slot {}", self.state_slot))
+                                                .color(Color32::from_gray(200)),
                                         ),
                                     );
-                                    if self.add_arrow(ui, true).clicked()
-                                    {
+                                    if self.add_arrow(ui, true).clicked() {
                                         if self.state_slot < 9 {
                                             self.state_slot += 1;
-                                        }
-                                        else {
+                                        } else {
                                             self.state_slot = 1;
                                         }
                                     };

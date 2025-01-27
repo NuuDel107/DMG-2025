@@ -1,6 +1,5 @@
 use super::*;
 use memmap2::MmapMut;
-use std::io::Write;
 
 #[derive(Deserialize, Serialize, Debug, Clone, Copy)]
 pub enum MBCType {
@@ -167,9 +166,8 @@ impl MBC {
 
     pub fn load_memory_map(&mut self, mut mmap: MmapMut, overwrite_mmap: bool) {
         if overwrite_mmap {
-            let _ = mmap.as_mut().write_all(&self.ram);
-        }
-        else {
+            mmap.clone_from_slice(&self.ram);
+        } else {
             self.ram = mmap.to_vec();
         }
         self.save_ram = Some(mmap);
@@ -330,7 +328,7 @@ impl MBC {
                 self.ram[address] = value;
                 if let Some(mmap) = self.save_ram.as_deref_mut() {
                     mmap[address] = value;
-                } 
+                }
             }
             _ => {}
         };
@@ -414,7 +412,7 @@ impl MBC {
                 self.ram[address] = value;
                 if let Some(mmap) = self.save_ram.as_deref_mut() {
                     mmap[address] = value;
-                } 
+                }
             }
             _ => {}
         };

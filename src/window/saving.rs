@@ -1,7 +1,8 @@
 use super::*;
-use std::path::PathBuf;
-use std::fs::OpenOptions;
+use cpu::memory::CartridgeInfo;
 use memmap2::MmapMut;
+use std::fs::OpenOptions;
+use std::path::PathBuf;
 
 fn on_save_error(e: &std::io::Error) {
     eprintln!("Failed to save CPU state: {e}");
@@ -13,24 +14,39 @@ fn on_load_error(e: &std::io::Error) {
 
 impl Window {
     pub fn get_save_folder(&self) -> PathBuf {
-        PathBuf::from(&self.options.data_path)
+        let folder = PathBuf::from(&self.options.data_path)
             .join("saves")
-            .join(PathBuf::from(&self.options.rom_path).file_stem().unwrap())
+            .join(PathBuf::from(&self.options.rom_path).file_stem().unwrap());
+        if !folder.exists() {
+            let _ = fs::create_dir(&folder);
+        }
+        folder
     }
 
     pub fn get_state_path(&self) -> PathBuf {
-        self.get_save_folder().join(format!("state{}.json", self.state_slot))
+        self.get_save_folder()
+            .join(format!("state{}.json", self.state_slot))
     }
 
-    fn get_mmap(&self) -> (MmapMut, bool) {
+    fn get_mmap(&self, info: CartridgeInfo) -> MmapMut {
         let file_path = self.get_save_folder().join("save.bin");
-        let created_new = !file_path.exists();
-        let file = if created_new {
-            OpenOptions::new().read(true).write(true).create_new(true).open(file_path).expect("Couldn't create new save file")
+        let file = if file_path.exists() {
+            OpenOptions::new()
+                .read(true)
+                .write(true)
+                .open(file_path)
+                .expect("Couldn't open save file")
         } else {
-            OpenOptions::new().read(true).write(true).open(file_path).expect("Couldn't open save file")
+            let mut new_file = OpenOptions::new()
+                .read(true)
+                .write(true)
+                .create_new(true)
+                .open(file_path)
+                .expect("Couldn't create new save file");
+            let _ = new_file.write_all(vec![0; usize::from(0x2000 * info.ram_banks)].as_slice());
+            new_file
         };
-        (unsafe { MmapMut::map_mut(&file).expect("Couldn't initialize memory map") }, created_new)
+        unsafe { MmapMut::map_mut(&file).expect("Couldn't initialize memory map") }
     }
 
     pub fn load_ram(&mut self) {
@@ -40,8 +56,9 @@ impl Window {
         if !cpu.mem.info.has_battery {
             return;
         }
-        let (mmap, created_new) = self.get_mmap();
-        cpu.mem.mbc.load_memory_map(mmap, created_new);
+        cpu.mem
+            .mbc
+            .load_memory_map(self.get_mmap(cpu.mem.info), false);
     }
 
     /// Saves current emulator state to file, a.k.a. serializes CPU
@@ -86,7 +103,10 @@ impl Window {
             if let Ok(mut loaded_cpu) = cpu_res {
                 loaded_cpu.mem.mbc.load_rom(rom);
                 if loaded_cpu.mem.info.has_battery {
-                    loaded_cpu.mem.mbc.load_memory_map(self.get_mmap().0, true);
+                    loaded_cpu
+                        .mem
+                        .mbc
+                        .load_memory_map(self.get_mmap(loaded_cpu.mem.info), true);
                 }
                 *cpu_option = Some(loaded_cpu);
             } else {
