@@ -41,6 +41,7 @@ pub struct Window {
     input_state: Arc<Mutex<InputFlag>>,
 
     options: Options,
+    state_slot: u8,
 
     menu_page: MenuPage,
     logo_texture: TextureHandle,
@@ -117,6 +118,7 @@ impl Window {
             input_state: Arc::new(Mutex::new(InputFlag::from_bits_truncate(0xFF))),
 
             options,
+            state_slot: 1,
 
             menu_page: MenuPage::Main,
             logo_texture,
@@ -148,6 +150,9 @@ impl Window {
             Self::load_rom_file(&self.options.rom_path),
             &self.options,
         ));
+
+        // Load saved ram from file and initialize memory map
+        self.load_ram();
 
         // Start loop on thread that receives clock signal
         // and cycles the CPU

@@ -1,4 +1,6 @@
 use super::*;
+use memmap2::MmapMut;
+use std::io::Write;
 
 #[derive(Deserialize, Serialize, Debug, Clone, Copy)]
 pub enum MBCType {
@@ -134,6 +136,8 @@ pub struct MBC {
     #[serde(skip_serializing, skip_deserializing)]
     pub rom: Vec<u8>,
     pub ram: Vec<u8>,
+    #[serde(skip_serializing, skip_deserializing)]
+    pub save_ram: Option<MmapMut>,
     rom_bank: u8,
     ram_bank: u8,
     ram_enabled: bool,
@@ -147,6 +151,7 @@ impl MBC {
         Self {
             rom: vec![],
             ram: vec![0; usize::from(0x2000 * info.ram_banks)],
+            save_ram: None,
             rom_bank: 1,
             ram_bank: 0,
             ram_enabled: false,
@@ -158,6 +163,16 @@ impl MBC {
     /// Loads ROM file into the simulated cartridge
     pub fn load_rom(&mut self, rom_file: Vec<u8>) {
         self.rom = rom_file;
+    }
+
+    pub fn load_memory_map(&mut self, mut mmap: MmapMut, overwrite_mmap: bool) {
+        if overwrite_mmap {
+            let _ = mmap.as_mut().write_all(&self.ram);
+        }
+        else {
+            self.ram = mmap.to_vec();
+        }
+        self.save_ram = Some(mmap);
     }
 
     /// Returns value from memory at address
@@ -313,6 +328,9 @@ impl MBC {
                     return;
                 }
                 self.ram[address] = value;
+                if let Some(mmap) = self.save_ram.as_deref_mut() {
+                    mmap[address] = value;
+                } 
             }
             _ => {}
         };
@@ -394,6 +412,9 @@ impl MBC {
                     return;
                 }
                 self.ram[address] = value;
+                if let Some(mmap) = self.save_ram.as_deref_mut() {
+                    mmap[address] = value;
+                } 
             }
             _ => {}
         };
