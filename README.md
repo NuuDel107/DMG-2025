@@ -1,32 +1,36 @@
+![DMG-2025](/assets/logo_large.png)
+
 # The world's worst Game Boy emulator
 
 ## Project goals
 
--   Fucking run something
--   Play Pokemon
--   Port to web? (using WebAssembly)
+-   Fucking run something ✅
+-   Play Pokemon ✅
+-   Add UI ✅
+-   Port to WASM?
+-   Game Boy Color emulation?
 
 ## TO-DO
 
-### Timers
+### App features
 
--   Simulate real Game Boy clock speed
+-   Fast forwarding
+-   Input rebinding
 
-### Memory
+### Audio
 
--   ROM loading
-
-### CPU
-
--   Opcode implementation
--   Interrupts
+-   Sound is popping quite often
+-   Filters for nicer sounds?
 
 ### Graphics
 
--   Display tiles
+-   Rendering isn't 100% accurate
 
-## Resources used
+### Memory
 
--   [The Rust Programming Language (amazing introductory book to Rust)](https://doc.rust-lang.org/book/title-page.html)
--   [Pan Docs (technical reference of pretty much everything you need related to Game Boy development)](https://gbdev.io/pandocs/About.html)
--   [Generate Game Boy CPU opcodes (Interactive table of opcodes by meganesu)](https://meganesu.github.io/generate-gb-opcodes/)
+-   Not all MBC types and features are supported
+
+## Credits
+
+-   [PixelMix font by Andrew Tyler](https://www.dafont.com/pixelmix.font)
+-   [All the cool libraries used](/Cargo.toml)
