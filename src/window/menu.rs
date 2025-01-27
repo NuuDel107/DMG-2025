@@ -24,6 +24,7 @@ impl Window {
         global_style.text_styles = text_styles;
 
         // Define other visual styles
+        global_style.visuals.dark_mode = true;
         global_style.visuals.button_frame = false;
         global_style.interaction.selectable_labels = false;
         global_style.visuals.widgets.inactive.fg_stroke =
@@ -101,6 +102,19 @@ impl Window {
                                         self.options.save();
                                         self.init();
                                     }
+                                }
+                                ui.add_space(scale * 12.0);
+                                if ui
+                                    .add_enabled(self.rom_loaded, egui::Button::new("Save state"))
+                                    .clicked()
+                                {
+                                    self.save_state();
+                                }
+                                if ui
+                                    .add_enabled(self.rom_loaded, egui::Button::new("Load state"))
+                                    .clicked()
+                                {
+                                    self.load_state();
                                 }
                             });
                             columns[1].vertical_centered(|ui| {

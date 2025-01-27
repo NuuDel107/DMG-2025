@@ -1,5 +1,5 @@
 use bitflags::bitflags;
-use serde::{Deserialize, Deserializer, Serialize, Serializer};
+use serde::{Deserialize, Serialize};
 use serde_big_array::BigArray;
 use std::ops::RangeInclusive;
 

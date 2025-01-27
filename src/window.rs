@@ -62,6 +62,7 @@ impl Window {
     }
 
     pub fn new(options: Options, cc: &eframe::CreationContext<'_>) -> Window {
+        cc.egui_ctx.set_theme(egui::Theme::Dark);
         // Initialize display texture with just white
         let display_texture = cc.egui_ctx.load_texture(
             "display",

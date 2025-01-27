@@ -1,5 +1,3 @@
-use serde::{de::Visitor, ser::SerializeSeq};
-
 use super::*;
 
 #[derive(Deserialize, Serialize, Clone, Copy, PartialEq)]
@@ -102,65 +100,17 @@ pub struct DMGPalettes {
 }
 
 pub type DisplayMatrix = [[u8; 144]; 160];
-const EMPTY_DISPLAY: DisplayMatrix = [[0; 144]; 160];
 
-/// Serializes 2D display matrix as a 1D array
-fn serialize_display<S>(display: &DisplayMatrix, serializer: S) -> Result<S::Ok, S::Error>
-where
-    S: Serializer,
-{
-    let mut seq = serializer.serialize_seq(Some(160 * 144))?;
-    for x in display {
-        for y in x {
-            seq.serialize_element(y)?;
-        }
-    }
-    seq.end()
-}
-
-struct DisplayVisitor;
-impl<'de> Visitor<'de> for DisplayVisitor {
-    type Value = DisplayMatrix;
-
-    fn expecting(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(
-            formatter,
-            "an array with length = pixels in display (160*144)"
-        )
-    }
-
-    fn visit_seq<A>(self, mut seq: A) -> Result<Self::Value, A::Error>
-    where
-        A: serde::de::SeqAccess<'de>,
-    {
-        let mut display = EMPTY_DISPLAY;
-        for x in 0..160 {
-            for y in 0..144 {
-                if let Ok(Some(pixel)) = seq.next_element() {
-                    display[x][y] = pixel;
-                } else {
-                    return Err(serde::de::Error::custom("Display array too short!"));
-                }
-            }
-        }
-        Ok(display)
-    }
-}
-
-/// Deserializes 2D display matrix from a 1D array
-fn deserialize_display<'de, D>(deserializer: D) -> Result<DisplayMatrix, D::Error>
-where
-    D: Deserializer<'de>,
-{
-    deserializer.deserialize_seq(DisplayVisitor)
+fn empty_display() -> DisplayMatrix {
+    [[0; 144]; 160]
 }
 
 /// The graphics processing unit
 #[allow(clippy::upper_case_acronyms)]
 #[derive(Deserialize, Serialize)]
 pub struct PPU {
-    #[serde(serialize_with = "serialize_display")]
-    #[serde(deserialize_with = "deserialize_display")]
+    #[serde(skip)]
+    #[serde(default = "empty_display")]
     pub display: DisplayMatrix,
     #[serde(with = "BigArray")]
     pub vram: [u8; 0x2000],
@@ -184,7 +134,7 @@ pub struct PPU {
 impl PPU {
     pub fn new() -> Self {
         Self {
-            display: EMPTY_DISPLAY,
+            display: empty_display(),
             vram: [0; 0x2000],
             oam: OAM::new(),
             oam_dma_source: 0,

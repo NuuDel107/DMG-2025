@@ -1,5 +1,4 @@
 use super::*;
-use serde::Deserialize;
 use std::path::PathBuf;
 
 fn on_save_error(e: &std::io::Error) {
@@ -26,7 +25,7 @@ impl Window {
         let cpu_option = self.cpu.lock().unwrap();
         let path = self.get_save_path();
         println!("Saving CPU state to {}", path.to_str().unwrap());
-        let state = serde_json::to_string_pretty::<CPU>(cpu_option.as_ref().unwrap())
+        let state = serde_json::to_string::<CPU>(cpu_option.as_ref().unwrap())
             .expect("Failed to save CPU state: Serialization failed");
 
         let _ = fs::remove_file(&path);
@@ -51,13 +50,6 @@ impl Window {
 
         if let Ok(save) = save_file {
             self.paused.store(true, Ordering::Relaxed);
-            // Stop executor
-            let _ = self
-                .clock_tx
-                .as_ref()
-                .unwrap()
-                .send(ExecutorInstruction::Stop);
-            // Lock CPU after executor has stopped
             let mut cpu_option = self.cpu.lock().unwrap();
 
             // Initialize new CPU from deserialized state using current ROM file
@@ -69,7 +61,6 @@ impl Window {
             } else {
                 eprintln!("Failed to load CPU state: Deserialization failed")
             }
-
             drop(cpu_option);
 
             // Start executing

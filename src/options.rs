@@ -120,12 +120,12 @@ impl Options {
         let options_path = dirs_next::data_dir()
             .unwrap()
             .join("DMG-2025")
-            .join("options.json5");
+            .join("options.json");
         if !options_path.exists() {
             return Self::init_default();
         }
         let file = fs::read_to_string(options_path).unwrap();
-        let json = json5::from_str(&file);
+        let json = serde_json::from_str(&file);
         if let Ok(options) = json {
             options
         } else {
@@ -146,11 +146,11 @@ impl Options {
             Self::init_folder(&default_folder);
         }
 
-        let options_path = default_folder.join("options.json5");
+        let options_path = default_folder.join("options.json");
         let _ = fs::remove_file(&options_path);
 
         let mut file = fs::File::create(&options_path).unwrap();
-        let json = json5::to_string(&self).unwrap();
+        let json = serde_json::to_string_pretty(&self).unwrap();
         let _ = file.write_all(json.as_bytes());
     }
 

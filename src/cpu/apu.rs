@@ -489,7 +489,7 @@ bitflags! {
 #[derive(Deserialize, Serialize)]
 pub struct APU {
     pub on: bool,
-    #[serde(skip_serializing, skip_deserializing)]
+    #[serde(skip)]
     pub buffer: Vec<f32>,
     pub sample_delay_counter: u32,
     pub sample_delay: u32,

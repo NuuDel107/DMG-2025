@@ -23,7 +23,12 @@ impl Window {
         thread::spawn(move || {
             loop {
                 // Wait for timer
-                let instruction = rx.recv().unwrap();
+                let received = rx.recv();
+                // If message is error, clock has been stopped
+                if received.is_err() {
+                    break;
+                }
+                let instruction = received.unwrap();
 
                 match instruction {
                     ExecutorInstruction::Stop => break,
