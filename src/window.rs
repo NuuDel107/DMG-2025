@@ -18,15 +18,10 @@ use std::time::Duration;
 mod clock;
 use clock::ExecutorInstruction;
 mod debug;
+mod input;
 mod menu;
+use menu::MenuPage;
 mod saving;
-
-#[derive(PartialEq)]
-pub enum MenuPage {
-    Main,
-    Options,
-    Info,
-}
 
 pub struct Window {
     cpu: Arc<Mutex<Option<CPU>>>,
@@ -42,10 +37,12 @@ pub struct Window {
 
     options: Options,
     state_slot: u8,
+    rebinding_input: Option<InputFlag>,
 
     menu_page: MenuPage,
     logo_texture: TextureHandle,
     arrow_texture: TextureHandle,
+    input_texture: TextureHandle,
     show_debug: bool,
     show_color_picker: bool,
 }
@@ -73,6 +70,7 @@ impl Window {
         // Load UI textures
         let logo_texture = Self::load_texture(cc, "logo", include_bytes!("../assets/logo.png"));
         let arrow_texture = Self::load_texture(cc, "arrow", include_bytes!("../assets/arrow.png"));
+        let input_texture = Self::load_texture(cc, "input", include_bytes!("../assets/input.png"));
 
         // Initialize audio queue and playback
         let (stream, stream_handle) = OutputStream::try_default().unwrap();
@@ -119,10 +117,12 @@ impl Window {
 
             options,
             state_slot: 1,
+            rebinding_input: None,
 
             menu_page: MenuPage::Main,
             logo_texture,
             arrow_texture,
+            input_texture,
             show_debug: false,
             show_color_picker: false,
         }
@@ -164,89 +164,6 @@ impl Window {
 
         self.rom_loaded = true;
         self.paused.store(false, Ordering::Relaxed);
-    }
-
-    fn handle_input(&mut self, input: &egui::InputState, in_main_window: bool) {
-        for event in &input.events {
-            if let egui::Event::Key {
-                key,
-                pressed,
-                repeat,
-                ..
-            } = event
-            {
-                use egui::Key;
-
-                if *repeat && !matches!(*key, Key::F3 | Key::F4) {
-                    continue;
-                }
-
-                if in_main_window {
-                    let input_option = match *key {
-                        Key::ArrowRight => Some(InputFlag::RIGHT),
-                        Key::ArrowLeft => Some(InputFlag::LEFT),
-                        Key::ArrowUp => Some(InputFlag::UP),
-                        Key::ArrowDown => Some(InputFlag::DOWN),
-                        Key::X => Some(InputFlag::A),
-                        Key::Z => Some(InputFlag::B),
-                        Key::Backspace => Some(InputFlag::SELECT),
-                        Key::Enter => Some(InputFlag::START),
-                        _ => None,
-                    };
-                    if let Some(input) = input_option {
-                        self.input_state.lock().unwrap().set(input, !pressed);
-                    }
-                }
-
-                if *pressed {
-                    match *key {
-                        // Toggle the clock
-                        Key::Escape => {
-                            if self.rom_loaded && self.paused.fetch_not(Ordering::Relaxed) {
-                                self.start_clock();
-                            };
-                        }
-                        // Toggle debug window
-                        Key::F1 => self.show_debug = !self.show_debug,
-                        // Manually step over an instruction
-                        Key::F3 => {
-                            if self.paused.load(Ordering::Relaxed) {
-                                let _ = self
-                                    .clock_tx
-                                    .clone()
-                                    .unwrap()
-                                    .send(ExecutorInstruction::RunInstruction);
-                            }
-                        }
-                        // Run until next frame
-                        Key::F4 => {
-                            if self.paused.load(Ordering::Relaxed) {
-                                let _ = self
-                                    .clock_tx
-                                    .clone()
-                                    .unwrap()
-                                    .send(ExecutorInstruction::RunFrame);
-                            }
-                        }
-                        // Manually activate breakpoint
-                        Key::F5 => {
-                            self.cpu
-                                .lock()
-                                .unwrap()
-                                .as_ref()
-                                .inspect(|cpu| cpu.breakpoint());
-                        }
-                        Key::F7 => {
-                            self.save_state();
-                        }
-                        Key::F8 => {
-                            self.load_state();
-                        }
-                        _ => {}
-                    };
-                }
-            }
-        }
     }
 }
 

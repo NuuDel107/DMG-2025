@@ -1,7 +1,10 @@
-use egui::Color32;
+use egui::{Color32, Key};
 use serde::{de::Visitor, ser::SerializeSeq, Deserialize, Deserializer, Serialize, Serializer};
+use std::collections::HashMap;
 use std::path::PathBuf;
 use std::{fs, io::Write};
+
+use crate::cpu::input::InputFlag;
 
 #[derive(Debug, Clone, PartialEq)]
 /// Represents color palette for display
@@ -60,15 +63,26 @@ impl Palette {
     }
 }
 
-fn serialize_palette<S>(palette: &Palette, serializer: S) -> Result<S::Ok, S::Error>
-where
-    S: Serializer,
-{
-    let mut seq = serializer.serialize_seq(Some(4))?;
-    for i in 0..4 {
-        let _ = seq.serialize_element(&palette.get_col(i).to_hex());
+impl Serialize for Palette {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let mut seq = serializer.serialize_seq(Some(4))?;
+        for i in 0..4 {
+            let _ = seq.serialize_element(&self.get_col(i).to_hex());
+        }
+        seq.end()
     }
-    seq.end()
+}
+
+impl<'de> Deserialize<'de> for Palette {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        deserializer.deserialize_seq(PaletteVisitor)
+    }
 }
 
 struct PaletteVisitor;
@@ -94,21 +108,13 @@ impl<'de> Visitor<'de> for PaletteVisitor {
     }
 }
 
-fn deserialize_palette<'de, D>(deserializer: D) -> Result<Palette, D::Error>
-where
-    D: Deserializer<'de>,
-{
-    deserializer.deserialize_seq(PaletteVisitor)
-}
-
-#[derive(Deserialize, Serialize, Debug, Clone, PartialEq)]
+#[derive(Deserialize, Serialize, Clone, PartialEq)]
 pub struct Options {
     pub data_path: String,
     pub rom_path: String,
+    pub keybinds: HashMap<InputFlag, String>,
     pub window_scale: u8,
     pub palette_preset: u8,
-    #[serde(serialize_with = "serialize_palette")]
-    #[serde(deserialize_with = "deserialize_palette")]
     pub custom_palette: Palette,
     pub audio_sample_rate: u32,
     pub log: bool,
@@ -158,6 +164,19 @@ impl Options {
         let _ = fs::create_dir(folder);
         let _ = fs::create_dir(folder.join("saves"));
     }
+
+    pub fn default_keybinds() -> HashMap<InputFlag, String> {
+        HashMap::from([
+            (InputFlag::RIGHT, Key::ArrowRight.name().to_string()),
+            (InputFlag::LEFT, Key::ArrowLeft.name().to_string()),
+            (InputFlag::UP, Key::ArrowUp.name().to_string()),
+            (InputFlag::DOWN, Key::ArrowDown.name().to_string()),
+            (InputFlag::A, Key::X.name().to_string()),
+            (InputFlag::B, Key::Z.name().to_string()),
+            (InputFlag::SELECT, Key::Backspace.name().to_string()),
+            (InputFlag::START, Key::Enter.name().to_string()),
+        ])
+    }
 }
 
 impl Default for Options {
@@ -170,6 +189,7 @@ impl Default for Options {
                 .unwrap()
                 .into(),
             rom_path: String::new(),
+            keybinds: Self::default_keybinds(),
             window_scale: 4,
             palette_preset: 0,
             custom_palette: Palette::original(),

@@ -3,6 +3,14 @@ use egui::{load::SizedTexture, Context, Image, ImageSource, RichText, Ui};
 use std::collections::BTreeMap;
 use std::path::PathBuf;
 
+#[derive(PartialEq)]
+pub enum MenuPage {
+    Main,
+    Input,
+    Options,
+    Info,
+}
+
 impl Window {
     pub fn render_menu(&mut self, _ctx: &Context, ui: &mut Ui) {
         let scale = self.options.window_scale as f32;
@@ -58,34 +66,14 @@ impl Window {
             Stroke::NONE,
         );
         egui::Frame::none()
-            .inner_margin(Margin::same(20.0))
+            .inner_margin(Margin::same(scale * 6.0))
             .show(ui, |ui| {
                 ui.set_style(topbar_style_arc.clone());
-                ui.columns(3, |columns| {
-                    columns[0].vertical_centered(|ui| {
-                        if ui
-                            .button(self.get_topbar_button_text(MenuPage::Main))
-                            .clicked()
-                        {
-                            self.menu_page = MenuPage::Main;
-                        }
-                    });
-                    columns[1].vertical_centered(|ui| {
-                        if ui
-                            .button(self.get_topbar_button_text(MenuPage::Options))
-                            .clicked()
-                        {
-                            self.menu_page = MenuPage::Options;
-                        }
-                    });
-                    columns[2].vertical_centered(|ui| {
-                        if ui
-                            .button(self.get_topbar_button_text(MenuPage::Info))
-                            .clicked()
-                        {
-                            self.menu_page = MenuPage::Info;
-                        }
-                    });
+                ui.horizontal(|ui| {
+                    self.add_topbar_button(ui, MenuPage::Main);
+                    self.add_topbar_button(ui, MenuPage::Input);
+                    self.add_topbar_button(ui, MenuPage::Options);
+                    self.add_topbar_button(ui, MenuPage::Info);
                 });
 
                 ui.add_space(scale * 8.0);
@@ -155,6 +143,37 @@ impl Window {
                                 });
                             });
                         });
+                    }
+                    // Input rebinding page
+                    MenuPage::Input => {
+                        ui.put(
+                            Rect::from_min_max(pos2(0.0, 0.0), pos2(scale * 160.0, scale * 144.0)),
+                            Image::new(SizedTexture::from_handle(&self.input_texture))
+                                .fit_to_exact_size(vec2(scale * 160.0, scale * 144.0)),
+                        );
+                        self.add_input_rebind(ui, pos2(9.0, 57.0), 30.0, InputFlag::LEFT);
+                        self.add_input_rebind(ui, pos2(42.0, 57.0), 30.0, InputFlag::RIGHT);
+                        self.add_input_rebind(ui, pos2(25.0, 44.0), 30.0, InputFlag::UP);
+                        self.add_input_rebind(ui, pos2(25.0, 69.0), 30.0, InputFlag::DOWN);
+                        self.add_input_rebind(ui, pos2(93.0, 59.0), 30.0, InputFlag::B);
+                        self.add_input_rebind(ui, pos2(117.0, 48.0), 30.0, InputFlag::A);
+                        self.add_input_rebind(ui, pos2(11.0, 89.0), 60.0, InputFlag::SELECT);
+                        self.add_input_rebind(ui, pos2(74.0, 89.0), 60.0, InputFlag::START);
+
+                        ui.set_style(reset_style_arc.clone());
+                        if ui
+                            .put(
+                                Rect::from_min_size(
+                                    pos2(0.0, scale * 130.0),
+                                    vec2(scale * 160.0, scale * 10.0),
+                                ),
+                                egui::Button::new("Reset keybinds"),
+                            )
+                            .clicked()
+                        {
+                            self.options.keybinds = Options::default_keybinds();
+                        }
+                        ui.set_style(global_style_arc.clone());
                     }
                     // Options page
                     MenuPage::Options => {
@@ -236,14 +255,24 @@ impl Window {
                                 });
                             });
                         });
-                        ui.add_space(40.0);
 
                         ui.set_style(reset_style_arc.clone());
-                        if ui.button("Reset options").clicked() {
-                            // Don't reset ROM path
+                        if ui
+                            .put(
+                                Rect::from_min_size(
+                                    pos2(0.0, scale * 130.0),
+                                    vec2(scale * 160.0, scale * 10.0),
+                                ),
+                                egui::Button::new("Reset options"),
+                            )
+                            .clicked()
+                        {
+                            // Don't reset ROM path or keybinds
                             let rom_path = self.options.rom_path.clone();
+                            let keybinds = self.options.keybinds.clone();
                             self.options = Options::default();
                             self.options.rom_path = rom_path;
+                            self.options.keybinds = keybinds;
                             self.options.save();
 
                             self.update_cpu_options();
@@ -349,17 +378,23 @@ impl Window {
         }
     }
 
-    fn get_topbar_button_text(&self, button_target: MenuPage) -> RichText {
+    fn add_topbar_button(&mut self, ui: &mut Ui, button_target: MenuPage) {
         let text = match button_target {
-            MenuPage::Main => "MAIN",
-            MenuPage::Options => "OPTIONS",
+            MenuPage::Main => " MAIN ",
+            MenuPage::Input => "INPUT ",
+            MenuPage::Options => "OPTION ",
             MenuPage::Info => "INFO",
         };
-        let rich = RichText::new(text);
+        let mut rich = RichText::new(text);
         if self.menu_page == button_target {
-            rich.color(Color32::WHITE)
-        } else {
-            rich
+            rich = rich.color(Color32::WHITE)
+        }
+
+        if ui.add(egui::Button::new(rich)).clicked() {
+            if button_target != MenuPage::Input {
+                self.rebinding_input = None;
+            }
+            self.menu_page = button_target;
         }
     }
 
@@ -388,6 +423,24 @@ impl Window {
                 .fit_to_exact_size(vec2(scale * 8.0, scale * 8.0))
                 .rotate(angle, vec2(0.5, 0.5)),
         ))
+    }
+
+    fn add_input_rebind(&mut self, ui: &mut Ui, pos: Pos2, width: f32, input: InputFlag) {
+        let scale = self.options.window_scale as f32;
+        let rect = Rect {
+            min: pos * scale,
+            max: pos2((pos.x + width) * scale, (pos.y + 8.0) * scale),
+        };
+
+        let mut button_text = RichText::new(self.options.keybinds[&input].clone());
+        if let Some(rebind) = self.rebinding_input {
+            if rebind == input {
+                button_text = RichText::new("...").color(Color32::from_gray(200));
+            }
+        }
+        if ui.put(rect, egui::Button::new(button_text)).clicked() {
+            self.rebinding_input = Some(input);
+        };
     }
 
     fn update_window(&mut self) {

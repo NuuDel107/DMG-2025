@@ -15,7 +15,6 @@
 ### App features
 
 -   Fast forwarding
--   Input rebinding
 
 ### Audio
 
@@ -33,4 +32,5 @@
 ## Credits
 
 -   [PixelMix font by Andrew Tyler](https://www.dafont.com/pixelmix.font)
+-   [Game Boy mockup texture by Indieground](https://resourceboy.com/mockups/top-view-close-up-shot-gameboy-on-floor-mockup/)
 -   [All the cool libraries used](/Cargo.toml)

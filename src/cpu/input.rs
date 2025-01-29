@@ -1,6 +1,6 @@
 use super::*;
 
-#[derive(Deserialize, Serialize, Clone, Copy, PartialEq)]
+#[derive(Deserialize, Serialize, Clone, Copy, Hash, Eq, PartialEq)]
 pub struct InputFlag(u8);
 
 bitflags! {
