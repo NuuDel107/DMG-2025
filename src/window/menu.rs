@@ -310,6 +310,16 @@ impl Window {
                             {
                                 let _ = open::that("https://www.dafont.com/pixelmix.font");
                             };
+                            if ui
+                                .hyperlink_to(
+                                    RichText::new("Shoutout to Pan Docs")
+                                        .font(FontId::proportional(scale * 4.0)),
+                                    "",
+                                )
+                                .clicked()
+                            {
+                                let _ = open::that("https://gbdev.io/pandocs/");
+                            };
                         });
                         ui.allocate_space(ui.available_size());
                     }

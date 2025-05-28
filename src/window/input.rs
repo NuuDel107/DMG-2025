@@ -22,8 +22,8 @@ impl Window {
                             self.rebinding_input = None;
                             self.options.keybinds.insert(rebind, key.name().to_string());
                             self.options.save();
+                            return;
                         }
-                        return;
                     }
                     let key_string = key.name().to_string();
                     for (input, key) in &self.options.keybinds {
