@@ -1,6 +1,6 @@
 use super::cpu::{input::*, interrupts::*, registers::*};
 use super::*;
-use egui::{epaint::*, FontData, FontDefinitions, TextureOptions};
+use egui::{epaint::*, FontData, FontDefinitions, Style, TextureOptions, Visuals};
 use rodio::{
     buffer::SamplesBuffer,
     queue::{queue, SourcesQueueInput},
@@ -45,6 +45,7 @@ pub struct Window {
     input_texture: TextureHandle,
     show_debug: bool,
     show_color_picker: bool,
+    show_profiler: bool,
 }
 
 impl Window {
@@ -60,7 +61,11 @@ impl Window {
     }
 
     pub fn new(options: Options, cc: &eframe::CreationContext<'_>) -> Window {
-        cc.egui_ctx.set_theme(egui::Theme::Dark);
+        let dark_style = Style {
+            visuals: Visuals::dark(),
+            ..Style::default()
+        };
+        cc.egui_ctx.set_style(dark_style);
         // Initialize display texture with just white
         let display_texture = cc.egui_ctx.load_texture(
             "display",
@@ -82,9 +87,7 @@ impl Window {
         let mut fonts = FontDefinitions::default();
         fonts.font_data.insert(
             "pixelmix".to_owned(),
-            std::sync::Arc::new(FontData::from_static(include_bytes!(
-                "../assets/pixelmix.ttf"
-            ))),
+            FontData::from_static(include_bytes!("../assets/pixelmix.ttf")),
         );
         fonts
             .families
@@ -93,15 +96,15 @@ impl Window {
             .insert(0, "pixelmix".to_owned());
         fonts.font_data.insert(
             "pixelmix_bold".to_owned(),
-            std::sync::Arc::new(FontData::from_static(include_bytes!(
-                "../assets/pixelmix_bold.ttf"
-            ))),
+            FontData::from_static(include_bytes!("../assets/pixelmix_bold.ttf")),
         );
         fonts.families.insert(
             FontFamily::Name("bold".into()),
             vec!["pixelmix_bold".to_owned()],
         );
         cc.egui_ctx.set_fonts(fonts);
+        // Only enable profiler when opening window
+        puffin::set_scopes_on(false);
 
         Window {
             cpu: Arc::new(Mutex::new(None)),
@@ -125,6 +128,7 @@ impl Window {
             input_texture,
             show_debug: false,
             show_color_picker: false,
+            show_profiler: false,
         }
     }
 
@@ -169,16 +173,19 @@ impl Window {
 
 impl eframe::App for Window {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
+        profiling::function_scope!();
         // Render the main display window
         let central_frame = egui::Frame::central_panel(&ctx.style()).inner_margin(Margin::ZERO);
         egui::CentralPanel::default()
             .frame(central_frame)
             .show(ctx, |ui| {
+                profiling::scope!("Render main display");
                 ctx.input(|input| {
                     self.handle_input(input, true);
                 });
 
                 if self.rom_loaded {
+                    profiling::scope!("Drawing");
                     // Calculate how texture should be resized on the screen to keep aspect ratio
                     let screen_size = ui.available_size();
                     let mut rect =
@@ -206,14 +213,15 @@ impl eframe::App for Window {
                 if !self.rom_loaded || self.paused.load(Ordering::Relaxed) {
                     self.render_menu(ctx, ui);
                 };
-                ui.response()
             });
 
         if self.show_color_picker {
+            profiling::scope!("Render color picker");
             self.render_color_picker(ctx);
         }
 
         if self.show_debug {
+            profiling::scope!("Render debug window");
             ctx.show_viewport_immediate(
                 egui::ViewportId::from_hash_of("debug_window"),
                 egui::ViewportBuilder::default()
@@ -234,11 +242,35 @@ impl eframe::App for Window {
                     });
 
                     if ctx.input(|i| i.viewport().close_requested()) {
-                        // Tell parent viewport that we should not show next frame:
+                        // tell parent viewport that we should not show next frame:
                         self.show_debug = false;
                     }
                 },
             );
         }
+
+        if self.show_profiler {
+            profiling::scope!("Render profiler");
+            ctx.show_viewport_immediate(
+                egui::ViewportId::from_hash_of("profiler_window"),
+                egui::ViewportBuilder::default()
+                    .with_title("Puffin profiler")
+                    .with_inner_size([600.0, 400.0]),
+                |ctx, class| {
+                    assert!(
+                        class == egui::ViewportClass::Immediate,
+                        "This egui backend doesn't support multiple viewports"
+                    );
+                    egui::CentralPanel::default().show(ctx, |ui| {
+                        puffin_egui::profiler_ui(ui);
+                    });
+                    if ctx.input(|i| i.viewport().close_requested()) {
+                        // tell parent viewport that we should not show next frame:
+                        self.show_profiler = false;
+                    }
+                },
+            );
+        }
+        profiling::finish_frame!();
     }
 }

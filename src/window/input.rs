@@ -44,6 +44,11 @@ impl Window {
                         }
                         // Toggle debug window
                         Key::F1 => self.show_debug = !self.show_debug,
+                        // Toggle profiler window
+                        Key::F2 => {
+                            self.show_profiler = !self.show_profiler;
+                            puffin::set_scopes_on(self.show_profiler);
+                        }
                         // Manually step over an instruction
                         Key::F3 => {
                             if self.paused.load(Ordering::Relaxed) {
@@ -64,13 +69,12 @@ impl Window {
                                     .send(ExecutorInstruction::RunFrame);
                             }
                         }
-                        // Manually activate breakpoint
+                        // Run CPU profiling for one frame
                         Key::F5 => {
-                            self.cpu
-                                .lock()
-                                .unwrap()
-                                .as_ref()
-                                .inspect(|cpu| cpu.breakpoint());
+                            let mut cpu_option = self.cpu.lock().unwrap();
+                            if cpu_option.is_some() {
+                                cpu_option.as_mut().unwrap().profiling = true;
+                            }
                         }
                         Key::F7 => {
                             self.save_state();

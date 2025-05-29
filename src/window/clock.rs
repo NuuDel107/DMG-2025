@@ -20,6 +20,7 @@ impl Window {
         let mut options = self.options.clone();
 
         let (tx, rx) = mpsc::sync_channel::<ExecutorInstruction>(0);
+        profiling::register_thread!("CPU");
         thread::spawn(move || {
             loop {
                 // Wait for timer
@@ -49,17 +50,16 @@ impl Window {
 
                 // Run emulation until next VBlank
                 if instruction == ExecutorInstruction::RunFrame {
+                    profiling::scope!("CPU Frame");
                     loop {
-                        // If program counter is at specified breakpoint,
-                        // stop the clock
-                        if options.breakpoints.contains(&cpu.reg.pc) {
-                            cpu.breakpoint();
-                            paused_ref.store(true, Ordering::Relaxed);
-                            break;
-                        }
-
                         // Break loop if execution function returns true (meaning VBlank was hit)
                         if cpu.execute() {
+                            // If profiling was enabled, disable it after frame and pause profiler
+                            // data so frame data can be viewed
+                            if cpu.profiling {
+                                cpu.profiling = false;
+                                puffin::set_scopes_on(false);
+                            }
                             // Update display texture
                             let image = Self::get_display_texture(cpu, &options);
                             display_ref

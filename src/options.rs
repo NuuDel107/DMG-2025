@@ -117,8 +117,6 @@ pub struct Options {
     pub palette_preset: u8,
     pub custom_palette: Palette,
     pub audio_sample_rate: u32,
-    pub log: bool,
-    pub breakpoints: Vec<u16>,
 }
 
 impl Options {
@@ -194,8 +192,6 @@ impl Default for Options {
             palette_preset: 0,
             custom_palette: Palette::original(),
             audio_sample_rate: 48000,
-            log: false,
-            breakpoints: vec![],
         }
     }
 }
