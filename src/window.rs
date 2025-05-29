@@ -81,7 +81,7 @@ impl Window {
         let (stream, stream_handle) = OutputStream::try_default().unwrap();
         let (queue, queue_output) = queue(true);
         let _ = stream_handle
-            .play_raw(queue_output.convert_samples())
+            .play_raw(queue_output)
             .inspect_err(|e| eprintln!("Failed to start queue playback: {e}"));
         // Load UI fonts
         let mut fonts = FontDefinitions::default();

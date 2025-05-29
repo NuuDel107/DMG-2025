@@ -73,7 +73,7 @@ impl Window {
                                     options.audio_sample_rate,
                                     cpu.apu.receive_buffer(),
                                 )
-                                .convert_samples(),
+                                .amplify((options.volume as f32) / 100.0),
                             );
                             drop(cpu_option);
                             // Request repaint to refresh display

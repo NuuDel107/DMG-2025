@@ -179,12 +179,36 @@ impl Window {
                     MenuPage::Options => {
                         ui.columns(2, |columns| {
                             columns[0].vertical_centered_justified(|ui| {
+                                ui.label(RichText::new("Volume").color(Color32::from_gray(200)));
                                 ui.label(
                                     RichText::new("Window scale").color(Color32::from_gray(200)),
                                 );
                                 ui.label(RichText::new("Palette").color(Color32::from_gray(200)));
                             });
                             columns[1].vertical_centered_justified(|ui| {
+                                // Volume
+                                ui.horizontal(|ui| {
+                                    if self.add_arrow(ui, false).clicked()
+                                        && self.options.volume >= 20
+                                    {
+                                        self.options.volume -= 10;
+                                        self.update_cpu_options();
+                                    };
+                                    ui.add_sized(
+                                        [scale * 50.0, scale * 8.0],
+                                        egui::Label::new(
+                                            RichText::new(self.options.volume.to_string() + "%")
+                                                .color(Color32::from_gray(200)),
+                                        ),
+                                    );
+                                    if self.add_arrow(ui, true).clicked()
+                                        && self.options.volume <= 90
+                                    {
+                                        self.options.volume += 10;
+                                        self.update_cpu_options();
+                                    };
+                                });
+
                                 // Window scale
                                 ui.horizontal(|ui| {
                                     if self.add_arrow(ui, false).clicked()

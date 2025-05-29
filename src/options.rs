@@ -117,6 +117,7 @@ pub struct Options {
     pub palette_preset: u8,
     pub custom_palette: Palette,
     pub audio_sample_rate: u32,
+    pub volume: u8,
 }
 
 impl Options {
@@ -192,6 +193,7 @@ impl Default for Options {
             palette_preset: 0,
             custom_palette: Palette::original(),
             audio_sample_rate: 48000,
+            volume: 100,
         }
     }
 }
