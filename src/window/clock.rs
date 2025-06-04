@@ -20,8 +20,8 @@ impl Window {
         let mut options = self.options.clone();
 
         let (tx, rx) = mpsc::sync_channel::<ExecutorInstruction>(0);
-        profiling::register_thread!("CPU");
         thread::spawn(move || {
+            profiling::register_thread!("CPU");
             loop {
                 // Wait for timer
                 let received = rx.recv();

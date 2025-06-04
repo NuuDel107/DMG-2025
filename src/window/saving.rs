@@ -95,6 +95,11 @@ impl Window {
 
         if let Ok(save) = save_file {
             self.paused.store(true, Ordering::Relaxed);
+            let _ = self
+                .clock_tx
+                .as_ref()
+                .unwrap()
+                .send(ExecutorInstruction::Stop);
             let mut cpu_option = self.cpu.lock().unwrap();
 
             // Initialize new CPU from deserialized state using current ROM file
